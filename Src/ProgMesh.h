@@ -1,0 +1,197 @@
+#pragma once
+
+#define zFCHUNK_PROGMESH ((zWORD)0xB100)
+#define zFCHUNK_PROGMESH_END ((zWORD)0xB1FF)
+
+typedef zWORD zPMINDEX;
+
+struct zTPMTriangle
+{
+	zPMINDEX wedge[3];
+};
+
+struct zTPMTriangleEdges
+{
+	zPMINDEX edge[3];
+};
+
+struct zTPMWedge
+{
+	zVEC3 normal;
+	zVEC2 texUV;
+	zPMINDEX position;
+};
+
+struct zTPMEdge
+{
+	zPMINDEX wedge[2];
+};
+
+struct zTPMVertexUpdate
+{
+	zPMINDEX numNewTri;
+	zPMINDEX numNewWedge;
+};
+
+class zCSubMesh
+{
+public:
+	zCMaterial *material;
+
+	zCArrayAdapt<zTPMTriangle> triList;
+	zCArrayAdapt<zTPMWedge> wedgeList;
+	zCArrayAdapt<zREAL> colorList;
+	zCArrayAdapt<zPMINDEX> triPlaneIndexList;
+	zCArrayAdapt<zTPlane> triPlaneList;
+	zCArrayAdapt<zTPMTriangleEdges> triEdgeList;
+	zCArrayAdapt<zTPMEdge> edgeList;
+	zCArrayAdapt<zREAL> edgeScoreList;
+
+	zCArrayAdapt<zPMINDEX> wedgeMap;
+	zCArrayAdapt<zTPMVertexUpdate> vertexUpdates;
+
+	zINT vbStartIndex;
+
+public:
+	zCSubMesh() { material = NULL; vbStartIndex = 0; }
+	~zCSubMesh() { zDELETE(material); }
+};
+
+struct zTLODParams
+{
+	zREAL strength;
+	zREAL zDisplace2;
+	zREAL morphPerc;
+	zINT minVerts;
+};
+
+class zCProgMeshProto
+{
+public:
+	zBOOL m_bUsesAlphaTesting;
+
+	zTBBox3D bbox3D;
+	zCOBBox3D obbox3D;
+
+	zTLODParams lodParams;
+
+	zBYTE *dataPool;
+	zDWORD dataSize;
+
+	zCArrayAdapt<zPOINT3> posList;
+	zCArrayAdapt<zVEC3> posNormalList;
+
+	zCSubMesh *subMeshList;
+	zBYTE numSubMeshes;
+
+public:
+	zCProgMeshProto()
+	{
+		numSubMeshes = 0;
+		subMeshList = NULL;
+
+		dataSize = 0;
+		dataPool = NULL;
+
+		m_bUsesAlphaTesting = FALSE;
+
+		bbox3D.mins = zVEC3(0.0f, 0.0f, 0.0f);
+		bbox3D.maxs = zVEC3(0.0f, 0.0f, 0.0f);
+	}
+
+	~zCProgMeshProto()
+	{
+		zFREE(dataPool);
+
+		zDELETE_ARRAY(subMeshList);
+	}
+
+	zBOOL UnarchiveMatList(zCFileBIN &file);
+	zVOID ArchiveMatList(zCFileBIN &file);
+
+	zBOOL LoadMRM(zCFileBIN &file);
+	zBOOL LoadMRM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMRM(f); }
+
+	zVOID SaveMRM(zCFileBIN &file);
+	zVOID SaveMRM(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMRM(f); }
+};
+
+struct zTPMProtoDirEntry
+{
+	zDWORD offset;
+	zDWORD size;
+
+	zVOID Set(zDWORD _offset, zDWORD _size)
+	{
+		offset = _offset;
+		size = _size;
+	}
+};
+
+struct zTPMProtoDirectoryMain
+{
+	zTPMProtoDirEntry posList;
+	zTPMProtoDirEntry posNormalList;
+
+	zVOID TransferFromProto(zCProgMeshProto *pmProto)
+	{
+#define SetDirEntry(FIELD) FIELD.Set((zDWORD)((zBYTE *)pmProto->FIELD.GetArray() - pmProto->dataPool), pmProto->FIELD.GetNum())
+		SetDirEntry(posList);
+		SetDirEntry(posNormalList);
+#undef SetDirEntry
+	}
+
+	zVOID TransferToProto(zCProgMeshProto *pmProto)
+	{
+#define GetFromEntry(FIELD) pmProto->FIELD.SetArray((zBYTE *)(pmProto->dataPool + FIELD.offset), FIELD.size)
+		GetFromEntry(posList);
+		GetFromEntry(posNormalList);
+#undef GetFromEntry
+	}
+};
+
+struct zTPMProtoDirectorySubMesh
+{
+	zTPMProtoDirEntry triList;
+	zTPMProtoDirEntry wedgeList;
+	zTPMProtoDirEntry colorList;
+	zTPMProtoDirEntry triPlaneIndexList;
+	zTPMProtoDirEntry triPlaneList;
+	zTPMProtoDirEntry wedgeMap;
+	zTPMProtoDirEntry vertexUpdates;
+	zTPMProtoDirEntry triEdgeList;
+	zTPMProtoDirEntry edgeList;
+	zTPMProtoDirEntry edgeScoreList;
+
+	zVOID TransferFromProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
+	{
+#define SetDirEntry(FIELD) FIELD.Set((zDWORD)((zBYTE *)subMesh->FIELD.GetArray() - pmProto->dataPool), subMesh->FIELD.GetNum())
+		SetDirEntry(triList);
+		SetDirEntry(wedgeList);
+		SetDirEntry(colorList);
+		SetDirEntry(triPlaneIndexList);
+		SetDirEntry(triPlaneList);
+		SetDirEntry(wedgeMap);
+		SetDirEntry(vertexUpdates);
+		SetDirEntry(triEdgeList);
+		SetDirEntry(edgeList);
+		SetDirEntry(edgeScoreList);
+#undef SetDirEntry
+	}
+
+	zVOID TransferToProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
+	{
+#define GetFromEntry(FIELD) subMesh->FIELD.SetArray((zBYTE *)(pmProto->dataPool + FIELD.offset), FIELD.size)
+		GetFromEntry(triList);
+		GetFromEntry(wedgeList);
+		GetFromEntry(colorList);
+		GetFromEntry(triPlaneIndexList);
+		GetFromEntry(triPlaneList);
+		GetFromEntry(wedgeMap);
+		GetFromEntry(vertexUpdates);
+		GetFromEntry(triEdgeList);
+		GetFromEntry(edgeList);
+		GetFromEntry(edgeScoreList);
+#undef GetFromEntry
+	}
+};
