@@ -196,6 +196,8 @@ zUINT CountTabsInLine(const zSTRING &line)
 
 zVOID oCWorld::WriteVobTree(zCFileBIN &file)
 {
+	zBOOL sameVersion = meshAndBspVersionIn == meshAndBspVersionOut;
+
 	for (zINT i = 0; i < vobTree.numInArray; i++)
 	{
 		zCVob *vob = vobTree[i];
@@ -204,125 +206,131 @@ zVOID oCWorld::WriteVobTree(zCFileBIN &file)
 		{
 			zSTRING *line = vob->lines[j];
 
-			// Remove some data
-			if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
+			if (!sameVersion)
 			{
-				// zCVob
+				// Remove some data
+				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
 				{
-					if (line->Contains("pack=int:"))
-						continue;
-				}
-			}
-
-			if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 || meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_04)
-			{
-				// zCVob
-				{
-					if (line->Contains("visualAniMode=enum:") || line->Contains("visualAniModeStrength=float:") || line->Contains("vobFarClipZScale=float:") ||
-						line->Contains("zbias=int:") || line->Contains("isAmbient=bool:"))
-						continue;
+					// zCVob
+					{
+						if (line->Contains("pack=int:"))
+							continue;
+					}
 				}
 
-				// zCDecal
+				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 || meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_04)
 				{
-					if (line->Contains("decalAlphaWeight=int:") || line->Contains("ignoreDayLight=bool:"))
-						continue;
+					// zCVob
+					{
+						if (line->Contains("visualAniMode=enum:") || line->Contains("visualAniModeStrength=float:") || line->Contains("vobFarClipZScale=float:") ||
+							line->Contains("zbias=int:") || line->Contains("isAmbient=bool:"))
+							continue;
+					}
+
+					// zCDecal
+					{
+						if (line->Contains("decalAlphaWeight=int:") || line->Contains("ignoreDayLight=bool:"))
+							continue;
+					}
+
+					// zCMover
+					{
+						if (line->Contains("autoRotate=bool:"))
+							continue;
+					}
+
+					// zCZoneFog
+					{
+						if (line->Contains("fadeOutSky=bool:") || line->Contains("overrideColor=bool:"))
+							continue;
+					}
+
+					// zCVobLightData
+					{
+						if (line->Contains("canMove=bool:"))
+							continue;
+					}
 				}
 
-				// zCMover
+				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_04 || meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_30)
 				{
-					if (line->Contains("autoRotate=bool:"))
-						continue;
-				}
-
-				// zCZoneFog
-				{
-					if (line->Contains("fadeOutSky=bool:") || line->Contains("overrideColor=bool:"))
-						continue;
-				}
-
-				// zCVobLightData
-				{
-					if (line->Contains("canMove=bool:"))
-						continue;
-				}
-			}
-
-			if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_04 || meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_30)
-			{
-				// oCMobInter
-				{
-					if (line->Contains("state=int:") || line->Contains("stateTarget=int:"))
-						continue;
+					// oCMobInter
+					{
+						if (line->Contains("state=int:") || line->Contains("stateTarget=int:"))
+							continue;
+					}
 				}
 			}
 
 			file.BinWriteLine(line);
 
-			zUINT numTabs = CountTabsInLine(*line);
-
-			// Add some data
-			if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
+			if (!sameVersion)
 			{
-				// oCMobInter
-				{
-					if (line->Contains("isDestroyed=bool:"))
-					{
-						file.BinWriteLineIndented(numTabs, "state=int:0");
-						file.BinWriteLineIndented(numTabs, "stateTarget=int:0");
-					}
-				}
-			}
+				zUINT numTabs = CountTabsInLine(*line);
 
-			if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_30)
-			{
-				// zCVob
+				// Add some data
+				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
 				{
-					if (line->Contains("visualCamAlign=enum:"))
+					// oCMobInter
 					{
-						file.BinWriteLineIndented(numTabs, "visualAniMode=enum:0");
-						file.BinWriteLineIndented(numTabs, "visualAniModeStrength=float:0");
-						file.BinWriteLineIndented(numTabs, "vobFarClipZScale=float:1");
-					}
-
-					if (line->Contains("dynShadow=enum:"))
-					{
-						file.BinWriteLineIndented(numTabs, "zbias=int:0");
-						file.BinWriteLineIndented(numTabs, "isAmbient=bool:0");
+						if (line->Contains("isDestroyed=bool:"))
+						{
+							file.BinWriteLineIndented(numTabs, "state=int:0");
+							file.BinWriteLineIndented(numTabs, "stateTarget=int:0");
+						}
 					}
 				}
 
-				// zCDecal
+				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_30)
 				{
-					if (line->Contains("decalTexAniFPS=float:"))
+					// zCVob
 					{
-						file.BinWriteLineIndented(numTabs, "decalAlphaWeight=int:255");
-						file.BinWriteLineIndented(numTabs, "ignoreDayLight=bool:0");
-					}
-				}
+						if (line->Contains("visualCamAlign=enum:"))
+						{
+							file.BinWriteLineIndented(numTabs, "visualAniMode=enum:0");
+							file.BinWriteLineIndented(numTabs, "visualAniModeStrength=float:0");
+							file.BinWriteLineIndented(numTabs, "vobFarClipZScale=float:1");
+						}
 
-				// zCMover
-				{
-					if (line->Contains("autoLinkEnabled=bool:"))
-					{
-						file.BinWriteLineIndented(numTabs, "autoRotate=bool:0");
+						if (line->Contains("dynShadow=enum:"))
+						{
+							file.BinWriteLineIndented(numTabs, "zbias=int:0");
+							file.BinWriteLineIndented(numTabs, "isAmbient=bool:0");
+						}
 					}
-				}
 
-				// zCZoneFog
-				{
-					if (line->Contains("fogColor=color:"))
+					// zCDecal
 					{
-						file.BinWriteLineIndented(numTabs, "fadeOutSky=bool:0");
-						file.BinWriteLineIndented(numTabs, "overrideColor=bool:0");
+						if (line->Contains("decalTexAniFPS=float:"))
+						{
+							file.BinWriteLineIndented(numTabs, "decalAlphaWeight=int:255");
+							file.BinWriteLineIndented(numTabs, "ignoreDayLight=bool:0");
+						}
 					}
-				}
 
-				// zCVobLightData
-				{
-					if (line->Contains("colorAniSmooth=bool:"))
+					// zCMover
 					{
-						file.BinWriteLineIndented(numTabs, "canMove=bool:0");
+						if (line->Contains("autoLinkEnabled=bool:"))
+						{
+							file.BinWriteLineIndented(numTabs, "autoRotate=bool:0");
+						}
+					}
+
+					// zCZoneFog
+					{
+						if (line->Contains("fogColor=color:"))
+						{
+							file.BinWriteLineIndented(numTabs, "fadeOutSky=bool:0");
+							file.BinWriteLineIndented(numTabs, "overrideColor=bool:0");
+						}
+					}
+
+					// zCVobLightData
+					{
+						if (line->Contains("colorAniSmooth=bool:"))
+						{
+							file.BinWriteLineIndented(numTabs, "canMove=bool:0");
+						}
 					}
 				}
 			}
