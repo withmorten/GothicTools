@@ -30,7 +30,7 @@ public:
 		numInArray = 0;
 	}
 
-	~zCArray() { DeleteList(); }
+	~zCArray() { EmptyList(); }
 
 	zVOID AllocDelta(const zINT numDelta)
 	{
@@ -96,6 +96,11 @@ public:
 	}
 
 	zVOID Insert(const T &ins) { InsertEnd(ins); }
+
+	zVOID EmptyList()
+	{
+		numInArray = 0;
+	}
 
 	zVOID DeleteList()
 	{

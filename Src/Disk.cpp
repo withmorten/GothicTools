@@ -3,6 +3,8 @@
 #ifdef _WIN32
 #include <direct.h>
 #else
+#include <limits.h>
+#define _MAX_PATH PATH_MAX
 #define _mkdir(path) mkdir(path, S_IRWXU)
 #endif
 

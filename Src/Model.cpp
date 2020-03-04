@@ -4,13 +4,13 @@ const zSTRING sep = " \t";
 const zSTRING trenn = " \t\r";
 const zSTRING skip = " \t\r";
 
-void CutMarks(zSTRING &arg)
+void CutMarks(zSTRING arg)
 {
 	arg.Delete("\"", zSTR_TO);
 	arg.Delete("\"", zSTR_FROM);
 }
 
-zSTRING CutMarks2(zSTRING &arg)
+zSTRING CutMarks2(zSTRING arg)
 {
 	zSTRING n = arg;
 	n.Delete("\"", zSTR_TO);
@@ -660,9 +660,9 @@ zVOID zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 	for (zINT i = 0; i < aniPtr->numAniEvents; i++)
 	{
-		memcpy(&aniPtr->aniEvents[i], aniEvents[i], sizeof(zCModelAniEvent));
+		memcpy((void *)&aniPtr->aniEvents[i], aniEvents[i], sizeof(zCModelAniEvent));
 
-		aniEvents[i] = NULL;
+		aniEvents[i] = NULL; // leaks ahoy
 	}
 }
 

@@ -6,6 +6,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <float.h>
+#include <math.h>
 #include <time.h>
 #include <sys/stat.h>
 

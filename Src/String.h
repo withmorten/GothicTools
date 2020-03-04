@@ -21,7 +21,7 @@ class zSTRING : public std::string
 public:
 	zSTRING() : string() { Clear(); }
 	zSTRING(string &xStr) : string(xStr) { }
-	zSTRING(zINT n, zCHAR c) : string(n, c) { }
+	zSTRING(zSIZE_T n, zCHAR c) : string(n, c) { }
 	zSTRING(const zSTRING &xStr) : string(xStr) { }
 	zSTRING(const zSTRING *pStr) : string(*pStr) { }
 	zSTRING(const zCHAR *pstring) : string(pstring) { }
@@ -30,6 +30,16 @@ public:
 	zSTRING(const zINT xWert) { zCHAR buffer[50]; snprintf(buffer, sizeof(buffer), "%d", xWert); assign(buffer); }
 	zSTRING(const zDWORD xWert) { zCHAR buffer[50]; snprintf(buffer, sizeof(buffer), "%u", xWert); assign(buffer); }
 	zSTRING(const zREAL xWert, zINT digits = 20);
+
+	zSTRING(const zSTRING &xStr1, const zCHAR *pstring) : string(xStr1) { append(pstring); };
+	zSTRING(const zSTRING &xStr1, const zSTRING &xStr2) : string(xStr1) { append(xStr2); };
+	zSTRING(const zSTRING &xStr1, const zCHAR ch) : string(xStr1) { append(1, ch); };
+
+	inline friend zSTRING operator+ (const zSTRING &xStr1, const zSTRING &xStr2);
+	inline friend zSTRING operator+ (const zSTRING &xStr1, const char *pstring);
+	inline friend zSTRING operator+ (const zSTRING &xStr2, const char ch);
+	inline friend zSTRING operator+ (const zCHAR *pstring, const zSTRING &xStr2);
+	inline friend zSTRING operator+ (const zCHAR ch, const zSTRING &xStr2);
 
 	zCHAR GetLastChar();
 
@@ -83,4 +93,29 @@ public:
 	zBOOL StartsWith(const zSTRING &prefix) { return size() >= prefix.size() && !compare(0, prefix.size(), prefix); }
 
 	zVOID Replace(zCHAR s, zCHAR r) { for (zSIZE_T i = 0; i < size(); i++) if (at(i) == s) replace(i, 1, 1, r); }
+};
+
+zSTRING operator+ (const zSTRING &xStr1, const zSTRING &xStr2)
+{
+	return zSTRING(xStr1, xStr2);
+}
+
+zSTRING operator+ (const zCHAR *str, const zSTRING &xStr2)
+{
+	return zSTRING(zSTRING(str), xStr2);
+};
+
+zSTRING operator+ (const zCHAR ch, const zSTRING &xStr2)
+{
+	return zSTRING(zSTRING(ch), xStr2);
+};
+
+zSTRING operator+ (const zSTRING &xStr1, const zCHAR *str)
+{
+	return zSTRING(xStr1, str);
+};
+
+zSTRING operator+ (const zSTRING &xStr1, const zCHAR ch)
+{
+	return zSTRING(xStr1, ch);
 };
