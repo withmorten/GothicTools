@@ -4,9 +4,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #else
+#include <errno.h>
+#include <fts.h>
 #endif
 
-zVOID zCScanDir::ScanDirectory(const zSTRING &dir, const zSTRING &ext)
+zVOID zCScanDir::ScanDirectory(const zSTRING &dir)
 {
 #ifdef _WIN32
 	WIN32_FIND_DATA fd;
@@ -36,18 +38,44 @@ zVOID zCScanDir::ScanDirectory(const zSTRING &dir, const zSTRING &ext)
 
 		if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			ScanDirectory(path, ext);
+			ScanDirectory(path);
 		}
 		else
 		{
-			if (ext == zSTR_EMPTY || cFileName.EndsWith(ext))
-			{
-				files.InsertEnd(path);
-			}
+			files.InsertEnd(path);
 		}
 	}
 	while(FindNextFile(h, &fd));
 #else
+	FTS *fts = NULL;
+	FTSENT *ent = NULL;
+
+	char *fts_argv[2];
+
+	fts_argv[0] = dir.ToChar();
+	fts_argv[1] = NULL;
+
+	fts = fts_open((char * const *)fts_argv, FTS_PHYSICAL | FTS_NOCHDIR, NULL);
+
+	if (errno)
+	{
+		printf("Could not open %s\n", dir.ToChar());
+	}
+
+	while ((ent = fts_read(fts)) != NULL)
+	{
+		// No errno checking because fts_read adds random backslashes into pathnames, resulting in "No such dir"
+		// fopen() will fail later on if the file cannot actually be opened and the program will exit
+		if (ent->fts_info & FTS_F)
+		{
+			zSTRING path = ent->fts_path;
+			unixify_path(path);
+
+			files.InsertEnd(path);
+		}
+	}
+
+	fts_close(fts);
 #endif
 }
 
