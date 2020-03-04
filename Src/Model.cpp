@@ -1285,7 +1285,7 @@ zVOID zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 				line = "*EVENTTAG (";
 
 				line.Append(zSTRING(event->frameNr));
-				line.Append("\"" + event->tagString + "\"");
+				line.Append(" \"" + event->tagString + "\"");
 
 				for (zINT j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
 				{
