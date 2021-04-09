@@ -75,11 +75,11 @@ public:
 		zDELETE_ARRAY(srcFileStats);
 	}
 
-	zBOOL LoadMMB(const zCHAR *fileName) { zSTRING s(fileName); return LoadMMB(s); }
+	zBOOL LoadMMB(const char *fileName) { zSTRING s(fileName); return LoadMMB(s); }
 	zBOOL LoadMMB(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMMB(f); }
 	zBOOL LoadMMB(zCFileBIN &file);
 
-	void SaveMMB(const zCHAR *fileName) { zSTRING s(fileName); SaveMMB(s); }
+	void SaveMMB(const char *fileName) { zSTRING s(fileName); SaveMMB(s); }
 	void SaveMMB(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMMB(f); }
 	void SaveMMB(zCFileBIN &file);
 };

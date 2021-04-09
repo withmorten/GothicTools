@@ -79,7 +79,7 @@ zFILE::zFILE(const zSTRING &filepath, zBOOL w)
 
 	write = w;
 
-	const zCHAR *mode = (write) ? "wb" : "rb";
+	const char *mode = (write) ? "wb" : "rb";
 
 	if (write && path.Length()) file_handle = fopen_r(complete_path.ToChar(), path.ToChar(), mode);
 	else file_handle = fopen(complete_path.ToChar(), mode);
@@ -97,7 +97,7 @@ zFILE::zFILE(const zSTRING &filepath, zBOOL w)
 
 void zFILE::ReadLine(zSTRING &s)
 {
-	zCHAR file_buffer[zFILE_MAXCHARS + 1];
+	char file_buffer[zFILE_MAXCHARS + 1];
 	zBOOL finished = FALSE;
 	s.Clear();
 
@@ -159,7 +159,7 @@ inline char *fgets_z(char *_Buffer, int _MaxCount, FILE *_Stream)
 
 void zFILE::Read(zSTRING &s)
 {
-	zCHAR file_buffer[zFILE_MAXCHARS];
+	char file_buffer[zFILE_MAXCHARS];
 	s.Clear();
 
 	s += zSTRING(fgets_z(file_buffer, zFILE_MAXCHARS, file_handle));

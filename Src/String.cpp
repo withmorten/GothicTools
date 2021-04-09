@@ -4,15 +4,15 @@ zSTRING::zSTRING(const zREAL xWert, zINT digits)
 {
 	if (digits > 9 || digits < 0) digits = 9;
 
-	zCHAR format[] = "%.9g";
-	format[2] = (zCHAR)digits + 48;
+	char format[] = "%.9g";
+	format[2] = (char)digits + 48;
 
-	zCHAR buffer[100];
+	char buffer[100];
 	sprintf(buffer, format, xWert);
 	assign(buffer);
 }
 
-zCHAR zSTRING::GetLastChar()
+char zSTRING::GetLastChar()
 {
 	if (size() == 0)
 	{
@@ -56,7 +56,7 @@ zSTRING zSTRING::PickWord(zUINT num, const zSTRING &trenn, const zSTRING &skip) 
 	}
 
 	zSTRING result;
-	const zCHAR *str = PickWordPos(num, trenn, skip);
+	const char *str = PickWordPos(num, trenn, skip);
 
 	if (!str)
 	{
@@ -85,13 +85,13 @@ zSTRING zSTRING::PickWord(zUINT num, const zSTRING &trenn, const zSTRING &skip) 
 	return result;
 }
 
-const zCHAR *zSTRING::PickWordPos(zUINT num, const zSTRING &trenn, const zSTRING &skip) const
+const char *zSTRING::PickWordPos(zUINT num, const zSTRING &trenn, const zSTRING &skip) const
 {
 	const zSIZE_T strsize = size();
 
 	if (strsize > 0)
 	{
-		zCHAR ch;
+		char ch;
 		zSIZE_T pos = 0;
 		zBYTE inWord = FALSE;
 
@@ -214,7 +214,7 @@ void zSTRING::DeleteRight(zSIZE_T length)
 	erase(size() - length, length);
 }
 
-zLONG zSTRING::Search(zSIZE_T startIndex, const zCHAR *substr, zUINT num) const
+zLONG zSTRING::Search(zSIZE_T startIndex, const char *substr, zUINT num) const
 {
 	if (!substr) return -1;
 
