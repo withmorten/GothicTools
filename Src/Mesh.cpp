@@ -169,7 +169,7 @@ zBOOL zCMesh::LoadMSH(zCFileBIN &file)
 			hasLightmaps = TRUE;
 
 			lightMapsLen = len;
-			lightMaps = zMALLOC<zBYTE>(len);
+			lightMaps = zMALLOC<byte>(len);
 
 			file.BinRead(lightMaps, lightMapsLen);
 
@@ -416,10 +416,10 @@ void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 
 	polyArray = zNEW_ARRAY(zCPolygon *, numPoly);
 
-	zBYTE *block = zMALLOC<zBYTE>(len - sizeof(zINT));
+	byte *block = zMALLOC<byte>(len - sizeof(zINT));
 	file.BinRead(block, len - sizeof(zINT));
 
-	zBYTE *blockPtr = block;
+	byte *blockPtr = block;
 	zINT inc = 0;
 
 	zTMSH_PolyReadChunk chunk;

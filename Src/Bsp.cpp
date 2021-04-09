@@ -48,7 +48,7 @@ void zCBspBase::LoadBINRec(zCFileBIN &file)
 	{
 		zCBspNode *node = (zCBspNode *)this;
 
-		zBYTE flag;
+		byte flag;
 		file.BinReadByte(flag);
 
 		file.BinRead(&node->plane, sizeof(node->plane));
@@ -223,7 +223,7 @@ zBOOL zCBspTree::LoadBIN(zCFileBIN &file)
 		}
 		case zFCHUNK_BSP_END:
 		{
-			zBYTE answer;
+			byte answer;
 			file.BinReadByte(answer);
 
 			if (answer != 0x42)
@@ -354,7 +354,7 @@ void zCBspBase::SaveBINRec(zCFileBIN &file)
 
 	if (IsNode())
 	{
-		zBYTE flag = zNODE_UNDEFINED;
+		byte flag = zNODE_UNDEFINED;
 
 		zCBspNode *node = (zCBspNode *)this;
 

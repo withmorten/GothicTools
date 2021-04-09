@@ -12,9 +12,8 @@
 
 typedef uint8_t uint8;
 
+typedef uint8 byte;
 
-
-typedef unsigned char zBYTE;
 typedef int16_t zSHORT;
 typedef int16_t zSWORD;
 typedef uint16_t zUINT16;

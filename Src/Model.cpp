@@ -1715,7 +1715,7 @@ zBOOL zCMeshSoftSkin::Load(zCFileBIN &file)
 			}
 
 			file.BinReadDWord(size);
-			vertWeightStream = zMALLOC<zBYTE>(size);
+			vertWeightStream = zMALLOC<byte>(size);
 			file.BinRead(vertWeightStream, size);
 
 			file.BinReadDWord(numNodeWedgeNormals);

@@ -14,7 +14,7 @@ zBOOL zCProgMeshProto::UnarchiveMatList(zCFileBIN &file)
 	file.BinReadLine(s); // END
 	file.BinReadLine(s); //
 
-	for (zBYTE i = 0; i < numSubMeshes; i++)
+	for (byte i = 0; i < numSubMeshes; i++)
 	{
 		file.BinReadString(s);
 
@@ -65,7 +65,7 @@ zBOOL zCProgMeshProto::LoadMRM(zCFileBIN &file)
 			}
 
 			file.BinReadDWord(dataSize);
-			dataPool = zMALLOC<zBYTE>(dataSize);
+			dataPool = zMALLOC<byte>(dataSize);
 			file.BinRead(dataPool, dataSize);
 
 			file.BinReadByte(numSubMeshes);
@@ -86,7 +86,7 @@ zBOOL zCProgMeshProto::LoadMRM(zCFileBIN &file)
 			zTPMProtoDirectorySubMesh subMeshDir[32];
 			file.BinRead(&subMeshDir, sizeof(zTPMProtoDirectorySubMesh) * numSubMeshes);
 
-			for (zBYTE i = 0; i < numSubMeshes; i++)
+			for (byte i = 0; i < numSubMeshes; i++)
 			{
 				subMeshDir[i].TransferToProto(this, &(subMeshList[i]));
 			}
@@ -158,7 +158,7 @@ void zCProgMeshProto::ArchiveMatList(zCFileBIN &file)
 	file.BinWriteLine("END");
 	file.BinWriteLine();
 
-	for (zBYTE i = 0; i < numSubMeshes; i++)
+	for (byte i = 0; i < numSubMeshes; i++)
 	{
 		zCMaterial *mat = subMeshList[i].material;
 			
@@ -190,7 +190,7 @@ void zCProgMeshProto::SaveMRM(zCFileBIN &file)
 
 		zTPMProtoDirectorySubMesh subMeshDir[32];
 
-		for (zBYTE i = 0; i < numSubMeshes; i++)
+		for (byte i = 0; i < numSubMeshes; i++)
 		{
 			subMeshDir[i].TransferFromProto(this, &(subMeshList[i]));
 		}

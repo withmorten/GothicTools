@@ -33,7 +33,7 @@ public:
 	zCVertFeature *featArray;
 
 	zLONG lightMapsLen;
-	zBYTE *lightMaps;
+	byte *lightMaps;
 
 public:
 	zCMesh();

@@ -53,7 +53,7 @@ public:
 
 	zTPlane plane;
 
-	zBYTE hasLod;
+	byte hasLod;
 
 public:
 	zCBspNode() { nodeType = zBSP_NODE; front = NULL; back = NULL; leafList = NULL; numLeafs = 0; hasLod = FALSE; }

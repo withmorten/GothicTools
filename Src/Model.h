@@ -105,7 +105,7 @@ class zCMeshSoftSkin : public zCProgMeshProto
 {
 public:
 	zDWORD size;
-	zBYTE *vertWeightStream;
+	byte *vertWeightStream;
 
 	zDWORD numNodeWedgeNormals;
 	zTNodeWedgeNormal *nodeWedgeNormalList;

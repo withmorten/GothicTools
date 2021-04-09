@@ -145,7 +145,7 @@ struct zTMSH_PolyChunk // unified chunk
 	zSWORD lightmapIndex;
 	zTPlane polyPlane;
 	TFlags flags;
-	zBYTE polyNumVert;
+	byte polyNumVert;
 };
 
 struct zTIndex // unified chunk
@@ -165,7 +165,7 @@ struct zTMSH_PolyChunkG1
 	zSWORD lightmapIndex;
 	zTPlane polyPlane;
 	TFlagsG1 flags;
-	zBYTE polyNumVert;
+	byte polyNumVert;
 };
 
 struct zTIndexG1
@@ -196,7 +196,7 @@ struct zTMSH_PolyChunkG2
 	zSWORD lightmapIndex;
 	zTPlane polyPlane;
 	TFlagsG2 flags;
-	zBYTE polyNumVert;
+	byte polyNumVert;
 };
 
 struct zTIndexG2
@@ -217,7 +217,7 @@ public:
 	zTPlane polyPlane;
 	zCMaterial *material;
 
-	zBYTE numVert;
+	byte numVert;
 	zSWORD lightmapIndex;
 	TFlags flags;
 

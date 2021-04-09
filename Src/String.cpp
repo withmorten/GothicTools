@@ -93,7 +93,7 @@ const char *zSTRING::PickWordPos(zUINT num, const zSTRING &trenn, const zSTRING 
 	{
 		char ch;
 		zSIZE_T pos = 0;
-		zBYTE inWord = FALSE;
+		byte inWord = FALSE;
 
 		do
 		{
