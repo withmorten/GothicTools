@@ -10,8 +10,11 @@
 #include <time.h>
 #include <sys/stat.h>
 
+typedef uint8_t uint8;
+
+
+
 typedef unsigned char zBYTE;
-typedef unsigned char zUINT8;
 typedef int16_t zSHORT;
 typedef int16_t zSWORD;
 typedef uint16_t zUINT16;

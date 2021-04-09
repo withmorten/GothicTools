@@ -95,39 +95,39 @@ typedef zDWORD zTFeatIndex;
 #pragma pack (push, 1)
 struct TFlags // unified flags
 {
-	zUINT8 portalPoly : 2;
-	zUINT8 occluder : 1;
-	zUINT8 sectorPoly : 1;
-	zUINT8 mustRelight : 1;
-	// zUINT8 lodFlag : 1; // G1, possibly exactly the same as mustRelight, just renamed
-	zUINT8 portalIndoorOutdoor : 1;
-	zUINT8 ghostOccluder : 1;
-	zUINT8 noDynLightNear : 1;
-	zUINT8 normalMainAxis : 2; // G1
+	uint8 portalPoly : 2;
+	uint8 occluder : 1;
+	uint8 sectorPoly : 1;
+	uint8 mustRelight : 1;
+	// uint8 lodFlag : 1; // G1, possibly exactly the same as mustRelight, just renamed
+	uint8 portalIndoorOutdoor : 1;
+	uint8 ghostOccluder : 1;
+	uint8 noDynLightNear : 1;
+	uint8 normalMainAxis : 2; // G1
 	zUINT16 sectorIndex : 16;
 };
 
 struct TFlagsG1
 {
-	zUINT8 portalPoly : 2; // tType
-	zUINT8 occluder : 1; // tOccluder
-	zUINT8 sectorPoly : 1; // tIndoor
-	zUINT8 lodFlag : 1; // tLODGenerate
-	zUINT8 portalIndoorOutdoor : 1; // tPortalWithoutMat
-	zUINT8 ghostOccluder : 1; // tGhost
-	zUINT8 normalMainAxis : 2; // m_nMainAxis
+	uint8 portalPoly : 2; // tType
+	uint8 occluder : 1; // tOccluder
+	uint8 sectorPoly : 1; // tIndoor
+	uint8 lodFlag : 1; // tLODGenerate
+	uint8 portalIndoorOutdoor : 1; // tPortalWithoutMat
+	uint8 ghostOccluder : 1; // tGhost
+	uint8 normalMainAxis : 2; // m_nMainAxis
 	zUINT16 sectorIndex : 16; // m_nSectorIndex
 };
 
 struct TFlagsG2
 {
-	zUINT8 portalPoly : 2;
-	zUINT8 occluder : 1;
-	zUINT8 sectorPoly : 1;
-	zUINT8 mustRelight : 1;
-	zUINT8 portalIndoorOutdoor : 1;
-	zUINT8 ghostOccluder : 1;
-	zUINT8 noDynLightNear : 1;
+	uint8 portalPoly : 2;
+	uint8 occluder : 1;
+	uint8 sectorPoly : 1;
+	uint8 mustRelight : 1;
+	uint8 portalIndoorOutdoor : 1;
+	uint8 ghostOccluder : 1;
+	uint8 noDynLightNear : 1;
 	zUINT16 sectorIndex : 16;
 };
 

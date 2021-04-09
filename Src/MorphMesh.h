@@ -13,10 +13,10 @@ public:
 
 	struct
 	{
-		zUINT8 discontinuity : 1;
-		zUINT8 looping : 1;
-		zUINT8 shape : 1;
-		zUINT8 refShape : 1;
+		uint8 discontinuity : 1;
+		uint8 looping : 1;
+		uint8 shape : 1;
+		uint8 refShape : 1;
 	} flags;
 
 	zINT numVert;

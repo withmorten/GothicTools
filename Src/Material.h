@@ -58,16 +58,16 @@ public:
 
 	zREAL m_bEnvironmentalMappingStrength;
 
-	zUINT8 dontUseLightmaps;
-	zUINT8 texAniMap;
-	zUINT8 lodDontCollapse;
-	zUINT8 noCollDet;
-	zUINT8 forceOccluder;
-	zUINT8 m_bEnvironmentalMapping;
-	zUINT8 polyListNeedsSort;
-	zUINT8 libFlag;
+	uint8 dontUseLightmaps;
+	uint8 texAniMap;
+	uint8 lodDontCollapse;
+	uint8 noCollDet;
+	uint8 forceOccluder;
+	uint8 m_bEnvironmentalMapping;
+	uint8 polyListNeedsSort;
+	uint8 libFlag;
 	zTRnd_AlphaBlendFunc rndAlphaBlendFunc;
-	zUINT8 m_bIgnoreSun;
+	uint8 m_bIgnoreSun;
 
 	zTWaveAniMode m_enuWaveMode;
 	zTFFT m_enuWaveSpeed;
