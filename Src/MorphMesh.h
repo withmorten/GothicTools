@@ -44,10 +44,10 @@ public:
 	void Save(zCFileBIN &file);
 };
 
-#define zFCHUNK_MMB_MORPHMESH ((zWORD)0xE000)
-#define zFCHUNK_MMB_SOURCE ((zWORD)0xE010)
-#define zFCHUNK_MMB_HEADER ((zWORD)0xE020)
-#define zFCHUNK_MMB_ANILIST ((zWORD)0xE030)
+#define zFCHUNK_MMB_MORPHMESH ((uint16)0xE000)
+#define zFCHUNK_MMB_SOURCE ((uint16)0xE010)
+#define zFCHUNK_MMB_HEADER ((uint16)0xE020)
+#define zFCHUNK_MMB_ANILIST ((uint16)0xE030)
 
 class zCMorphMeshProto
 {
@@ -56,7 +56,7 @@ public:
 	zCProgMeshProto *morphRefMesh;
 	zPOINT3 *morphRefMeshVertPos;
 
-	zWORD numAni;
+	uint16 numAni;
 	zTSrcFileStats *srcFileStats;
 	zCArray<zCMorphMeshAni *> aniList;
 

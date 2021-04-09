@@ -85,7 +85,7 @@ void zCMaterial::Archive(zCFileBIN &file, zDWORD objectIndex)
 zBOOL zCMaterial::Unarchive(zCFileBIN &file)
 {
 	zDWORD dw;
-	zWORD version;
+	uint16 version;
 	zSTRING s;
 
 	// Read chunk header
@@ -148,8 +148,8 @@ zBOOL zCMaterial::Unarchive(zCFileBIN &file)
 
 		if (version == MATERIAL_VERSION_SUM_GOTHIC_OLD1)
 		{
-			zWORD waveMaxAmplitude;
-			zWORD waveGridSize;
+			uint16 waveMaxAmplitude;
+			uint16 waveGridSize;
 
 			file.BinReadWord(waveMaxAmplitude); // waveMaxAmplitude
 			file.BinReadWord(waveGridSize); // waveGridSize

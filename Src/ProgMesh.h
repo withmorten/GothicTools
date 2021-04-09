@@ -1,9 +1,9 @@
 #pragma once
 
-#define zFCHUNK_PROGMESH ((zWORD)0xB100)
-#define zFCHUNK_PROGMESH_END ((zWORD)0xB1FF)
+#define zFCHUNK_PROGMESH ((uint16)0xB100)
+#define zFCHUNK_PROGMESH_END ((uint16)0xB1FF)
 
-typedef zWORD zPMINDEX;
+typedef uint16 zPMINDEX;
 
 struct zTPMTriangle
 {

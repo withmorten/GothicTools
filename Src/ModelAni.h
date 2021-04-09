@@ -42,17 +42,17 @@ public:
 	void Save(zCFileBIN &file);
 };
 
-#define zFCHUNK_MODELANI ((zWORD)0xA000)
-#define zFCHUNK_MAN_HEADER ((zWORD)0xA020)
-#define zFCHUNK_MAN_SOURCE ((zWORD)0xA010)
-#define zFCHUNK_MAN_ANIEVENTS ((zWORD)0xA030)
-#define zFCHUNK_MAN_RAWDATA ((zWORD)0xA090)
+#define zFCHUNK_MODELANI ((uint16)0xA000)
+#define zFCHUNK_MAN_HEADER ((uint16)0xA020)
+#define zFCHUNK_MAN_SOURCE ((uint16)0xA010)
+#define zFCHUNK_MAN_ANIEVENTS ((uint16)0xA030)
+#define zFCHUNK_MAN_RAWDATA ((uint16)0xA090)
 
 #pragma pack (push, 1)
 struct zTMdl_AniSample
 {
-	zWORD rotation[3];
-	zWORD position[3];
+	uint16 rotation[3];
+	uint16 position[3];
 };
 #pragma pack (pop)
 

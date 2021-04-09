@@ -41,7 +41,7 @@ void zCMorphMeshAni::Save(zCFileBIN &file)
 
 zBOOL zCMorphMeshProto::LoadMMB(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -88,7 +88,7 @@ zBOOL zCMorphMeshProto::LoadMMB(zCFileBIN &file)
 			file.BinReadWord(numAni);
 			srcFileStats = zNEW_ARRAY(zTSrcFileStats, numAni);
 
-			for (zWORD i = 0; i < numAni; i++)
+			for (uint16 i = 0; i < numAni; i++)
 			{
 				srcFileStats[i].LoadBIN(file);
 			}
@@ -97,12 +97,12 @@ zBOOL zCMorphMeshProto::LoadMMB(zCFileBIN &file)
 		}
 		case zFCHUNK_MMB_ANILIST:
 		{
-			zWORD numAni2;
+			uint16 numAni2;
 			file.BinReadWord(numAni2);
 
 			aniList.AllocAbs(numAni);
 
-			for (zWORD i = 0; i < numAni; i++)
+			for (uint16 i = 0; i < numAni; i++)
 			{
 				zCMorphMeshAni *ani = zNEW(zCMorphMeshAni);
 
@@ -146,7 +146,7 @@ void zCMorphMeshProto::SaveMMB(zCFileBIN &file)
 	{
 		file.BinWriteWord(numAni);
 
-		for (zWORD i = 0; i < numAni; i++)
+		for (uint16 i = 0; i < numAni; i++)
 		{
 			srcFileStats[i].SaveBIN(file);
 		}
@@ -156,7 +156,7 @@ void zCMorphMeshProto::SaveMMB(zCFileBIN &file)
 	{
 		file.BinWriteWord(numAni);
 
-		for (zWORD i = 0; i < numAni; i++)
+		for (uint16 i = 0; i < numAni; i++)
 		{
 			zCMorphMeshAni *ani = aniList[i];
 

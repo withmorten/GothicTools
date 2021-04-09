@@ -33,7 +33,7 @@ zBOOL zCModelPrototype::ReadAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 	file.BinReadInt(aniPtr->numAniEvents);
 	aniPtr->aniEvents = zNEW_ARRAY(zCModelAniEvent, aniPtr->numAniEvents);
 
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	zINT actEvent = 0;
@@ -186,7 +186,7 @@ fileEnd:;
 
 zBOOL zCModelPrototype::ReadAniEnumMSB(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	zCModelAni *aniPtr = NULL;
@@ -359,7 +359,7 @@ fileEnd:;
 
 zBOOL zCModelPrototype::ReadModelMSB(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -457,7 +457,7 @@ zBOOL zCModelPrototype::LoadModelScriptMSB(zCFileBIN &file)
 {
 	SetModelProtoName(file.file->filename);
 
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -1686,7 +1686,7 @@ void zCModelPrototype::SaveMDL(zCFileBIN &file)
 
 zBOOL zCMeshSoftSkin::Load(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -1728,7 +1728,7 @@ zBOOL zCMeshSoftSkin::Load(zCFileBIN &file)
 
 			nodeOBBList.AllocAbs(numNodes);
 
-			for (zWORD i = 0; i < numNodes; i++)
+			for (uint16 i = 0; i < numNodes; i++)
 			{
 				zCOBBox3D *obb = zNEW(zCOBBox3D);
 				obb->LoadBIN(file);
@@ -1776,7 +1776,7 @@ void zCMeshSoftSkin::Save(zCFileBIN &file)
 		file.BinWriteWord(numNodes);
 		file.BinWrite(nodeIndexList, numNodes * sizeof(zINT));
 
-		for (zWORD i = 0; i < numNodes; i++)
+		for (uint16 i = 0; i < numNodes; i++)
 		{
 			zCOBBox3D *obb = nodeOBBList[i];
 			obb->SaveBIN(file);
@@ -1790,7 +1790,7 @@ void zCMeshSoftSkin::Save(zCFileBIN &file)
 
 zBOOL zCModelMesh::LoadMDM(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -1832,7 +1832,7 @@ zBOOL zCModelMesh::LoadMDM(zCFileBIN &file)
 
 			nodeMeshNames.AllocAbs(numNodeMeshes);
 
-			for (zWORD i = 0; i < numNodeMeshes; i++)
+			for (uint16 i = 0; i < numNodeMeshes; i++)
 			{
 				zSTRING nodeName;
 				file.BinReadLine(nodeName);
@@ -1841,7 +1841,7 @@ zBOOL zCModelMesh::LoadMDM(zCFileBIN &file)
 
 			nodeMeshList = zNEW_ARRAY(zCProgMeshProto, numNodeMeshes);
 
-			for (zWORD i = 0; i < numNodeMeshes; i++)
+			for (uint16 i = 0; i < numNodeMeshes; i++)
 			{
 				zCProgMeshProto *pmesh = &nodeMeshList[i];
 
@@ -1863,7 +1863,7 @@ zBOOL zCModelMesh::LoadMDM(zCFileBIN &file)
 
 			softSkinList = zNEW_ARRAY(zCMeshSoftSkin, numSoftSkins);
 
-			for (zWORD i = 0; i < numSoftSkins; i++)
+			for (uint16 i = 0; i < numSoftSkins; i++)
 			{
 				zCMeshSoftSkin *mesh = &softSkinList[i];
 
@@ -1917,12 +1917,12 @@ void zCModelMesh::SaveMDM(zCFileBIN &file)
 		{
 			file.BinWriteWord(numNodeMeshes);
 
-			for (zWORD i = 0; i < numNodeMeshes; i++)
+			for (uint16 i = 0; i < numNodeMeshes; i++)
 			{
 				file.BinWriteLine(nodeMeshNames[i]);
 			}
 
-			for (zWORD i = 0; i < numNodeMeshes; i++)
+			for (uint16 i = 0; i < numNodeMeshes; i++)
 			{
 				zCProgMeshProto *pmesh = &nodeMeshList[i];
 
@@ -1939,7 +1939,7 @@ void zCModelMesh::SaveMDM(zCFileBIN &file)
 
 			file.BinWriteWord(numSoftSkins);
 
-			for (zWORD i = 0; i < numSoftSkins; i++)
+			for (uint16 i = 0; i < numSoftSkins; i++)
 			{
 				zCMeshSoftSkin *mesh = &softSkinList[i];
 
@@ -1957,7 +1957,7 @@ zBOOL zCModelHierarchy::LoadMDH(zCFileBIN &file)
 {
 	SetModelHierarchyName(file.file->filename);
 
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -1981,7 +1981,7 @@ zBOOL zCModelHierarchy::LoadMDH(zCFileBIN &file)
 			file.BinReadWord(numNodes);
 			nodeList = zNEW_ARRAY(zCModelNode, numNodes);
 
-			for (zWORD i = 0; i < numNodes; i++)
+			for (uint16 i = 0; i < numNodes; i++)
 			{
 				zCModelNode *mnode = &nodeList[i];
 
@@ -2035,7 +2035,7 @@ void zCModelHierarchy::SaveMDH(zCFileBIN &file)
 
 		file.BinWriteWord(numNodes);
 
-		for (zWORD i = 0; i < numNodes; i++)
+		for (uint16 i = 0; i < numNodes; i++)
 		{
 			zCModelNode *mnode = &nodeList[i];
 

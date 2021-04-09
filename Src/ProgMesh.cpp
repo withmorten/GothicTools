@@ -40,7 +40,7 @@ zBOOL zCProgMeshProto::UnarchiveMatList(zCFileBIN &file)
 
 zBOOL zCProgMeshProto::LoadMRM(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -51,7 +51,7 @@ zBOOL zCProgMeshProto::LoadMRM(zCFileBIN &file)
 		{
 		case zFCHUNK_PROGMESH:
 		{
-			zWORD vers;
+			uint16 vers;
 
 			file.BinReadWord(vers);
 

@@ -17,7 +17,7 @@ public:
 	zVEC3 axis[3];
 	zVEC3 extent;
 
-	zWORD numChilds;
+	uint16 numChilds;
 	zCArray<zCOBBox3D *> childs;
 
 public:
@@ -29,7 +29,7 @@ public:
 
 		file.BinWriteWord(numChilds);
 
-		for (zWORD i = 0; i < numChilds; i++)
+		for (uint16 i = 0; i < numChilds; i++)
 		{
 			zCOBBox3D *obb = childs[i];
 			obb->SaveBIN(file);
@@ -45,7 +45,7 @@ public:
 		file.BinReadWord(numChilds);
 		childs.AllocAbs(numChilds);
 
-		for (zWORD i = 0; i < numChilds; i++)
+		for (uint16 i = 0; i < numChilds; i++)
 		{
 			zCOBBox3D *newOBB = zNEW(zCOBBox3D);
 			childs.Insert(newOBB);
@@ -85,7 +85,7 @@ public:
 };
 
 typedef zDWORD zTVertIndex;
-typedef zWORD zTVertIndexG1;
+typedef uint16 zTVertIndexG1;
 typedef zDWORD zTVertIndexGRM;
 typedef zDWORD zTVertIndexG2;
 typedef zDWORD zTFeatIndex;
@@ -104,7 +104,7 @@ struct TFlags // unified flags
 	uint8 ghostOccluder : 1;
 	uint8 noDynLightNear : 1;
 	uint8 normalMainAxis : 2; // G1
-	zUINT16 sectorIndex : 16;
+	uint16 sectorIndex : 16;
 };
 
 struct TFlagsG1
@@ -116,7 +116,7 @@ struct TFlagsG1
 	uint8 portalIndoorOutdoor : 1; // tPortalWithoutMat
 	uint8 ghostOccluder : 1; // tGhost
 	uint8 normalMainAxis : 2; // m_nMainAxis
-	zUINT16 sectorIndex : 16; // m_nSectorIndex
+	uint16 sectorIndex : 16; // m_nSectorIndex
 };
 
 struct TFlagsG2
@@ -128,7 +128,7 @@ struct TFlagsG2
 	uint8 portalIndoorOutdoor : 1;
 	uint8 ghostOccluder : 1;
 	uint8 noDynLightNear : 1;
-	zUINT16 sectorIndex : 16;
+	uint16 sectorIndex : 16;
 };
 
 struct zTMSH_FeatureChunk
@@ -141,8 +141,8 @@ struct zTMSH_FeatureChunk
 
 struct zTMSH_PolyChunk // unified chunk
 {
-	zSWORD matIndex;
-	zSWORD lightmapIndex;
+	int16 matIndex;
+	int16 lightmapIndex;
 	zTPlane polyPlane;
 	TFlags flags;
 	byte polyNumVert;
@@ -161,8 +161,8 @@ struct zTMSH_PolyReadChunk : zTMSH_PolyChunk // unified chunk
 
 struct zTMSH_PolyChunkG1
 {
-	zSWORD matIndex;
-	zSWORD lightmapIndex;
+	int16 matIndex;
+	int16 lightmapIndex;
 	zTPlane polyPlane;
 	TFlagsG1 flags;
 	byte polyNumVert;
@@ -192,8 +192,8 @@ struct zTMSH_PolyReadChunkGRM : zTMSH_PolyChunkG1
 
 struct zTMSH_PolyChunkG2
 {
-	zSWORD matIndex;
-	zSWORD lightmapIndex;
+	int16 matIndex;
+	int16 lightmapIndex;
 	zTPlane polyPlane;
 	TFlagsG2 flags;
 	byte polyNumVert;
@@ -218,7 +218,7 @@ public:
 	zCMaterial *material;
 
 	byte numVert;
-	zSWORD lightmapIndex;
+	int16 lightmapIndex;
 	TFlags flags;
 
 	zTIndex *indexList;

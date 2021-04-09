@@ -2,49 +2,49 @@
 
 #define HANDLE_MSB_CHILD_FILES 0
 
-#define zFCHUNK_MODELSCRIPT ((zWORD)0xF000)
-#define zFCHUNK_MDS_SOURCE ((zWORD)0xF100)
-#define zFCHUNK_MDS_MODEL ((zWORD)0xF200)
-#define zFCHUNK_MDS_MESHANDTREE ((zWORD)0xF300)
-#define zFCHUNK_MDS_REGISTERMESH ((zWORD)0xF400)
-#define zFCHUNK_MDS_ANIENUM ((zWORD)0xF500)
-#define zFCHUNK_MDS_ANIMAXFPS ((zWORD)0xF510)
-#define zFCHUNK_MDS_ANI ((zWORD)0xF520)
-#define zFCHUNK_MDS_ANIALIAS ((zWORD)0xF530)
-#define zFCHUNK_MDS_ANIBLEND ((zWORD)0xF540)
-#define zFCHUNK_MDS_ANISYNC ((zWORD)0xF550)
-#define zFCHUNK_MDS_ANIBATCH ((zWORD)0xF560)
-#define zFCHUNK_MDS_ANICOMB ((zWORD)0xF570)
-#define zFCHUNK_MDS_ANIDISABLE ((zWORD)0xF580)
-#define zFCHUNK_MDS_MODELTAG ((zWORD)0xF590)
-#define zFCHUNK_MDS_ANIEVENTS ((zWORD)0xF5A0)
-#define zFCHUNK_MDS_EVENTSFX ((zWORD)0xF5A1)
-#define zFCHUNK_MDS_EVENTSFXGRND ((zWORD)0xF5A2)
-#define zFCHUNK_MDS_EVENTTAG ((zWORD)0xF5A3)
-#define zFCHUNK_MDS_EVENTPFX ((zWORD)0xF5A4)
-#define zFCHUNK_MDS_EVENTPFXSTOP ((zWORD)0xF5A5)
-#define zFCHUNK_MDS_EVENTPFXGRND ((zWORD)0xF5A6)
-#define zFCHUNK_MDS_EVENTSETMESH ((zWORD)0xF5A7)
-#define zFCHUNK_MDS_EVENTSWAPMESH ((zWORD)0xF5A8)
-#define zFCHUNK_MDS_EVENTMMSTARTANI ((zWORD)0xF5A9)
-#define zFCHUNK_MDS_EVENTCAMTREMOR ((zWORD)0xF5AA)
-#define zFCHUNK_MDS_ANIEVENTS_END ((zWORD)0xF5AF)
-#define zFCHUNK_MDS_ANIENUM_END ((zWORD)0xF5FF)
-#define zFCHUNK_MDS_MODEL_END ((zWORD)0xF2FF)
-#define zFCHUNK_MDS_END ((zWORD)0xFFFF)
+#define zFCHUNK_MODELSCRIPT ((uint16)0xF000)
+#define zFCHUNK_MDS_SOURCE ((uint16)0xF100)
+#define zFCHUNK_MDS_MODEL ((uint16)0xF200)
+#define zFCHUNK_MDS_MESHANDTREE ((uint16)0xF300)
+#define zFCHUNK_MDS_REGISTERMESH ((uint16)0xF400)
+#define zFCHUNK_MDS_ANIENUM ((uint16)0xF500)
+#define zFCHUNK_MDS_ANIMAXFPS ((uint16)0xF510)
+#define zFCHUNK_MDS_ANI ((uint16)0xF520)
+#define zFCHUNK_MDS_ANIALIAS ((uint16)0xF530)
+#define zFCHUNK_MDS_ANIBLEND ((uint16)0xF540)
+#define zFCHUNK_MDS_ANISYNC ((uint16)0xF550)
+#define zFCHUNK_MDS_ANIBATCH ((uint16)0xF560)
+#define zFCHUNK_MDS_ANICOMB ((uint16)0xF570)
+#define zFCHUNK_MDS_ANIDISABLE ((uint16)0xF580)
+#define zFCHUNK_MDS_MODELTAG ((uint16)0xF590)
+#define zFCHUNK_MDS_ANIEVENTS ((uint16)0xF5A0)
+#define zFCHUNK_MDS_EVENTSFX ((uint16)0xF5A1)
+#define zFCHUNK_MDS_EVENTSFXGRND ((uint16)0xF5A2)
+#define zFCHUNK_MDS_EVENTTAG ((uint16)0xF5A3)
+#define zFCHUNK_MDS_EVENTPFX ((uint16)0xF5A4)
+#define zFCHUNK_MDS_EVENTPFXSTOP ((uint16)0xF5A5)
+#define zFCHUNK_MDS_EVENTPFXGRND ((uint16)0xF5A6)
+#define zFCHUNK_MDS_EVENTSETMESH ((uint16)0xF5A7)
+#define zFCHUNK_MDS_EVENTSWAPMESH ((uint16)0xF5A8)
+#define zFCHUNK_MDS_EVENTMMSTARTANI ((uint16)0xF5A9)
+#define zFCHUNK_MDS_EVENTCAMTREMOR ((uint16)0xF5AA)
+#define zFCHUNK_MDS_ANIEVENTS_END ((uint16)0xF5AF)
+#define zFCHUNK_MDS_ANIENUM_END ((uint16)0xF5FF)
+#define zFCHUNK_MDS_MODEL_END ((uint16)0xF2FF)
+#define zFCHUNK_MDS_END ((uint16)0xFFFF)
 
-#define zFCHUNK_MODELHIERARCHY ((zWORD)0xD100)
-#define zFCHUNK_MDH_SOURCE ((zWORD)0xD110)
-#define zFCHUNK_MDH_END ((zWORD)0xD120)
+#define zFCHUNK_MODELHIERARCHY ((uint16)0xD100)
+#define zFCHUNK_MDH_SOURCE ((uint16)0xD110)
+#define zFCHUNK_MDH_END ((uint16)0xD120)
 
-#define zFCHUNK_MODELMESH ((zWORD)0xD000)
-#define zFCHUNK_MDM_SOURCE ((zWORD)0xD010)
-#define zFCHUNK_MDM_NODEMESHES ((zWORD)0xD020)
-#define zFCHUNK_MDM_SOFSKINLIST ((zWORD)0xD030)
-#define zFCHUNK_MDM_END ((zWORD)0xD040)
+#define zFCHUNK_MODELMESH ((uint16)0xD000)
+#define zFCHUNK_MDM_SOURCE ((uint16)0xD010)
+#define zFCHUNK_MDM_NODEMESHES ((uint16)0xD020)
+#define zFCHUNK_MDM_SOFSKINLIST ((uint16)0xD030)
+#define zFCHUNK_MDM_END ((uint16)0xD040)
 
-#define zFCHUNK_MESHSOFTSKIN ((zWORD)0xE100)
-#define zFCHUNK_MESHSOFTSKIN_END ((zWORD)0xE110)
+#define zFCHUNK_MESHSOFTSKIN ((uint16)0xE100)
+#define zFCHUNK_MESHSOFTSKIN_END ((uint16)0xE110)
 
 class zCModelAni;
 class zCModelAniEvent;
@@ -54,7 +54,7 @@ class zCModelNode
 public:
 	zSTRING nodeName;
 
-	zWORD parentIndex;
+	uint16 parentIndex;
 	zMATRIX4 trafo;
 };
 
@@ -64,7 +64,7 @@ public:
 	zSTRING modelHierarchyName;
 	zTSrcFileStats srcFileStats;
 
-	zWORD numNodes;
+	uint16 numNodes;
 	zCModelNode *nodeList;
 
 	zTBBox3D bbox3D;
@@ -110,7 +110,7 @@ public:
 	zDWORD numNodeWedgeNormals;
 	zTNodeWedgeNormal *nodeWedgeNormalList;
 
-	zWORD numNodes;
+	uint16 numNodes;
 	zINT *nodeIndexList;
 
 	zCArray<zCOBBox3D *> nodeOBBList;
@@ -144,11 +144,11 @@ public:
 	zTSrcFileStats srcFileStats;
 	zDWORD checkSum;
 
-	zWORD numNodeMeshes;
+	uint16 numNodeMeshes;
 	zCArray<zSTRING> nodeMeshNames;
 	zCProgMeshProto *nodeMeshList;
 
-	zWORD numSoftSkins;
+	uint16 numSoftSkins;
 	zCMeshSoftSkin *softSkinList;
 
 public:

@@ -1,11 +1,11 @@
 #pragma once
 
-#define zFCHUNK_BSP ((zWORD)0xC000)
-#define zFCHUNK_BSP_POLYLIST ((zWORD)0xC010)
-#define zFCHUNK_BSP_TREE ((zWORD)0xC040)
-#define zFCHUNK_BSP_LEAF_LIGHT ((zWORD)0xC045)
-#define zFCHUNK_BSP_OUTDOOR_SECTORS ((zWORD)0xC050)
-#define zFCHUNK_BSP_END ((zWORD)0xC0FF)
+#define zFCHUNK_BSP ((uint16)0xC000)
+#define zFCHUNK_BSP_POLYLIST ((uint16)0xC010)
+#define zFCHUNK_BSP_TREE ((uint16)0xC040)
+#define zFCHUNK_BSP_LEAF_LIGHT ((uint16)0xC045)
+#define zFCHUNK_BSP_OUTDOOR_SECTORS ((uint16)0xC050)
+#define zFCHUNK_BSP_END ((uint16)0xC0FF)
 
 #define zNODE_UNDEFINED 0
 #define zNODE_FRONT 1

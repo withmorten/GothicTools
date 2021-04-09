@@ -52,7 +52,7 @@ void zCModelAni::InitValues()
 
 zBOOL zCModelAni::LoadMAN(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -67,7 +67,7 @@ zBOOL zCModelAni::LoadMAN(zCFileBIN &file)
 		}
 		case zFCHUNK_MAN_HEADER:
 		{
-			zWORD vers;
+			uint16 vers;
 			file.BinReadWord(vers);
 
 			if (vers != modelAnimationVersionIn)

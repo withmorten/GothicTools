@@ -114,7 +114,7 @@ zBOOL zCBspTree::LoadBIN(zCFileBIN &file)
 
 	file.BinReadDWord(chunkLen);
 
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	mesh = zNEW(zCMesh);
@@ -136,7 +136,7 @@ zBOOL zCBspTree::LoadBIN(zCFileBIN &file)
 		{
 		case zFCHUNK_BSP:
 		{
-			zWORD vers;
+			uint16 vers;
 
 			file.BinReadWord(vers);
 

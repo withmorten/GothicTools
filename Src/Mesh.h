@@ -1,14 +1,14 @@
 #pragma once
 
-#define zFCHUNK_MESH ((zWORD)0xB000)
-#define zFCHUNK_BBOX3D ((zWORD)0xB010)
-#define zFCHUNK_MATLIST ((zWORD)0xB020)
-#define zFCHUNK_LIGHTMAPLIST ((zWORD)0xB025)
-#define zFCHUNK_LIGHTMAPLIST_SHARED ((zWORD)0xB026)
-#define zFCHUNK_VERTLIST ((zWORD)0xB030)
-#define zFCHUNK_FEATLIST ((zWORD)0xB040)
-#define zFCHUNK_POLYLIST ((zWORD)0xB050)
-#define zFCHUNK_MESH_END ((zWORD)0xB060)
+#define zFCHUNK_MESH ((uint16)0xB000)
+#define zFCHUNK_BBOX3D ((uint16)0xB010)
+#define zFCHUNK_MATLIST ((uint16)0xB020)
+#define zFCHUNK_LIGHTMAPLIST ((uint16)0xB025)
+#define zFCHUNK_LIGHTMAPLIST_SHARED ((uint16)0xB026)
+#define zFCHUNK_VERTLIST ((uint16)0xB030)
+#define zFCHUNK_FEATLIST ((uint16)0xB040)
+#define zFCHUNK_POLYLIST ((uint16)0xB050)
+#define zFCHUNK_MESH_END ((uint16)0xB060)
 
 class zCMesh
 {

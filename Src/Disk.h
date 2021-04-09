@@ -62,7 +62,7 @@ public:
 	void BinReadFloat(zREAL &f) { file->Read(&f, sizeof(f)); }
 	void BinReadInt(zINT &i) { file->Read(&i, sizeof(i)); }
 	void BinReadDWord(zDWORD &d) { file->Read(&d, sizeof(d)); }
-	void BinReadWord(zWORD &w) { file->Read(&w, sizeof(w)); }
+	void BinReadWord(uint16 &w) { file->Read(&w, sizeof(w)); }
 	void BinReadByte(byte &b) { file->Read(&b, sizeof(b)); }
 	void BinReadBool(zBOOL &b) { file->Read(&b, sizeof(byte)); }
 	template<typename zENUM> void BinReadEnum(zENUM &e) { file->Read(&e, sizeof(zENUM)); }
@@ -70,17 +70,17 @@ public:
 	void BinReadString(zSTRING &s) { file->Read(s); }
 	void BinReadLine(zSTRING &s) { file->ReadLine(s); }
 
-	void BinOpenChunk(zWORD &id, zLONG &len);
+	void BinOpenChunk(uint16 &id, zLONG &len);
 	void BinSkipChunk();
 
-	void BinStartChunk(const zWORD id);
+	void BinStartChunk(const uint16 id);
 	void BinEndChunk();
 
 	void BinWrite(const void *ptr, zLONG num) { file->Write(ptr, num); }
 	void BinWriteFloat(const zREAL f) { file->Write(&f, sizeof(f)); }
 	void BinWriteInt(const zINT i) { file->Write(&i, sizeof(i)); }
 	void BinWriteDWord(const zDWORD d) { file->Write(&d, sizeof(d)); }
-	void BinWriteWord(const zWORD w) { file->Write(&w, sizeof(w)); }
+	void BinWriteWord(const uint16 w) { file->Write(&w, sizeof(w)); }
 	void BinWriteByte(const byte b) { file->Write(&b, sizeof(b)); }
 	void BinWriteBool(const zBOOL b) { file->Write(&b, sizeof(byte)); }
 	template<typename zENUM> void BinWriteEnum(const zENUM e) { file->Write(&e, sizeof(zENUM)); }
@@ -94,11 +94,11 @@ class zDATE
 {
 public:
 	zUINT year;
-	zWORD month;
-	zWORD day;
-	zWORD hour;
-	zWORD minute;
-	zWORD second;
+	uint16 month;
+	uint16 day;
+	uint16 hour;
+	uint16 minute;
+	uint16 second;
 
 public:
 	zDATE() { memset(this, 0x00, sizeof(*this)); }

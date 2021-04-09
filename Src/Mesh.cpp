@@ -119,7 +119,7 @@ zBOOL zCMesh::SaveMSH(zCFileBIN &file)
 
 zBOOL zCMesh::LoadMSH(zCFileBIN &file)
 {
-	zWORD id;
+	uint16 id;
 	zLONG len;
 
 	while (!file.BinEof())
@@ -130,7 +130,7 @@ zBOOL zCMesh::LoadMSH(zCFileBIN &file)
 		{
 		case zFCHUNK_MESH:
 		{
-			zWORD vers;
+			uint16 vers;
 
 			file.BinReadWord(vers);
 

@@ -191,7 +191,7 @@ zCFileBIN::zCFileBIN(const zSTRING &fname, zBOOL write)
 	nextStart = -1;
 }
 
-void zCFileBIN::BinOpenChunk(zWORD &id, zLONG &len)
+void zCFileBIN::BinOpenChunk(uint16 &id, zLONG &len)
 {
 	file->Read(&id, sizeof(id));
 
@@ -216,7 +216,7 @@ void zCFileBIN::BinSkipChunk()
 	file->Seek(nextStart);
 }
 
-void zCFileBIN::BinStartChunk(const zWORD id)
+void zCFileBIN::BinStartChunk(const uint16 id)
 {
 	BinEndChunk();
 
@@ -233,7 +233,7 @@ void zCFileBIN::BinEndChunk()
 		zINT actPos = file->Pos();
 		zINT len = actPos - lastStart - 6;
 
-		file->Seek(lastStart + sizeof(zWORD));
+		file->Seek(lastStart + sizeof(uint16));
 		file->Write(&len, sizeof(len));
 		file->Seek(actPos);
 	}
