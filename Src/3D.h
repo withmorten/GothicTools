@@ -65,7 +65,7 @@ struct zTSrcFileStats
 
 struct zTPlane
 {
-	zREAL distance;
+	float distance;
 	zPOINT3 normal;
 };
 
@@ -80,8 +80,8 @@ class zCVertFeature
 public:
 	zPOINT3 vertNormal;
 	zCOLOR lightStat;
-	zVALUE texu;
-	zVALUE texv;
+	float texu;
+	float texv;
 };
 
 typedef uint32 zTVertIndex;
@@ -133,8 +133,8 @@ struct TFlagsG2
 
 struct zTMSH_FeatureChunk
 {
-	zREAL texu;
-	zREAL texv;
+	float texu;
+	float texv;
 	zCOLOR lightStat;
 	zVEC3 vertNormal;
 };

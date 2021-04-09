@@ -25,17 +25,17 @@ public:
 
 	int32 frameNr;
 
-	zVALUE value1;
-	zVALUE value2;
-	zVALUE value3;
-	zVALUE value4;
+	float value1;
+	float value2;
+	float value3;
+	float value4;
 
 	zSTRING tagString;
 	zSTRING sfxName;
 	zSTRING emitterName;
 	zSTRING string[zMDL_ANIEVENT_MAXSTRING];
 
-	zREAL prob;
+	float prob;
 
 public:
 	void Load(zCFileBIN &file);
@@ -77,21 +77,21 @@ public:
 	zTMdl_AniType aniType;
 
 	int32 layer;
-	zREAL fpsRate;
-	zREAL fpsRateSource;
-	zREAL samplePosRangeMin;
-	zREAL samplePosScaler;
+	float fpsRate;
+	float fpsRateSource;
+	float samplePosRangeMin;
+	float samplePosScaler;
 
-	zREAL blendInSpeed;
-	zREAL blendOutSpeed;
+	float blendInSpeed;
+	float blendOutSpeed;
 	zSTRING aniFlagsStr;
 	zSTRING ascName;
 	zSTRING aniDirStr;
 	int32 firstFrame;
 	int32 lastFrame;
-	zREAL maxFps;
-	zREAL speed;
-	zREAL collisionVolumeScale;
+	float maxFps;
+	float speed;
+	float collisionVolumeScale;
 
 	zTBBox3D aniBBox3DObjSpace;
 

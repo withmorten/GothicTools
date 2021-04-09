@@ -59,7 +59,7 @@ public:
 	void BinSeekRel(int32 rel) { file->SeekRel(rel); }
 
 	void BinRead(void *ptr, int32 num) { file->Read(ptr, num); }
-	void BinReadFloat(zREAL &f) { file->Read(&f, sizeof(f)); }
+	void BinReadFloat(float &f) { file->Read(&f, sizeof(f)); }
 	void BinReadInt(int32 &i) { file->Read(&i, sizeof(i)); }
 	void BinReadDWord(uint32 &d) { file->Read(&d, sizeof(d)); }
 	void BinReadWord(uint16 &w) { file->Read(&w, sizeof(w)); }
@@ -77,7 +77,7 @@ public:
 	void BinEndChunk();
 
 	void BinWrite(const void *ptr, int32 num) { file->Write(ptr, num); }
-	void BinWriteFloat(const zREAL f) { file->Write(&f, sizeof(f)); }
+	void BinWriteFloat(const float f) { file->Write(&f, sizeof(f)); }
 	void BinWriteInt(const int32 i) { file->Write(&i, sizeof(i)); }
 	void BinWriteDWord(const uint32 d) { file->Write(&d, sizeof(d)); }
 	void BinWriteWord(const uint16 w) { file->Write(&w, sizeof(w)); }

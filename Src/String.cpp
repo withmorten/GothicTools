@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-zSTRING::zSTRING(const zREAL xWert, int32 digits)
+zSTRING::zSTRING(const float xWert, int32 digits)
 {
 	if (digits > 9 || digits < 0) digits = 9;
 

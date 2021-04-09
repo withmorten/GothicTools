@@ -29,7 +29,7 @@ public:
 
 	zSTRING(const int32 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%d", xWert); assign(buffer); }
 	zSTRING(const uint32 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%u", xWert); assign(buffer); }
-	zSTRING(const zREAL xWert, int32 digits = 20);
+	zSTRING(const float xWert, int32 digits = 20);
 
 	zSTRING(const zSTRING &xStr1, const char *pstring) : string(xStr1) { append(pstring); };
 	zSTRING(const zSTRING &xStr1, const zSTRING &xStr2) : string(xStr1) { append(xStr2); };
@@ -48,7 +48,7 @@ public:
 	size_t Length() const { return size(); }
 	char *ToChar() const { return (char *)c_str(); }
 	int32 ToInt() const { return atol(c_str()); }
-	zREAL ToFloat() const { return (zREAL)atof(c_str()); }
+	float ToFloat() const { return (float)atof(c_str()); }
 
 	int32 CompareTo(zSTRING &xStr2) const { return compare(xStr2); }
 	int32 CompareTo(const char *cstr) const { return compare(cstr); }

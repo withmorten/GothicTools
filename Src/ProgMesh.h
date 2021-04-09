@@ -40,12 +40,12 @@ public:
 
 	zCArrayAdapt<zTPMTriangle> triList;
 	zCArrayAdapt<zTPMWedge> wedgeList;
-	zCArrayAdapt<zREAL> colorList;
+	zCArrayAdapt<float> colorList;
 	zCArrayAdapt<zPMINDEX> triPlaneIndexList;
 	zCArrayAdapt<zTPlane> triPlaneList;
 	zCArrayAdapt<zTPMTriangleEdges> triEdgeList;
 	zCArrayAdapt<zTPMEdge> edgeList;
-	zCArrayAdapt<zREAL> edgeScoreList;
+	zCArrayAdapt<float> edgeScoreList;
 
 	zCArrayAdapt<zPMINDEX> wedgeMap;
 	zCArrayAdapt<zTPMVertexUpdate> vertexUpdates;
@@ -59,9 +59,9 @@ public:
 
 struct zTLODParams
 {
-	zREAL strength;
-	zREAL zDisplace2;
-	zREAL morphPerc;
+	float strength;
+	float zDisplace2;
+	float morphPerc;
 	int32 minVerts;
 };
 

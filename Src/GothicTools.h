@@ -22,12 +22,6 @@ typedef uint8 byte;
 typedef uint8 bool8;
 typedef int32 bool32;
 
-typedef float zREAL;
-typedef float zVALUE;
-
-#define zREAL_MAX ((zREAL)+FLT_MAX)
-#define zREAL_MIN ((zREAL)-FLT_MAX)
-
 #ifndef _WIN32
 #define stricmp strcasecmp
 #endif

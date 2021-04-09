@@ -18,7 +18,7 @@ zSTRING CutMarks2(zSTRING arg)
 	return n;
 }
 
-void GetMDSLineValue(const zSTRING &line, const zSTRING &key, zREAL &result)
+void GetMDSLineValue(const zSTRING &line, const zSTRING &key, float &result)
 {
 	int spos = line.Search(key);
 
@@ -550,7 +550,7 @@ void zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 				event->frameNr = arg.PickWord(1, trenn, skip).ToInt();
 				event->sfxName = CutMarks2(arg.PickWord(2, trenn, skip));
 
-				zREAL range = zMDL_DEFAULT_RADIUS_EVENTSFXGRND;
+				float range = zMDL_DEFAULT_RADIUS_EVENTSFXGRND;
 				GetMDSLineValue(arg, "R:", range);
 
 				event->value1 = zMin(range, zMDL_MAX_RADIUS_EVENTSFX);
@@ -563,7 +563,7 @@ void zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 				event->frameNr = arg.PickWord(1, trenn, skip).ToInt();
 				event->sfxName = CutMarks2(arg.PickWord(2, trenn, skip));
 
-				zREAL range = zMDL_DEFAULT_RADIUS_EVENTSFX;
+				float range = zMDL_DEFAULT_RADIUS_EVENTSFX;
 				GetMDSLineValue(arg, "R:", range);
 
 				event->value1 = zMin(range, zMDL_MAX_RADIUS_EVENTSFX);
@@ -610,7 +610,7 @@ void zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 				event->value1 = arg.PickWord(2, trenn, skip).ToFloat();
 				event->emitterName = arg.PickWord(2, "\"", "\"");
 				event->string[0] = arg.PickWord(4, "\"", "\"");
-				event->value2 = (zREAL)arg.Contains("ATTACH");
+				event->value2 = (float)arg.Contains("ATTACH");
 			}
 			else if (line.Contains("*EVENTSETMESH"))
 			{

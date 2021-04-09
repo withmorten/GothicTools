@@ -59,7 +59,7 @@ public:
 	zCBspNode() { nodeType = zBSP_NODE; front = NULL; back = NULL; leafList = NULL; numLeafs = 0; hasLod = FALSE; }
 };
 
-#define zBSP_LEAF_LIGHT_UNDEFINED ((zREAL)-99)
+#define zBSP_LEAF_LIGHT_UNDEFINED ((float)-99)
 
 class zCBspLeaf : public zCBspBase
 {

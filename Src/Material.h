@@ -52,11 +52,11 @@ public:
 
 	zSTRING texture;
 	zCOLOR color;
-	zREAL smoothAngle;
+	float smoothAngle;
 	zTMat_Group matGroup;
-	zREAL aniFPS;
+	float aniFPS;
 
-	zREAL m_bEnvironmentalMappingStrength;
+	float m_bEnvironmentalMappingStrength;
 
 	uint8 dontUseLightmaps;
 	uint8 texAniMap;
@@ -71,11 +71,11 @@ public:
 
 	zTWaveAniMode m_enuWaveMode;
 	zTFFT m_enuWaveSpeed;
-	zREAL m_fWaveMaxAmplitude;
-	zREAL m_fWaveGridSize;
+	float m_fWaveMaxAmplitude;
+	float m_fWaveGridSize;
 
 	zSTRING detailTexture;
-	zREAL detailTextureScale;
+	float detailTextureScale;
 	zSTRING texAniMapDelta;
 
 	zPOINT2 default_mapping;

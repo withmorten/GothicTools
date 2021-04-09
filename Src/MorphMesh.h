@@ -5,11 +5,11 @@ class zCMorphMeshAni
 public:
 	zSTRING aniName;
 
-	zREAL blendInSpeed;
-	zREAL blendOutSpeed;
-	zREAL holdTime;
+	float blendInSpeed;
+	float blendOutSpeed;
+	float holdTime;
 	int32 layer;
-	zREAL fpsRate;
+	float fpsRate;
 
 	struct
 	{

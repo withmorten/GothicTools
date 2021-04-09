@@ -173,11 +173,11 @@ public:
 	void SaveMDM(zCFileBIN &file);
 };
 
-const zREAL zMDL_MAX_FPS = 25.0f;
+const float zMDL_MAX_FPS = 25.0f;
 
-const zREAL zMDL_DEFAULT_RADIUS_EVENTSFXGRND = 1000.0f;
-const zREAL zMDL_DEFAULT_RADIUS_EVENTSFX = 2500.0f;
-const zREAL zMDL_MAX_RADIUS_EVENTSFX = 3500.0f;
+const float zMDL_DEFAULT_RADIUS_EVENTSFXGRND = 1000.0f;
+const float zMDL_DEFAULT_RADIUS_EVENTSFX = 2500.0f;
+const float zMDL_MAX_RADIUS_EVENTSFX = 3500.0f;
 
 class zCModelPrototype
 {
@@ -186,7 +186,7 @@ public:
 	zSTRING ascPath;
 	zTSrcFileStats srcFileStats;
 
-	zREAL maxFps;
+	float maxFps;
 	bool32 writeMaxFps;
 
 	uint32 dontUseMesh;
