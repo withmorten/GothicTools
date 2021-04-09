@@ -145,9 +145,9 @@ void zCProgMeshProto::ArchiveMatList(zCFileBIN &file)
 		zSTRING l;
 
 		l += "objects " + zSTRING(numSubMeshes);
-		zSIZE_T fill = strlen("objects 0        ") - l.Length();
+		size_t fill = strlen("objects 0        ") - l.Length();
 
-		for (zSIZE_T i = 0; i < fill; i++)
+		for (size_t i = 0; i < fill; i++)
 		{
 			l.Append(" ");
 		}

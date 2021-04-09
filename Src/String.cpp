@@ -26,7 +26,7 @@ char zSTRING::GetLastChar()
 
 zSTRING &zSTRING::Upper()
 {
-	zSIZE_T pos = size();
+	size_t pos = size();
 
 	while (pos--)
 	{
@@ -38,7 +38,7 @@ zSTRING &zSTRING::Upper()
 
 zSTRING &zSTRING::Lower()
 {
-	zSIZE_T pos = size();
+	size_t pos = size();
 
 	while (pos--)
 	{
@@ -87,12 +87,12 @@ zSTRING zSTRING::PickWord(uint32 num, const zSTRING &trenn, const zSTRING &skip)
 
 const char *zSTRING::PickWordPos(uint32 num, const zSTRING &trenn, const zSTRING &skip) const
 {
-	const zSIZE_T strsize = size();
+	const size_t strsize = size();
 
 	if (strsize > 0)
 	{
 		char ch;
-		zSIZE_T pos = 0;
+		size_t pos = 0;
 		byte inWord = FALSE;
 
 		do
@@ -144,7 +144,7 @@ zSTRING zSTRING::PickWordCutMarks(uint32 num, const zSTRING &trenn, const zSTRIN
 
 void zSTRING::Delete(const zSTRING &xStr, zTSTR_KIND kind)
 {
-	zSIZE_T pos = find(xStr);
+	size_t pos = find(xStr);
 
 	if (pos != npos)
 	{
@@ -190,21 +190,21 @@ void zSTRING::Delete(const zSTRING &xStr, zTSTR_KIND kind)
 	}
 }
 
-int32 zSTRING::Delete(zSIZE_T pos, zSIZE_T length)
+int32 zSTRING::Delete(size_t pos, size_t length)
 {
 	if (pos >= size()) return 0;
 	erase(pos, length);
 	return 0;
 }
 
-zSTRING zSTRING::Deleted(zSIZE_T pos, zSIZE_T length) const
+zSTRING zSTRING::Deleted(size_t pos, size_t length) const
 {
 	zSTRING s(this);
 	s.Delete(pos, length);
 	return s;
 }
 
-void zSTRING::DeleteRight(zSIZE_T length)
+void zSTRING::DeleteRight(size_t length)
 {
 	if (length > size())
 	{
@@ -214,11 +214,11 @@ void zSTRING::DeleteRight(zSIZE_T length)
 	erase(size() - length, length);
 }
 
-int32 zSTRING::Search(zSIZE_T startIndex, const char *substr, uint32 num) const
+int32 zSTRING::Search(size_t startIndex, const char *substr, uint32 num) const
 {
 	if (!substr) return -1;
 
-	zSIZE_T index = startIndex;
+	size_t index = startIndex;
 	int32 pos = -1;
 
 	for (uint32 i = 0; i < num; i++)

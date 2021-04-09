@@ -21,7 +21,7 @@ class zSTRING : public std::string
 public:
 	zSTRING() : string() { Clear(); }
 	zSTRING(string &xStr) : string(xStr) { }
-	zSTRING(zSIZE_T n, char c) : string(n, c) { }
+	zSTRING(size_t n, char c) : string(n, c) { }
 	zSTRING(const zSTRING &xStr) : string(xStr) { }
 	zSTRING(const zSTRING *pStr) : string(*pStr) { }
 	zSTRING(const char *pstring) : string(pstring) { }
@@ -45,7 +45,7 @@ public:
 
 	void Clear() { erase(); }
 
-	zSIZE_T Length() const { return size(); }
+	size_t Length() const { return size(); }
 	char *ToChar() const { return (char *)c_str(); }
 	int32 ToInt() const { return atol(c_str()); }
 	zREAL ToFloat() const { return (zREAL)atof(c_str()); }
@@ -63,9 +63,9 @@ public:
 	zSTRING PickWordCutMarks(uint32 num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 
 	void Delete(const zSTRING &xStr, zTSTR_KIND kind);
-	int32 Delete(zSIZE_T pos, zSIZE_T = UINT32_MAX);
-	zSTRING Deleted(zSIZE_T pos, zSIZE_T length = UINT32_MAX) const;
-	void DeleteRight(zSIZE_T length);
+	int32 Delete(size_t pos, size_t = UINT32_MAX);
+	zSTRING Deleted(size_t pos, size_t length = UINT32_MAX) const;
+	void DeleteRight(size_t length);
 
 	void Append(char c) { append(zSTRING(c)); }
 	void Append(const char *c) { append(c); }
@@ -75,16 +75,16 @@ public:
 	void Prepend(char c) { insert(0, 1, c); }
 	void Prepend(const char *c) { insert(0, c); }
 
-	int32 Search(zSIZE_T startIndex, const char *substr, uint32 num = 1) const;
-	int32 Search(zSIZE_T startIndex, const zSTRING &substr, uint32 num = 1) const { return Search(startIndex, substr.ToChar(), num); }
+	int32 Search(size_t startIndex, const char *substr, uint32 num = 1) const;
+	int32 Search(size_t startIndex, const zSTRING &substr, uint32 num = 1) const { return Search(startIndex, substr.ToChar(), num); }
 	int32 Search(const char *substr, uint32 num = 1) const { return Search(0, substr, num); }
 	int32 Search(const zSTRING &substr, uint32 num = 1) const { return Search(0, substr.ToChar(), num); }
 
 	bool32 Contains(const char *substr) const { return Search(substr) != -1; }
 	bool32 Contains(const zSTRING &substr) const { return Search(substr.ToChar()) != -1; }
 
-	char &operator[] (zSIZE_T index) { return at(index); };
-	const char &operator[] (zSIZE_T index) const { return at(index); };
+	char &operator[] (size_t index) { return at(index); };
+	const char &operator[] (size_t index) const { return at(index); };
 
 	char &First() { return at(0); }
 	char &Last() { return at(size() - 1); }
@@ -92,7 +92,7 @@ public:
 	bool32 EndsWith(const zSTRING &suffix) { return size() >= suffix.size() && !compare(size() - suffix.size(), suffix.size(), suffix); }
 	bool32 StartsWith(const zSTRING &prefix) { return size() >= prefix.size() && !compare(0, prefix.size(), prefix); }
 
-	void Replace(char s, char r) { for (zSIZE_T i = 0; i < size(); i++) if (at(i) == s) replace(i, 1, 1, r); }
+	void Replace(char s, char r) { for (size_t i = 0; i < size(); i++) if (at(i) == s) replace(i, 1, 1, r); }
 };
 
 zSTRING operator+ (const zSTRING &xStr1, const zSTRING &xStr2)

@@ -22,7 +22,6 @@ typedef uint8 byte;
 typedef uint8 bool8;
 typedef int32 bool32;
 
-typedef size_t zSIZE_T;
 typedef float zREAL;
 typedef float zVALUE;
 

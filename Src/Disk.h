@@ -33,11 +33,11 @@ public:
 	void WriteLine(const zSTRING &s = zSTR_EMPTY, bool32 crLf = TRUE);
 	void WriteLineIndented(uint32 numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = TRUE);
 	void Write(const zSTRING &s) { fputs(s.ToChar(), file_handle); fputc('\0', file_handle); }
-	zSIZE_T Write(const void *scr, int32 bytes) { return fwrite(scr, 1, bytes, file_handle); }
+	size_t Write(const void *scr, int32 bytes) { return fwrite(scr, 1, bytes, file_handle); }
 
 	void ReadLine(zSTRING &s);
 	void Read(zSTRING &s);
-	zSIZE_T Read(void *scr, int32 bytes) { return fread(scr, 1, bytes, file_handle); }
+	size_t Read(void *scr, int32 bytes) { return fread(scr, 1, bytes, file_handle); }
 };
 
 class zCFileBIN

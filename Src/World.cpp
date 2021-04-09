@@ -183,7 +183,7 @@ uint32 CountTabsInLine(const zSTRING &line)
 {
 	uint32 numTabs = 0;
 
-	for (zSIZE_T i = 0; i < line.Length(); i++)
+	for (size_t i = 0; i < line.Length(); i++)
 	{
 		if (line[i] == '\t')
 		{
