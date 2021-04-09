@@ -1,0 +1,104 @@
+workspace "GothicTools"
+	configurations { "Debug", "Release" }
+	platforms { "x86", "x64" }
+
+	startproject "GothicZEN"
+
+	location "build"
+
+	characterset ("MBCS")
+	toolset ("v141_xp")
+	floatingpoint "Fast"
+
+	defines { "WIN32", "WIN32_LEAN_AND_MEAN", "_CRT_SECURE_NO_WARNINGS", "_CRT_NONSTDC_NO_DEPRECATE", "_CRT_NONSTDC_NO_WARNINGS" }
+
+	buildoptions { "/Zc:sizedDealloc-" }
+
+	staticruntime "on"
+
+	filter "configurations:Debug*"
+		defines { "DEBUG" }
+		symbols "full"
+		optimize "off"
+		runtime "debug"
+
+	filter { "configurations:Release" }
+		defines { "NDEBUG" }
+		runtime "release"
+		symbols "on"
+		optimize "speed"
+		inlining "auto"
+		flags { "LinkTimeOptimization" }
+
+	filter { "platforms:x86" }
+		architecture "x86"
+
+	filter { "platforms:x64" }
+		architecture "x64"
+
+project "GothicTools"
+	kind "StaticLib"
+	language "C++"
+	targetname "GothicTools"
+	targetdir "build/obj/%{cfg.platform}/%{cfg.buildcfg}/GothicTools"
+
+	files { "src/GothicTools.h" }
+	files { "src/3D.h" }
+	files { "src/Algebra.h" }
+	files { "src/Bsp.h" }
+	files { "src/Color.h" }
+	files { "src/Container.h" }
+	files { "src/Disk.h" }
+	files { "src/Material.h" }
+	files { "src/Memory.h" }
+	files { "src/Mesh.h" }
+	files { "src/Model.h" }
+	files { "src/ModelAni.h" }
+	files { "src/MorphMesh.h" }
+	files { "src/ProgMesh.h" }
+	files { "src/ScanDir.h" }
+	files { "src/String.h" }
+	files { "src/World.h" }
+
+	files { "src/GothicTools.cpp" }
+	files { "src/Bsp.cpp" }
+	files { "src/Disk.cpp" }
+	files { "src/Material.cpp" }
+	files { "src/Mesh.cpp" }
+	files { "src/Model.cpp" }
+	files { "src/ModelAni.cpp" }
+	files { "src/MorphMesh.cpp" }
+	files { "src/ProgMesh.cpp" }
+	files { "src/ScanDir.cpp" }
+	files { "src/String.cpp" }
+	files { "src/World.cpp" }
+
+project "GothicZEN"
+	kind "ConsoleApp"
+	language "C++"
+	targetname "GothicZEN"
+	targetdir "bin/%{cfg.platform}/%{cfg.buildcfg}"
+
+	dependson { "GothicTools" }
+	links { "GothicTools" }
+
+	files { "src/GothicZEN.cpp" }
+
+	if (os.getenv("BIN") ~= nil) then
+		postbuildcommands { '{COPYFILE} "%{cfg.buildtarget.abspath}" "' .. os.getenv("BIN") .. "/" .. '%{cfg.buildtarget.name}"' }
+	end
+
+project "GothicAnims"
+	kind "ConsoleApp"
+	language "C++"
+	targetname "GothicAnims"
+	targetdir "bin/%{cfg.platform}/%{cfg.buildcfg}"
+
+	dependson { "GothicTools" }
+	links { "GothicTools" }
+
+	files { "src/GothicAnims.cpp" }
+
+	if (os.getenv("BIN") ~= nil) then
+		postbuildcommands { '{COPYFILE} "%{cfg.buildtarget.abspath}" "' .. os.getenv("BIN") .. "/" .. '%{cfg.buildtarget.name}"' }
+	end

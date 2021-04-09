@@ -1,11 +1,11 @@
 CC = g++
 
-FLAGS = -O3 -g
+FLAGS = -flto -O3 -g
 
-SOURCES_ZEN = Src/GothicZEN.cpp Src/GothicTools.cpp Src/Bsp.cpp Src/Disk.cpp Src/Material.cpp Src/Mesh.cpp Src/String.cpp Src/World.cpp
-SOURCES_ANIMS = Src/GothicAnims.cpp Src/GothicTools.cpp Src/Disk.cpp Src/Material.cpp Src/Mesh.cpp Src/Model.cpp Src/ModelAni.cpp Src/MorphMesh.cpp Src/ProgMesh.cpp Src/ScanDir.cpp Src/String.cpp
+SOURCES_ZEN = src/GothicZEN.cpp src/GothicTools.cpp src/Bsp.cpp src/Disk.cpp src/Material.cpp src/Mesh.cpp src/String.cpp src/World.cpp
+SOURCES_ANIMS = src/GothicAnims.cpp src/GothicTools.cpp src/Disk.cpp src/Material.cpp src/Mesh.cpp src/Model.cpp src/ModelAni.cpp src/MorphMesh.cpp src/ProgMesh.cpp src/ScanDir.cpp src/String.cpp
 
 all:
-	mkdir -p Bin
-	$(CC) -o "Bin/GothicZEN" -Wall $(FLAGS) $(SOURCES_ZEN)
-	$(CC) -o "Bin/GothicAnims" -Wall $(FLAGS) $(SOURCES_ANIMS)
+	mkdir -p bin
+	$(CC) -o "bin/GothicZEN" -Wall $(FLAGS) $(SOURCES_ZEN)
+	$(CC) -o "bin/GothicAnims" -Wall $(FLAGS) $(SOURCES_ANIMS)
