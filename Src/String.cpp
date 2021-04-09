@@ -48,7 +48,7 @@ zSTRING &zSTRING::Lower()
 	return *this;
 }
 
-zSTRING zSTRING::PickWord(zUINT num, const zSTRING &trenn, const zSTRING &skip) const
+zSTRING zSTRING::PickWord(uint32 num, const zSTRING &trenn, const zSTRING &skip) const
 {
 	if (size() <= 0)
 	{
@@ -85,7 +85,7 @@ zSTRING zSTRING::PickWord(zUINT num, const zSTRING &trenn, const zSTRING &skip) 
 	return result;
 }
 
-const char *zSTRING::PickWordPos(zUINT num, const zSTRING &trenn, const zSTRING &skip) const
+const char *zSTRING::PickWordPos(uint32 num, const zSTRING &trenn, const zSTRING &skip) const
 {
 	const zSIZE_T strsize = size();
 
@@ -132,7 +132,7 @@ zSTRING zSTRING::PickWorld_Old(int32 num, const zSTRING &trenn)
 	return PickWord(num, trenn, " ");
 }
 
-zSTRING zSTRING::PickWordCutMarks(zUINT num, const zSTRING &trenn, const zSTRING &skip) const
+zSTRING zSTRING::PickWordCutMarks(uint32 num, const zSTRING &trenn, const zSTRING &skip) const
 {
 	zSTRING word = PickWord(num, trenn, skip);
 
@@ -214,14 +214,14 @@ void zSTRING::DeleteRight(zSIZE_T length)
 	erase(size() - length, length);
 }
 
-int32 zSTRING::Search(zSIZE_T startIndex, const char *substr, zUINT num) const
+int32 zSTRING::Search(zSIZE_T startIndex, const char *substr, uint32 num) const
 {
 	if (!substr) return -1;
 
 	zSIZE_T index = startIndex;
 	int32 pos = -1;
 
-	for (zUINT i = 0; i < num; i++)
+	for (uint32 i = 0; i < num; i++)
 	{
 		pos = (int32)find(substr, index);
 

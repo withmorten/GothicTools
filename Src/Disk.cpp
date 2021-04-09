@@ -173,9 +173,9 @@ void zFILE::WriteLine(const zSTRING &s, bool32 crLf)
 	fputc('\n', file_handle);
 }
 
-void zFILE::WriteLineIndented(zUINT numTabs, const zSTRING &s, bool32 crLf)
+void zFILE::WriteLineIndented(uint32 numTabs, const zSTRING &s, bool32 crLf)
 {
-	for (zUINT i = 0; i < numTabs; i++)
+	for (uint32 i = 0; i < numTabs; i++)
 	{
 		fputc('\t', file_handle);
 	}

@@ -72,7 +72,7 @@ public:
 
 	zPOINT3 rootNodeTrans;
 
-	zDWORD nodeListChecksum;
+	uint32 nodeListChecksum;
 
 public:
 	zCModelHierarchy()
@@ -104,10 +104,10 @@ struct zTNodeWedgeNormal
 class zCMeshSoftSkin : public zCProgMeshProto
 {
 public:
-	zDWORD size;
+	uint32 size;
 	byte *vertWeightStream;
 
-	zDWORD numNodeWedgeNormals;
+	uint32 numNodeWedgeNormals;
 	zTNodeWedgeNormal *nodeWedgeNormalList;
 
 	uint16 numNodes;
@@ -142,7 +142,7 @@ class zCModelMesh
 {
 public:
 	zTSrcFileStats srcFileStats;
-	zDWORD checkSum;
+	uint32 checkSum;
 
 	uint16 numNodeMeshes;
 	zCArray<zSTRING> nodeMeshNames;
@@ -189,7 +189,7 @@ public:
 	zREAL maxFps;
 	bool32 writeMaxFps;
 
-	zDWORD dontUseMesh;
+	uint32 dontUseMesh;
 	zSTRING ascName;
 
 	zCArray<zSTRING> ascNames;
@@ -205,7 +205,7 @@ public:
 	zCModelHierarchy *hierarchy;
 	zCModelMesh *mesh;
 
-	zUINT numTabs;
+	uint32 numTabs;
 
 public:
 	zCModelPrototype()

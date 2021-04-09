@@ -194,7 +194,7 @@ public:
 	int32 numInArray;
 
 public:
-	zDWORD SetArray(void *ptr, const int32 num)
+	uint32 SetArray(void *ptr, const int32 num)
 	{
 		array = (T *)ptr;
 		numInArray = num;

@@ -30,7 +30,7 @@ public:
 	zTBspNodeType nodeType;
 	zTBBox3D bbox3D;
 
-	zDWORD treePolyIndex; // index to bspTree->treePolyIndices 
+	uint32 treePolyIndex; // index to bspTree->treePolyIndices 
 	int32 numPolys;
 
 public:
@@ -82,10 +82,10 @@ public:
 	zSTRING sectorName;
 
 	int32 numSectorNodes;
-	zDWORD *leafIndices;
+	uint32 *leafIndices;
 
 	int32 numSectorPortals;
-	zDWORD *sectorIndices; // indices to mesh->polyArray
+	uint32 *sectorIndices; // indices to mesh->polyArray
 
 public:
 	zCBspSector() { leafIndices = NULL; sectorIndices = NULL; numSectorNodes = 0; numSectorPortals = 0; }
@@ -105,7 +105,7 @@ public:
 	zCMesh *mesh;
 
 	int32 numPolys;
-	zDWORD *treePolyIndices; // indices to mesh->polyArray
+	uint32 *treePolyIndices; // indices to mesh->polyArray
 
 	int32 numNodes;
 	zCBspNode *nodeList;
@@ -114,7 +114,7 @@ public:
 	zCBspLeaf *leafList;
 
 	int32 numPortals;
-	zDWORD *portalIndices; // indices to mesh->polyArray, indoor only
+	uint32 *portalIndices; // indices to mesh->polyArray, indoor only
 
 	int32 numSectors;
 	zCBspSector *sectorList;

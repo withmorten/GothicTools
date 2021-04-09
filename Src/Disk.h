@@ -31,7 +31,7 @@ public:
 	void SeekRel(int32 rel) { fseek(file_handle, rel, SEEK_CUR); }
 
 	void WriteLine(const zSTRING &s = zSTR_EMPTY, bool32 crLf = TRUE);
-	void WriteLineIndented(zUINT numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = TRUE);
+	void WriteLineIndented(uint32 numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = TRUE);
 	void Write(const zSTRING &s) { fputs(s.ToChar(), file_handle); fputc('\0', file_handle); }
 	zSIZE_T Write(const void *scr, int32 bytes) { return fwrite(scr, 1, bytes, file_handle); }
 
@@ -61,7 +61,7 @@ public:
 	void BinRead(void *ptr, int32 num) { file->Read(ptr, num); }
 	void BinReadFloat(zREAL &f) { file->Read(&f, sizeof(f)); }
 	void BinReadInt(int32 &i) { file->Read(&i, sizeof(i)); }
-	void BinReadDWord(zDWORD &d) { file->Read(&d, sizeof(d)); }
+	void BinReadDWord(uint32 &d) { file->Read(&d, sizeof(d)); }
 	void BinReadWord(uint16 &w) { file->Read(&w, sizeof(w)); }
 	void BinReadByte(byte &b) { file->Read(&b, sizeof(b)); }
 	void BinReadBool(bool32 &b) { file->Read(&b, sizeof(byte)); }
@@ -79,7 +79,7 @@ public:
 	void BinWrite(const void *ptr, int32 num) { file->Write(ptr, num); }
 	void BinWriteFloat(const zREAL f) { file->Write(&f, sizeof(f)); }
 	void BinWriteInt(const int32 i) { file->Write(&i, sizeof(i)); }
-	void BinWriteDWord(const zDWORD d) { file->Write(&d, sizeof(d)); }
+	void BinWriteDWord(const uint32 d) { file->Write(&d, sizeof(d)); }
 	void BinWriteWord(const uint16 w) { file->Write(&w, sizeof(w)); }
 	void BinWriteByte(const byte b) { file->Write(&b, sizeof(b)); }
 	void BinWriteBool(const bool32 b) { file->Write(&b, sizeof(byte)); }
@@ -87,13 +87,13 @@ public:
 	template<typename zENUM> void BinWriteEnumByte(const zENUM e) { file->Write(&e, sizeof(byte)); }
 	void BinWriteString(const zSTRING &s) { file->Write(s); }
 	void BinWriteLine(const zSTRING &s = zSTR_EMPTY, bool32 crLf = FALSE) { file->WriteLine(s, crLf); }
-	void BinWriteLineIndented(zUINT numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = FALSE) { file->WriteLineIndented(numTabs, s, crLf); }
+	void BinWriteLineIndented(uint32 numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = FALSE) { file->WriteLineIndented(numTabs, s, crLf); }
 };
 
 class zDATE
 {
 public:
-	zUINT year;
+	uint32 year;
 	uint16 month;
 	uint16 day;
 	uint16 hour;

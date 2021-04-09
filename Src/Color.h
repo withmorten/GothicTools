@@ -10,13 +10,13 @@ public:
 			byte b, g, r, alpha;
 		};
 
-		zDWORD dword;
+		uint32 dword;
 	};
 
 public:
 	zCOLOR() { Reset(); };
 	zCOLOR(byte rr, byte gg, byte bb, byte aa) { r = rr; g = gg; b = bb; alpha = aa; }
-	zCOLOR(zDWORD color) { dword = color; }
+	zCOLOR(uint32 color) { dword = color; }
 
 	void Reset() { dword = 0xFF000000; }
 	void ResetToMax() { dword = 0xFFFFFFFF; }

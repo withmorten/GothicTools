@@ -84,11 +84,11 @@ public:
 	zVALUE texv;
 };
 
-typedef zDWORD zTVertIndex;
+typedef uint32 zTVertIndex;
 typedef uint16 zTVertIndexG1;
-typedef zDWORD zTVertIndexGRM;
-typedef zDWORD zTVertIndexG2;
-typedef zDWORD zTFeatIndex;
+typedef uint32 zTVertIndexGRM;
+typedef uint32 zTVertIndexG2;
+typedef uint32 zTFeatIndex;
 
 #define zMAX_INDEX_NUM 255
 

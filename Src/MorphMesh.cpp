@@ -56,7 +56,7 @@ bool32 zCMorphMeshProto::LoadMMB(zCFileBIN &file)
 		}
 		case zFCHUNK_MMB_HEADER:
 		{
-			zDWORD vers;
+			uint32 vers;
 			file.BinReadDWord(vers);
 
 			if (vers != morphMeshVersionIn)

@@ -28,7 +28,7 @@ public:
 	zSTRING(char ch) : string(1, ch) { }
 
 	zSTRING(const int32 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%d", xWert); assign(buffer); }
-	zSTRING(const zDWORD xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%u", xWert); assign(buffer); }
+	zSTRING(const uint32 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%u", xWert); assign(buffer); }
 	zSTRING(const zREAL xWert, int32 digits = 20);
 
 	zSTRING(const zSTRING &xStr1, const char *pstring) : string(xStr1) { append(pstring); };
@@ -56,11 +56,11 @@ public:
 	zSTRING &Upper();
 	zSTRING &Lower();
 
-	zSTRING PickWord(zUINT num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
-	const char *PickWordPos(zUINT num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
+	zSTRING PickWord(uint32 num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
+	const char *PickWordPos(uint32 num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 	zSTRING PickWorld_Old(int32 num, const zSTRING &trenn);
 
-	zSTRING PickWordCutMarks(zUINT num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
+	zSTRING PickWordCutMarks(uint32 num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 
 	void Delete(const zSTRING &xStr, zTSTR_KIND kind);
 	int32 Delete(zSIZE_T pos, zSIZE_T = UINT32_MAX);
@@ -71,14 +71,14 @@ public:
 	void Append(const char *c) { append(c); }
 	void Append(const zSTRING &s) { append(s); }
 
-	void Prepend(char c, zUINT num) { insert(0, num, c); }
+	void Prepend(char c, uint32 num) { insert(0, num, c); }
 	void Prepend(char c) { insert(0, 1, c); }
 	void Prepend(const char *c) { insert(0, c); }
 
-	int32 Search(zSIZE_T startIndex, const char *substr, zUINT num = 1) const;
-	int32 Search(zSIZE_T startIndex, const zSTRING &substr, zUINT num = 1) const { return Search(startIndex, substr.ToChar(), num); }
-	int32 Search(const char *substr, zUINT num = 1) const { return Search(0, substr, num); }
-	int32 Search(const zSTRING &substr, zUINT num = 1) const { return Search(0, substr.ToChar(), num); }
+	int32 Search(zSIZE_T startIndex, const char *substr, uint32 num = 1) const;
+	int32 Search(zSIZE_T startIndex, const zSTRING &substr, uint32 num = 1) const { return Search(startIndex, substr.ToChar(), num); }
+	int32 Search(const char *substr, uint32 num = 1) const { return Search(0, substr, num); }
+	int32 Search(const zSTRING &substr, uint32 num = 1) const { return Search(0, substr.ToChar(), num); }
 
 	bool32 Contains(const char *substr) const { return Search(substr) != -1; }
 	bool32 Contains(const zSTRING &substr) const { return Search(substr.ToChar()) != -1; }

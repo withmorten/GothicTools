@@ -98,7 +98,7 @@ public:
 	zTSrcFileStats srcFileStats;
 	zSTRING scriptDefLine;
 
-	zDWORD checksum;
+	uint32 checksum;
 
 	int32 numNodes;
 	int32 *nodeIndexList;

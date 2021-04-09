@@ -468,7 +468,7 @@ bool32 zCModelPrototype::LoadModelScriptMSB(zCFileBIN &file)
 		{
 		case zFCHUNK_MODELSCRIPT:
 		{
-			zDWORD vers;
+			uint32 vers;
 			file.BinReadDWord(vers);
 
 			if (vers != modelScriptVersionIn)
@@ -1697,7 +1697,7 @@ bool32 zCMeshSoftSkin::Load(zCFileBIN &file)
 		{
 		case zFCHUNK_MESHSOFTSKIN:
 		{
-			zDWORD vers;
+			uint32 vers;
 			file.BinReadDWord(vers);
 
 			if (vers != meshSoftSkinVersionIn)
@@ -1801,7 +1801,7 @@ bool32 zCModelMesh::LoadMDM(zCFileBIN &file)
 		{
 		case zFCHUNK_MODELMESH:
 		{
-			zDWORD vers;
+			uint32 vers;
 			file.BinReadDWord(vers);
 
 			if (vers != modelMeshVersionIn
@@ -1968,7 +1968,7 @@ bool32 zCModelHierarchy::LoadMDH(zCFileBIN &file)
 		{
 		case zFCHUNK_MODELHIERARCHY:
 		{
-			zDWORD vers;
+			uint32 vers;
 			file.BinReadDWord(vers);
 
 			if (vers != modelHierarchyVersionIn)

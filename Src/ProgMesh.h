@@ -76,7 +76,7 @@ public:
 	zTLODParams lodParams;
 
 	byte *dataPool;
-	zDWORD dataSize;
+	uint32 dataSize;
 
 	zCArrayAdapt<zPOINT3> posList;
 	zCArrayAdapt<zVEC3> posNormalList;
@@ -118,10 +118,10 @@ public:
 
 struct zTPMProtoDirEntry
 {
-	zDWORD offset;
-	zDWORD size;
+	uint32 offset;
+	uint32 size;
 
-	void Set(zDWORD _offset, zDWORD _size)
+	void Set(uint32 _offset, uint32 _size)
 	{
 		offset = _offset;
 		size = _size;
@@ -135,7 +135,7 @@ struct zTPMProtoDirectoryMain
 
 	void TransferFromProto(zCProgMeshProto *pmProto)
 	{
-#define SetDirEntry(FIELD) FIELD.Set((zDWORD)((byte *)pmProto->FIELD.GetArray() - pmProto->dataPool), pmProto->FIELD.GetNum())
+#define SetDirEntry(FIELD) FIELD.Set((uint32)((byte *)pmProto->FIELD.GetArray() - pmProto->dataPool), pmProto->FIELD.GetNum())
 		SetDirEntry(posList);
 		SetDirEntry(posNormalList);
 #undef SetDirEntry
@@ -165,7 +165,7 @@ struct zTPMProtoDirectorySubMesh
 
 	void TransferFromProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
 	{
-#define SetDirEntry(FIELD) FIELD.Set((zDWORD)((byte *)subMesh->FIELD.GetArray() - pmProto->dataPool), subMesh->FIELD.GetNum())
+#define SetDirEntry(FIELD) FIELD.Set((uint32)((byte *)subMesh->FIELD.GetArray() - pmProto->dataPool), subMesh->FIELD.GetNum())
 		SetDirEntry(triList);
 		SetDirEntry(wedgeList);
 		SetDirEntry(colorList);

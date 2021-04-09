@@ -30,11 +30,11 @@ void zCMaterial::InitValues()
 	dontUseLightmaps = FALSE;
 }
 
-void zCMaterial::Archive(zCFileBIN &file, zDWORD objectIndex)
+void zCMaterial::Archive(zCFileBIN &file, uint32 objectIndex)
 {
 	int32 startPos = file.BinPos(); // chunk.startPos
 	int32 pos;
-	zDWORD size;
+	uint32 size;
 
 	// Write chunk header
 	file.BinWriteDWord(0); // chunk.size
@@ -84,7 +84,7 @@ void zCMaterial::Archive(zCFileBIN &file, zDWORD objectIndex)
 
 bool32 zCMaterial::Unarchive(zCFileBIN &file)
 {
-	zDWORD dw;
+	uint32 dw;
 	uint16 version;
 	zSTRING s;
 

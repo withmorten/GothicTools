@@ -87,6 +87,6 @@ public:
 
 	void InitValues();
 	bool32 Unarchive(zCFileBIN &file);
-	void Archive(zCFileBIN &file, zDWORD objectIndex);
+	void Archive(zCFileBIN &file, uint32 objectIndex);
 };
 

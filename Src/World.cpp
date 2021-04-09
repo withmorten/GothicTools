@@ -103,8 +103,8 @@ bool32 oCWorld::LoadZEN(zCFileBIN &file)
 		{
 			compiled = FALSE;
 
-			zDWORD version;
-			zDWORD chunkLen;
+			uint32 version;
+			uint32 chunkLen;
 
 			file.BinReadDWord(version);
 			file.BinReadDWord(chunkLen);
@@ -179,9 +179,9 @@ void oCWorld::WriteHeader(zCFileBIN &file)
 	file.BinWriteLine();
 }
 
-zUINT CountTabsInLine(const zSTRING &line)
+uint32 CountTabsInLine(const zSTRING &line)
 {
-	zUINT numTabs = 0;
+	uint32 numTabs = 0;
 
 	for (zSIZE_T i = 0; i < line.Length(); i++)
 	{
@@ -266,7 +266,7 @@ void oCWorld::WriteVobTree(zCFileBIN &file)
 
 			if (!sameVersion)
 			{
-				zUINT numTabs = CountTabsInLine(*line);
+				uint32 numTabs = CountTabsInLine(*line);
 
 				// Add some data
 				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
