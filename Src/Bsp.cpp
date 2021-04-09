@@ -37,7 +37,7 @@ zCBspTree::~zCBspTree()
 	zDELETE_ARRAY(sectorList);
 }
 
-zVOID zCBspBase::LoadBINRec(zCFileBIN &file)
+void zCBspBase::LoadBINRec(zCFileBIN &file)
 {
 	bbox3D.LoadBIN(file);
 
@@ -273,7 +273,7 @@ fileEnd:;
 	return TRUE;
 }
 
-zVOID zCBspTree::LODDegenerate()
+void zCBspTree::LODDegenerate()
 {
 	zCArray<zDWORD> nonLodPolyIndices(numPolys / 8);
 
@@ -345,7 +345,7 @@ zVOID zCBspTree::LODDegenerate()
 	zFREE(polyIndexMap);
 }
 
-zVOID zCBspBase::SaveBINRec(zCFileBIN &file)
+void zCBspBase::SaveBINRec(zCFileBIN &file)
 {
 	bbox3D.SaveBIN(file);
 

@@ -6,8 +6,8 @@ struct zTBBox3D
 	zPOINT3 maxs;
 
 public:
-	zVOID SaveBIN(zCFileBIN &file) { file.BinWrite(this, sizeof(zTBBox3D)); }
-	zVOID LoadBIN(zCFileBIN &file) { file.BinRead(this, sizeof(zTBBox3D)); }
+	void SaveBIN(zCFileBIN &file) { file.BinWrite(this, sizeof(zTBBox3D)); }
+	void LoadBIN(zCFileBIN &file) { file.BinRead(this, sizeof(zTBBox3D)); }
 };
 
 class zCOBBox3D
@@ -21,7 +21,7 @@ public:
 	zCArray<zCOBBox3D *> childs;
 
 public:
-	zVOID SaveBIN(zCFileBIN &file)
+	void SaveBIN(zCFileBIN &file)
 	{
 		file.BinWrite(&center, sizeof(center));
 		file.BinWrite(&axis, sizeof(axis));
@@ -36,7 +36,7 @@ public:
 		}
 	}
 
-	zVOID LoadBIN(zCFileBIN &file)
+	void LoadBIN(zCFileBIN &file)
 	{
 		file.BinRead(&center, sizeof(center));
 		file.BinRead(&axis, sizeof(axis));
@@ -59,8 +59,8 @@ struct zTSrcFileStats
 	zDATE date;
 	zSTRING fileName;
 
-	zVOID SaveBIN(zCFileBIN &file) { file.BinWrite(&date, sizeof(date)); file.BinWriteLine(fileName); }
-	zVOID LoadBIN(zCFileBIN &file) { file.BinRead(&date, sizeof(date)); file.BinReadLine(fileName); }
+	void SaveBIN(zCFileBIN &file) { file.BinWrite(&date, sizeof(date)); file.BinWriteLine(fileName); }
+	void LoadBIN(zCFileBIN &file) { file.BinRead(&date, sizeof(date)); file.BinReadLine(fileName); }
 };
 
 struct zTPlane

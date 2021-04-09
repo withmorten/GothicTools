@@ -32,7 +32,7 @@ public:
 
 	~zCArray() { EmptyList(); }
 
-	zVOID AllocDelta(const zINT numDelta)
+	void AllocDelta(const zINT numDelta)
 	{
 		if (numDelta <= 0)
 		{
@@ -54,7 +54,7 @@ public:
 		numAlloc += numDelta;
 	}
 
-	zVOID AllocAbs(const zINT size)
+	void AllocAbs(const zINT size)
 	{
 		if (numAlloc >= size)
 		{
@@ -78,7 +78,7 @@ public:
 		return *this;
 	}
 
-	zVOID InsertEnd(const T &ins)
+	void InsertEnd(const T &ins)
 	{
 		if (numAlloc < numInArray + 1)
 		{
@@ -95,14 +95,14 @@ public:
 		array[numInArray++] = ins;
 	}
 
-	zVOID Insert(const T &ins) { InsertEnd(ins); }
+	void Insert(const T &ins) { InsertEnd(ins); }
 
-	zVOID EmptyList()
+	void EmptyList()
 	{
 		numInArray = 0;
 	}
 
-	zVOID DeleteList()
+	void DeleteList()
 	{
 		zDELETE_ARRAY(array);
 		numAlloc = 0;
@@ -135,7 +135,7 @@ public:
 		return FALSE;
 	}
 
-	zVOID ShrinkToFit()
+	void ShrinkToFit()
 	{
 		if (numInArray <= 0)
 		{
@@ -160,7 +160,7 @@ public:
 		}
 	}
 
-	zVOID RemoveLast(zBOOL release = FALSE)
+	void RemoveLast(zBOOL release = FALSE)
 	{
 		if (numInArray <= 0) return;
 
@@ -169,7 +169,7 @@ public:
 		if (release) zDELETE(array[numInArray]);
 	}
 
-	zVOID RemoveOrderIndex(const zINT index, zBOOL release = FALSE)
+	void RemoveOrderIndex(const zINT index, zBOOL release = FALSE)
 	{
 		if (index > numInArray) return;
 

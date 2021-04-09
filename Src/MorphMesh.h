@@ -40,8 +40,8 @@ public:
 		zDELETE_ARRAY(vertPosMatrix);
 	}
 
-	zVOID Load(zCFileBIN &file);
-	zVOID Save(zCFileBIN &file);
+	void Load(zCFileBIN &file);
+	void Save(zCFileBIN &file);
 };
 
 #define zFCHUNK_MMB_MORPHMESH ((zWORD)0xE000)
@@ -79,7 +79,7 @@ public:
 	zBOOL LoadMMB(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMMB(f); }
 	zBOOL LoadMMB(zCFileBIN &file);
 
-	zVOID SaveMMB(const zCHAR *fileName) { zSTRING s(fileName); SaveMMB(s); }
-	zVOID SaveMMB(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMMB(f); }
-	zVOID SaveMMB(zCFileBIN &file);
+	void SaveMMB(const zCHAR *fileName) { zSTRING s(fileName); SaveMMB(s); }
+	void SaveMMB(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMMB(f); }
+	void SaveMMB(zCFileBIN &file);
 };

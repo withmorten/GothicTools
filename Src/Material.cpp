@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-zVOID zCMaterial::InitValues()
+void zCMaterial::InitValues()
 {
 	smoothAngle = 60.0f;
 	libFlag = 0;
@@ -30,7 +30,7 @@ zVOID zCMaterial::InitValues()
 	dontUseLightmaps = FALSE;
 }
 
-zVOID zCMaterial::Archive(zCFileBIN &file, zDWORD objectIndex)
+void zCMaterial::Archive(zCFileBIN &file, zDWORD objectIndex)
 {
 	zLONG startPos = file.BinPos(); // chunk.startPos
 	zLONG pos;

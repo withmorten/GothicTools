@@ -10,7 +10,6 @@
 #include <time.h>
 #include <sys/stat.h>
 
-typedef void zVOID;
 typedef char zCHAR;
 typedef unsigned char zBYTE;
 typedef unsigned char zUINT8;

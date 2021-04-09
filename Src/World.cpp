@@ -37,7 +37,7 @@ zBOOL oCWorld::ReadHeader(zCFileBIN &file)
 	return TRUE;
 }
 
-zVOID oCWorld::ReadVobTree(zCFileBIN &file)
+void oCWorld::ReadVobTree(zCFileBIN &file)
 {
 	zSTRING *line = NULL;
 	zBOOL inVob = FALSE;
@@ -72,7 +72,7 @@ zVOID oCWorld::ReadVobTree(zCFileBIN &file)
 	while (*line != "\t[]");
 }
 
-zVOID oCWorld::ReadWayNet(zCFileBIN &file)
+void oCWorld::ReadWayNet(zCFileBIN &file)
 {
 	zSTRING *line = NULL;
 
@@ -154,7 +154,7 @@ zBOOL oCWorld::LoadZEN(zCFileBIN &file)
 	return TRUE;
 }
 
-zVOID oCWorld::WriteHeader(zCFileBIN &file)
+void oCWorld::WriteHeader(zCFileBIN &file)
 {
 	file.BinWriteLine("ZenGin Archive");
 	file.BinWriteLine("ver 1");
@@ -194,7 +194,7 @@ zUINT CountTabsInLine(const zSTRING &line)
 	return numTabs;
 }
 
-zVOID oCWorld::WriteVobTree(zCFileBIN &file)
+void oCWorld::WriteVobTree(zCFileBIN &file)
 {
 	zBOOL sameVersion = meshAndBspVersionIn == meshAndBspVersionOut;
 
@@ -338,7 +338,7 @@ zVOID oCWorld::WriteVobTree(zCFileBIN &file)
 	}
 }
 
-zVOID oCWorld::WriteWayNet(zCFileBIN &file)
+void oCWorld::WriteWayNet(zCFileBIN &file)
 {
 	for (zINT i = 0; i < wayNet.numInArray; i++)
 	{
@@ -346,7 +346,7 @@ zVOID oCWorld::WriteWayNet(zCFileBIN &file)
 	}
 }
 
-zVOID oCWorld::SaveZEN(zCFileBIN &file)
+void oCWorld::SaveZEN(zCFileBIN &file)
 {
 	WriteHeader(file);
 

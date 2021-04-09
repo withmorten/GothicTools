@@ -38,8 +38,8 @@ public:
 	zREAL prob;
 
 public:
-	zVOID Load(zCFileBIN &file);
-	zVOID Save(zCFileBIN &file);
+	void Load(zCFileBIN &file);
+	void Save(zCFileBIN &file);
 };
 
 #define zFCHUNK_MODELANI ((zWORD)0xA000)
@@ -121,11 +121,11 @@ public:
 		zDELETE_ARRAY(aniEvents);
 	}
 
-	zVOID InitValues();
+	void InitValues();
 
 	zBOOL LoadMAN(const zSTRING &filename) { zCFileBIN f(filename); return LoadMAN(f); }
 	zBOOL LoadMAN(zCFileBIN &file);
 
-	zVOID SaveMAN(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMAN(f); }
-	zVOID SaveMAN(zCFileBIN &file);
+	void SaveMAN(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMAN(f); }
+	void SaveMAN(zCFileBIN &file);
 };

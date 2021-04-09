@@ -85,8 +85,8 @@ public:
 	zCMaterial() { InitValues(); }
 	zCMaterial(const zSTRING &n) { InitValues(); name = n; }
 
-	zVOID InitValues();
+	void InitValues();
 	zBOOL Unarchive(zCFileBIN &file);
-	zVOID Archive(zCFileBIN &file, zDWORD objectIndex);
+	void Archive(zCFileBIN &file, zDWORD objectIndex);
 };
 

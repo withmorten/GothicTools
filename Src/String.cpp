@@ -142,7 +142,7 @@ zSTRING zSTRING::PickWordCutMarks(zUINT num, const zSTRING &trenn, const zSTRING
 	return word;
 }
 
-zVOID zSTRING::Delete(const zSTRING &xStr, zTSTR_KIND kind)
+void zSTRING::Delete(const zSTRING &xStr, zTSTR_KIND kind)
 {
 	zSIZE_T pos = find(xStr);
 
@@ -204,7 +204,7 @@ zSTRING zSTRING::Deleted(zSIZE_T pos, zSIZE_T length) const
 	return s;
 }
 
-zVOID zSTRING::DeleteRight(zSIZE_T length)
+void zSTRING::DeleteRight(zSIZE_T length)
 {
 	if (length > size())
 	{

@@ -107,13 +107,13 @@ public:
 	}
 
 	zBOOL UnarchiveMatList(zCFileBIN &file);
-	zVOID ArchiveMatList(zCFileBIN &file);
+	void ArchiveMatList(zCFileBIN &file);
 
 	zBOOL LoadMRM(zCFileBIN &file);
 	zBOOL LoadMRM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMRM(f); }
 
-	zVOID SaveMRM(zCFileBIN &file);
-	zVOID SaveMRM(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMRM(f); }
+	void SaveMRM(zCFileBIN &file);
+	void SaveMRM(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMRM(f); }
 };
 
 struct zTPMProtoDirEntry
@@ -121,7 +121,7 @@ struct zTPMProtoDirEntry
 	zDWORD offset;
 	zDWORD size;
 
-	zVOID Set(zDWORD _offset, zDWORD _size)
+	void Set(zDWORD _offset, zDWORD _size)
 	{
 		offset = _offset;
 		size = _size;
@@ -133,7 +133,7 @@ struct zTPMProtoDirectoryMain
 	zTPMProtoDirEntry posList;
 	zTPMProtoDirEntry posNormalList;
 
-	zVOID TransferFromProto(zCProgMeshProto *pmProto)
+	void TransferFromProto(zCProgMeshProto *pmProto)
 	{
 #define SetDirEntry(FIELD) FIELD.Set((zDWORD)((zBYTE *)pmProto->FIELD.GetArray() - pmProto->dataPool), pmProto->FIELD.GetNum())
 		SetDirEntry(posList);
@@ -141,7 +141,7 @@ struct zTPMProtoDirectoryMain
 #undef SetDirEntry
 	}
 
-	zVOID TransferToProto(zCProgMeshProto *pmProto)
+	void TransferToProto(zCProgMeshProto *pmProto)
 	{
 #define GetFromEntry(FIELD) pmProto->FIELD.SetArray((zBYTE *)(pmProto->dataPool + FIELD.offset), FIELD.size)
 		GetFromEntry(posList);
@@ -163,7 +163,7 @@ struct zTPMProtoDirectorySubMesh
 	zTPMProtoDirEntry edgeList;
 	zTPMProtoDirEntry edgeScoreList;
 
-	zVOID TransferFromProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
+	void TransferFromProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
 	{
 #define SetDirEntry(FIELD) FIELD.Set((zDWORD)((zBYTE *)subMesh->FIELD.GetArray() - pmProto->dataPool), subMesh->FIELD.GetNum())
 		SetDirEntry(triList);
@@ -179,7 +179,7 @@ struct zTPMProtoDirectorySubMesh
 #undef SetDirEntry
 	}
 
-	zVOID TransferToProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
+	void TransferToProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
 	{
 #define GetFromEntry(FIELD) subMesh->FIELD.SetArray((zBYTE *)(pmProto->dataPool + FIELD.offset), FIELD.size)
 		GetFromEntry(triList);

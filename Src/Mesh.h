@@ -40,12 +40,12 @@ public:
 	~zCMesh();
 
 	zBOOL UnarchiveMatList(zCFileBIN &file);
-	zVOID ArchiveMatList(zCFileBIN &file);
+	void ArchiveMatList(zCFileBIN &file);
 
-	zVOID UnarchivePolyList(zCFileBIN &file, zLONG len);
-	zVOID ArchivePolyList(zCFileBIN &file);
+	void UnarchivePolyList(zCFileBIN &file, zLONG len);
+	void ArchivePolyList(zCFileBIN &file);
 
-	zVOID LODDegenerate(zINT *polyIndexMap, zINT newNumPoly);
+	void LODDegenerate(zINT *polyIndexMap, zINT newNumPoly);
 
 	zBOOL LoadMSH(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMSH(f); }
 	zBOOL LoadMSH(zCFileBIN &file);

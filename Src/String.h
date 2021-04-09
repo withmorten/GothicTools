@@ -43,7 +43,7 @@ public:
 
 	zCHAR GetLastChar();
 
-	zVOID Clear() { erase(); }
+	void Clear() { erase(); }
 
 	zSIZE_T Length() const { return size(); }
 	zCHAR *ToChar() const { return (zCHAR *)c_str(); }
@@ -62,18 +62,18 @@ public:
 
 	zSTRING PickWordCutMarks(zUINT num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 
-	zVOID Delete(const zSTRING &xStr, zTSTR_KIND kind);
+	void Delete(const zSTRING &xStr, zTSTR_KIND kind);
 	zINT Delete(zSIZE_T pos, zSIZE_T = UINT32_MAX);
 	zSTRING Deleted(zSIZE_T pos, zSIZE_T length = UINT32_MAX) const;
-	zVOID DeleteRight(zSIZE_T length);
+	void DeleteRight(zSIZE_T length);
 
-	zVOID Append(zCHAR c) { append(zSTRING(c)); }
-	zVOID Append(const zCHAR *c) { append(c); }
-	zVOID Append(const zSTRING &s) { append(s); }
+	void Append(zCHAR c) { append(zSTRING(c)); }
+	void Append(const zCHAR *c) { append(c); }
+	void Append(const zSTRING &s) { append(s); }
 
-	zVOID Prepend(zCHAR c, zUINT num) { insert(0, num, c); }
-	zVOID Prepend(zCHAR c) { insert(0, 1, c); }
-	zVOID Prepend(const zCHAR *c) { insert(0, c); }
+	void Prepend(zCHAR c, zUINT num) { insert(0, num, c); }
+	void Prepend(zCHAR c) { insert(0, 1, c); }
+	void Prepend(const zCHAR *c) { insert(0, c); }
 
 	zLONG Search(zSIZE_T startIndex, const zCHAR *substr, zUINT num = 1) const;
 	zLONG Search(zSIZE_T startIndex, const zSTRING &substr, zUINT num = 1) const { return Search(startIndex, substr.ToChar(), num); }
@@ -92,7 +92,7 @@ public:
 	zBOOL EndsWith(const zSTRING &suffix) { return size() >= suffix.size() && !compare(size() - suffix.size(), suffix.size(), suffix); }
 	zBOOL StartsWith(const zSTRING &prefix) { return size() >= prefix.size() && !compare(0, prefix.size(), prefix); }
 
-	zVOID Replace(zCHAR s, zCHAR r) { for (zSIZE_T i = 0; i < size(); i++) if (at(i) == s) replace(i, 1, 1, r); }
+	void Replace(zCHAR s, zCHAR r) { for (zSIZE_T i = 0; i < size(); i++) if (at(i) == s) replace(i, 1, 1, r); }
 };
 
 zSTRING operator+ (const zSTRING &xStr1, const zSTRING &xStr2)

@@ -77,7 +77,7 @@ public:
 	zREAL &operator [](const zINT i) { return n[i]; }
 	zREAL operator [](const zINT i) const { return n[i]; }
 
-	zVOID SetByDescription(zSTRING &desc) { n[VX] = desc.PickWorld_Old(1, zSTR_EMPTY).ToFloat(); n[VY] = desc.PickWorld_Old(2, zSTR_EMPTY).ToFloat(); }
+	void SetByDescription(zSTRING &desc) { n[VX] = desc.PickWorld_Old(1, zSTR_EMPTY).ToFloat(); n[VY] = desc.PickWorld_Old(2, zSTR_EMPTY).ToFloat(); }
 	zSTRING GetDescription() const { zSTRING s; zSTRING s1(n[0], MAX_FRAC); zSTRING s2(" "); zSTRING s3(n[1], MAX_FRAC); s += s1 + s2 + s3; return s; }
 };
 

@@ -521,7 +521,7 @@ fileEnd:;
 	return TRUE;
 }
 
-zVOID zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
+void zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 {
 	zCArray<zCModelAniEvent *> aniEvents;
 
@@ -666,7 +666,7 @@ zVOID zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 	}
 }
 
-zVOID zCModelPrototype::ReadAniEnum(zFILE &file)
+void zCModelPrototype::ReadAniEnum(zFILE &file)
 {
 	zSTRING line;
 	zSTRING arg;
@@ -828,7 +828,7 @@ zVOID zCModelPrototype::ReadAniEnum(zFILE &file)
 	}
 }
 
-zVOID zCModelPrototype::ReadModel(zFILE &file)
+void zCModelPrototype::ReadModel(zFILE &file)
 {
 	zSTRING line;
 
@@ -898,7 +898,7 @@ zBOOL zCModelPrototype::LoadModelScript(zFILE &file)
 	return TRUE;
 }
 
-zVOID zCModelPrototype::WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
+void zCModelPrototype::WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 {
 	if (aniPtr->numAniEvents > 0)
 	{
@@ -1044,7 +1044,7 @@ zVOID zCModelPrototype::WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 	}
 }
 
-zVOID zCModelPrototype::WriteAniEnumMSB(zCFileBIN &file)
+void zCModelPrototype::WriteAniEnumMSB(zCFileBIN &file)
 {
 	for (zINT i = 0; i < modelEvents.numInArray; i++)
 	{
@@ -1193,7 +1193,7 @@ zVOID zCModelPrototype::WriteAniEnumMSB(zCFileBIN &file)
 	file.BinEndChunk();
 }
 
-zVOID zCModelPrototype::WriteModelMSB(zCFileBIN &file)
+void zCModelPrototype::WriteModelMSB(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MDS_MESHANDTREE);
 	{
@@ -1241,7 +1241,7 @@ zVOID zCModelPrototype::WriteModelMSB(zCFileBIN &file)
 	file.BinEndChunk();
 }
 
-zVOID zCModelPrototype::SaveModelScriptMSB(zCFileBIN &file)
+void zCModelPrototype::SaveModelScriptMSB(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MODELSCRIPT);
 	{
@@ -1264,7 +1264,7 @@ zVOID zCModelPrototype::SaveModelScriptMSB(zCFileBIN &file)
 	file.BinEndChunk();
 }
 
-zVOID zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
+void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 {
 	if (aniPtr->numAniEvents > 0)
 	{
@@ -1448,7 +1448,7 @@ zVOID zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 	}
 }
 
-zVOID zCModelPrototype::WriteAniEnum(zFILE &file)
+void zCModelPrototype::WriteAniEnum(zFILE &file)
 {
 	numTabs++;
 
@@ -1614,7 +1614,7 @@ zVOID zCModelPrototype::WriteAniEnum(zFILE &file)
 	numTabs--;
 }
 
-zVOID zCModelPrototype::WriteModel(zFILE &file)
+void zCModelPrototype::WriteModel(zFILE &file)
 {
 	numTabs++;
 
@@ -1644,7 +1644,7 @@ zVOID zCModelPrototype::WriteModel(zFILE &file)
 	numTabs--;
 }
 
-zVOID zCModelPrototype::SaveModelScript(zFILE &file)
+void zCModelPrototype::SaveModelScript(zFILE &file)
 {
 	file.WriteLineIndented(numTabs, "MODEL (\"" + modelProtoName + "\")");
 	file.WriteLineIndented(numTabs, "{");
@@ -1677,7 +1677,7 @@ zBOOL zCModelPrototype::LoadMDL(zCFileBIN &file)
 	return TRUE;
 }
 
-zVOID zCModelPrototype::SaveMDL(zCFileBIN &file)
+void zCModelPrototype::SaveMDL(zCFileBIN &file)
 {
 	hierarchy->SaveMDH(file);
 
@@ -1759,7 +1759,7 @@ fileEnd:;
 	return TRUE;
 }
 
-zVOID zCMeshSoftSkin::Save(zCFileBIN &file)
+void zCMeshSoftSkin::Save(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MESHSOFTSKIN);
 	{
@@ -1899,7 +1899,7 @@ fileEnd:;
 	return TRUE;
 }
 
-zVOID zCModelMesh::SaveMDM(zCFileBIN &file)
+void zCModelMesh::SaveMDM(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MODELMESH);
 	{
@@ -2027,7 +2027,7 @@ fileEnd:;
 	return TRUE;
 }
 
-zVOID zCModelHierarchy::SaveMDH(zCFileBIN &file)
+void zCModelHierarchy::SaveMDH(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MODELHIERARCHY);
 	{

@@ -242,7 +242,7 @@ fileEnd:;
 	return TRUE;
 }
 
-zVOID zCMesh::ArchiveMatList(zCFileBIN &file)
+void zCMesh::ArchiveMatList(zCFileBIN &file)
 {
 	file.BinWriteLine("ZenGin Archive");
 	file.BinWriteLine("ver 1");
@@ -333,7 +333,7 @@ zBOOL zCMesh::UnarchiveMatList(zCFileBIN &file)
 	return TRUE;
 }
 
-zVOID zCMesh::ArchivePolyList(zCFileBIN &file)
+void zCMesh::ArchivePolyList(zCFileBIN &file)
 {
 	file.BinWriteInt(numPoly);
 
@@ -410,7 +410,7 @@ zVOID zCMesh::ArchivePolyList(zCFileBIN &file)
 	}
 }
 
-zVOID zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
+void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 {
 	file.BinReadInt(numPoly);
 
@@ -535,7 +535,7 @@ zVOID zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 	zFREE(block);
 }
 
-zVOID zCMesh::LODDegenerate(zINT *polyIndexMap, zINT newNumPoly)
+void zCMesh::LODDegenerate(zINT *polyIndexMap, zINT newNumPoly)
 {
 	zCPolygon **newPolyArray = zNEW_ARRAY(zCPolygon *, newNumPoly);
 

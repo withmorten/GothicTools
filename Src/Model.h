@@ -86,13 +86,13 @@ public:
 		zDELETE_ARRAY(nodeList);
 	}
 
-	zVOID SetModelHierarchyName(const zSTRING &name) { modelHierarchyName = name; modelHierarchyName.Upper(); }
+	void SetModelHierarchyName(const zSTRING &name) { modelHierarchyName = name; modelHierarchyName.Upper(); }
 
 	zBOOL LoadMDH(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDH(f); }
 	zBOOL LoadMDH(zCFileBIN &file);
 
-	zVOID SaveMDH(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDH(f); }
-	zVOID SaveMDH(zCFileBIN &file);
+	void SaveMDH(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDH(f); }
+	void SaveMDH(zCFileBIN &file);
 };
 
 struct zTNodeWedgeNormal
@@ -135,7 +135,7 @@ public:
 	}
 
 	zBOOL Load(zCFileBIN &file);
-	zVOID Save(zCFileBIN &file);
+	void Save(zCFileBIN &file);
 };
 
 class zCModelMesh
@@ -169,8 +169,8 @@ public:
 	zBOOL LoadMDM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDM(f); }
 	zBOOL LoadMDM(zCFileBIN &file);
 
-	zVOID SaveMDM(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDM(f); }
-	zVOID SaveMDM(zCFileBIN &file);
+	void SaveMDM(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDM(f); }
+	void SaveMDM(zCFileBIN &file);
 };
 
 const zREAL zMDL_MAX_FPS = 25.0f;
@@ -225,7 +225,7 @@ public:
 		zDELETE(mesh);
 	}
 
-	zVOID SetModelProtoName(const zSTRING &name) { modelProtoName = name; modelProtoName.Upper(); }
+	void SetModelProtoName(const zSTRING &name) { modelProtoName = name; modelProtoName.Upper(); }
 
 	zBOOL ReadAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr);
 	zBOOL ReadAniEnumMSB(zCFileBIN &file);
@@ -234,30 +234,30 @@ public:
 	zBOOL LoadModelScriptMSB(const zSTRING &filename) { zCFileBIN f(filename); return LoadModelScriptMSB(f); }
 	zBOOL LoadModelScriptMSB(zCFileBIN &file);
 
-	zVOID ReadAniEvents(zFILE &file, zCModelAni *aniPtr);
-	zVOID ReadAniEnum(zFILE &file);
-	zVOID ReadModel(zFILE &file);
+	void ReadAniEvents(zFILE &file, zCModelAni *aniPtr);
+	void ReadAniEnum(zFILE &file);
+	void ReadModel(zFILE &file);
 
 	zBOOL LoadModelScript(const zSTRING &filename) { zFILE f(filename); return LoadModelScript(f); }
 	zBOOL LoadModelScript(zFILE &file);
 
-	zVOID WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr);
-	zVOID WriteAniEnumMSB(zCFileBIN &file);
-	zVOID WriteModelMSB(zCFileBIN &file);
+	void WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr);
+	void WriteAniEnumMSB(zCFileBIN &file);
+	void WriteModelMSB(zCFileBIN &file);
 
-	zVOID SaveModelScriptMSB(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveModelScriptMSB(f); }
-	zVOID SaveModelScriptMSB(zCFileBIN &file);
+	void SaveModelScriptMSB(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveModelScriptMSB(f); }
+	void SaveModelScriptMSB(zCFileBIN &file);
 
-	zVOID WriteAniEvents(zFILE &file, zCModelAni *aniPtr);
-	zVOID WriteAniEnum(zFILE &file);
-	zVOID WriteModel(zFILE &file);
+	void WriteAniEvents(zFILE &file, zCModelAni *aniPtr);
+	void WriteAniEnum(zFILE &file);
+	void WriteModel(zFILE &file);
 
-	zVOID SaveModelScript(const zSTRING &filename) { zFILE f(filename, TRUE); SaveModelScript(f); }
-	zVOID SaveModelScript(zFILE &file);
+	void SaveModelScript(const zSTRING &filename) { zFILE f(filename, TRUE); SaveModelScript(f); }
+	void SaveModelScript(zFILE &file);
 
 	zBOOL LoadMDL(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDL(f); }
 	zBOOL LoadMDL(zCFileBIN &file);
 
-	zVOID SaveMDL(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDL(f); }
-	zVOID SaveMDL(zCFileBIN &file);
+	void SaveMDL(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDL(f); }
+	void SaveMDL(zCFileBIN &file);
 };

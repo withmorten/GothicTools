@@ -8,7 +8,7 @@
 #include <fts.h>
 #endif
 
-zVOID zCScanDir::ScanDirectory(const zSTRING &dir)
+void zCScanDir::ScanDirectory(const zSTRING &dir)
 {
 #ifdef _WIN32
 	WIN32_FIND_DATA fd;

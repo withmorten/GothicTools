@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-zVOID zCMorphMeshAni::Load(zCFileBIN &file)
+void zCMorphMeshAni::Load(zCFileBIN &file)
 {
 	file.BinReadLine(aniName);
 
@@ -21,7 +21,7 @@ zVOID zCMorphMeshAni::Load(zCFileBIN &file)
 	file.BinRead(vertPosMatrix, sizeof(zPOINT3) * numVert * numFrames);
 }
 
-zVOID zCMorphMeshAni::Save(zCFileBIN &file)
+void zCMorphMeshAni::Save(zCFileBIN &file)
 {
 	file.BinWriteLine(aniName);
 
@@ -127,7 +127,7 @@ zBOOL zCMorphMeshProto::LoadMMB(zCFileBIN &file)
 	return TRUE;
 }
 
-zVOID zCMorphMeshProto::SaveMMB(zCFileBIN &file)
+void zCMorphMeshProto::SaveMMB(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MMB_MORPHMESH); // empty
 

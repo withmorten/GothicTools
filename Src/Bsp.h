@@ -38,8 +38,8 @@ public:
 
 	zBOOL IsLeaf() { return nodeType == zBSP_LEAF; }
 	zBOOL IsNode() { return nodeType == zBSP_NODE; }
-	zVOID LoadBINRec(zCFileBIN &file);
-	zVOID SaveBINRec(zCFileBIN &file);
+	void LoadBINRec(zCFileBIN &file);
+	void SaveBINRec(zCFileBIN &file);
 };
 
 class zCBspNode : public zCBspBase
@@ -123,7 +123,7 @@ public:
 	zCBspTree();
 	~zCBspTree();
 
-	zVOID LODDegenerate();
+	void LODDegenerate();
 
 	zBOOL LoadBIN(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadBIN(f); }
 	zBOOL LoadBIN(zCFileBIN &file);

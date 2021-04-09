@@ -21,23 +21,23 @@ public:
 	zFILE(const zSTRING &filepath, zBOOL w = FALSE);
 	~zFILE() { fclose(file_handle); }
 
-	zVOID Close() { fclose(file_handle); }
-	zVOID Reset() { fseek(file_handle, 0, SEEK_SET); }
+	void Close() { fclose(file_handle); }
+	void Reset() { fseek(file_handle, 0, SEEK_SET); }
 	zLONG Size() { return size; }
 	zLONG Pos() { return ftell(file_handle); }
-	zVOID Append() { fseek(file_handle, 0, SEEK_END); }
+	void Append() { fseek(file_handle, 0, SEEK_END); }
 	zBOOL Eof() { return (feof(file_handle) != FALSE); }
-	zVOID Seek(zLONG pos) { fseek(file_handle, pos, SEEK_SET); }
-	zVOID SeekRel(zLONG rel) { fseek(file_handle, rel, SEEK_CUR); }
+	void Seek(zLONG pos) { fseek(file_handle, pos, SEEK_SET); }
+	void SeekRel(zLONG rel) { fseek(file_handle, rel, SEEK_CUR); }
 
-	zVOID WriteLine(const zSTRING &s = zSTR_EMPTY, zBOOL crLf = TRUE);
-	zVOID WriteLineIndented(zUINT numTabs, const zSTRING &s = zSTR_EMPTY, zBOOL crLf = TRUE);
-	zVOID Write(const zSTRING &s) { fputs(s.ToChar(), file_handle); fputc('\0', file_handle); }
-	zSIZE_T Write(const zVOID *scr, zLONG bytes) { return fwrite(scr, 1, bytes, file_handle); }
+	void WriteLine(const zSTRING &s = zSTR_EMPTY, zBOOL crLf = TRUE);
+	void WriteLineIndented(zUINT numTabs, const zSTRING &s = zSTR_EMPTY, zBOOL crLf = TRUE);
+	void Write(const zSTRING &s) { fputs(s.ToChar(), file_handle); fputc('\0', file_handle); }
+	zSIZE_T Write(const void *scr, zLONG bytes) { return fwrite(scr, 1, bytes, file_handle); }
 
-	zVOID ReadLine(zSTRING &s);
-	zVOID Read(zSTRING &s);
-	zSIZE_T Read(zVOID *scr, zLONG bytes) { return fread(scr, 1, bytes, file_handle); }
+	void ReadLine(zSTRING &s);
+	void Read(zSTRING &s);
+	zSIZE_T Read(void *scr, zLONG bytes) { return fread(scr, 1, bytes, file_handle); }
 };
 
 class zCFileBIN
@@ -55,39 +55,39 @@ public:
 	zBOOL BinEof() { return nextStart >= file->Size(); }
 	zLONG BinSize() { return file->Size(); }
 	zLONG BinPos() { return file->Pos(); }
-	zVOID BinSeek(zLONG pos) { file->Seek(pos); }
-	zVOID BinSeekRel(zLONG rel) { file->SeekRel(rel); }
+	void BinSeek(zLONG pos) { file->Seek(pos); }
+	void BinSeekRel(zLONG rel) { file->SeekRel(rel); }
 
-	zVOID BinRead(zVOID *ptr, zLONG num) { file->Read(ptr, num); }
-	zVOID BinReadFloat(zREAL &f) { file->Read(&f, sizeof(f)); }
-	zVOID BinReadInt(zINT &i) { file->Read(&i, sizeof(i)); }
-	zVOID BinReadDWord(zDWORD &d) { file->Read(&d, sizeof(d)); }
-	zVOID BinReadWord(zWORD &w) { file->Read(&w, sizeof(w)); }
-	zVOID BinReadByte(zBYTE &b) { file->Read(&b, sizeof(b)); }
-	zVOID BinReadBool(zBOOL &b) { file->Read(&b, sizeof(zBYTE)); }
-	template<typename zENUM> zVOID BinReadEnum(zENUM &e) { file->Read(&e, sizeof(zENUM)); }
-	template<typename zENUM> zVOID BinReadEnumByte(zENUM &e) { file->Read(&e, sizeof(zBYTE)); }
-	zVOID BinReadString(zSTRING &s) { file->Read(s); }
-	zVOID BinReadLine(zSTRING &s) { file->ReadLine(s); }
+	void BinRead(void *ptr, zLONG num) { file->Read(ptr, num); }
+	void BinReadFloat(zREAL &f) { file->Read(&f, sizeof(f)); }
+	void BinReadInt(zINT &i) { file->Read(&i, sizeof(i)); }
+	void BinReadDWord(zDWORD &d) { file->Read(&d, sizeof(d)); }
+	void BinReadWord(zWORD &w) { file->Read(&w, sizeof(w)); }
+	void BinReadByte(zBYTE &b) { file->Read(&b, sizeof(b)); }
+	void BinReadBool(zBOOL &b) { file->Read(&b, sizeof(zBYTE)); }
+	template<typename zENUM> void BinReadEnum(zENUM &e) { file->Read(&e, sizeof(zENUM)); }
+	template<typename zENUM> void BinReadEnumByte(zENUM &e) { file->Read(&e, sizeof(zBYTE)); }
+	void BinReadString(zSTRING &s) { file->Read(s); }
+	void BinReadLine(zSTRING &s) { file->ReadLine(s); }
 
-	zVOID BinOpenChunk(zWORD &id, zLONG &len);
-	zVOID BinSkipChunk();
+	void BinOpenChunk(zWORD &id, zLONG &len);
+	void BinSkipChunk();
 
-	zVOID BinStartChunk(const zWORD id);
-	zVOID BinEndChunk();
+	void BinStartChunk(const zWORD id);
+	void BinEndChunk();
 
-	zVOID BinWrite(const zVOID *ptr, zLONG num) { file->Write(ptr, num); }
-	zVOID BinWriteFloat(const zREAL f) { file->Write(&f, sizeof(f)); }
-	zVOID BinWriteInt(const zINT i) { file->Write(&i, sizeof(i)); }
-	zVOID BinWriteDWord(const zDWORD d) { file->Write(&d, sizeof(d)); }
-	zVOID BinWriteWord(const zWORD w) { file->Write(&w, sizeof(w)); }
-	zVOID BinWriteByte(const zBYTE b) { file->Write(&b, sizeof(b)); }
-	zVOID BinWriteBool(const zBOOL b) { file->Write(&b, sizeof(zBYTE)); }
-	template<typename zENUM> zVOID BinWriteEnum(const zENUM e) { file->Write(&e, sizeof(zENUM)); }
-	template<typename zENUM> zVOID BinWriteEnumByte(const zENUM e) { file->Write(&e, sizeof(zBYTE)); }
-	zVOID BinWriteString(const zSTRING &s) { file->Write(s); }
-	zVOID BinWriteLine(const zSTRING &s = zSTR_EMPTY, zBOOL crLf = FALSE) { file->WriteLine(s, crLf); }
-	zVOID BinWriteLineIndented(zUINT numTabs, const zSTRING &s = zSTR_EMPTY, zBOOL crLf = FALSE) { file->WriteLineIndented(numTabs, s, crLf); }
+	void BinWrite(const void *ptr, zLONG num) { file->Write(ptr, num); }
+	void BinWriteFloat(const zREAL f) { file->Write(&f, sizeof(f)); }
+	void BinWriteInt(const zINT i) { file->Write(&i, sizeof(i)); }
+	void BinWriteDWord(const zDWORD d) { file->Write(&d, sizeof(d)); }
+	void BinWriteWord(const zWORD w) { file->Write(&w, sizeof(w)); }
+	void BinWriteByte(const zBYTE b) { file->Write(&b, sizeof(b)); }
+	void BinWriteBool(const zBOOL b) { file->Write(&b, sizeof(zBYTE)); }
+	template<typename zENUM> void BinWriteEnum(const zENUM e) { file->Write(&e, sizeof(zENUM)); }
+	template<typename zENUM> void BinWriteEnumByte(const zENUM e) { file->Write(&e, sizeof(zBYTE)); }
+	void BinWriteString(const zSTRING &s) { file->Write(s); }
+	void BinWriteLine(const zSTRING &s = zSTR_EMPTY, zBOOL crLf = FALSE) { file->WriteLine(s, crLf); }
+	void BinWriteLineIndented(zUINT numTabs, const zSTRING &s = zSTR_EMPTY, zBOOL crLf = FALSE) { file->WriteLineIndented(numTabs, s, crLf); }
 };
 
 class zDATE
@@ -103,8 +103,8 @@ public:
 public:
 	zDATE() { memset(this, 0x00, sizeof(*this)); }
 
-	zVOID SetTime(zCFileBIN &file) { SetTime(*file.file); }
-	zVOID SetTime(zFILE &file);
+	void SetTime(zCFileBIN &file) { SetTime(*file.file); }
+	void SetTime(zFILE &file);
 
 	static zBOOL IsFileNewer(const zSTRING &one, const zSTRING &two); // checks if file two was modified more recently than file one
 };

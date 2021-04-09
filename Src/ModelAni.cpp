@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-zVOID zCModelAniEvent::Load(zCFileBIN &file)
+void zCModelAniEvent::Load(zCFileBIN &file)
 {
 	file.BinReadEnum(aniEventType);
 	file.BinReadInt(frameNr);
@@ -19,7 +19,7 @@ zVOID zCModelAniEvent::Load(zCFileBIN &file)
 	file.BinReadFloat(prob);
 }
 
-zVOID zCModelAniEvent::Save(zCFileBIN &file)
+void zCModelAniEvent::Save(zCFileBIN &file)
 {
 	file.BinWriteEnum(aniEventType);
 	file.BinWriteInt(frameNr);
@@ -38,7 +38,7 @@ zVOID zCModelAniEvent::Save(zCFileBIN &file)
 	file.BinWriteFloat(prob);
 }
 
-zVOID zCModelAni::InitValues()
+void zCModelAni::InitValues()
 {
 	nodeIndexList = NULL;
 	aniSampleMatrix = NULL;
@@ -147,7 +147,7 @@ zBOOL zCModelAni::LoadMAN(zCFileBIN &file)
 	return TRUE;
 }
 
-zVOID zCModelAni::SaveMAN(zCFileBIN &file)
+void zCModelAni::SaveMAN(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MODELANI);
 

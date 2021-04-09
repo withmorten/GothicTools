@@ -127,7 +127,7 @@ fileEnd:;
 	return TRUE;
 }
 
-zVOID zCProgMeshProto::ArchiveMatList(zCFileBIN &file)
+void zCProgMeshProto::ArchiveMatList(zCFileBIN &file)
 {
 	file.BinWriteLine("ZenGin Archive");
 	file.BinWriteLine("ver 1");
@@ -173,7 +173,7 @@ zVOID zCProgMeshProto::ArchiveMatList(zCFileBIN &file)
 	}
 }
 
-zVOID zCProgMeshProto::SaveMRM(zCFileBIN &file)
+void zCProgMeshProto::SaveMRM(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_PROGMESH);
 	{

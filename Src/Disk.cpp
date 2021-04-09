@@ -95,7 +95,7 @@ zFILE::zFILE(const zSTRING &filepath, zBOOL w)
 	size = st.st_size;
 }
 
-zVOID zFILE::ReadLine(zSTRING &s)
+void zFILE::ReadLine(zSTRING &s)
 {
 	zCHAR file_buffer[zFILE_MAXCHARS + 1];
 	zBOOL finished = FALSE;
@@ -157,7 +157,7 @@ inline char *fgets_z(char *_Buffer, int _MaxCount, FILE *_Stream)
 	return _Backup;
 }
 
-zVOID zFILE::Read(zSTRING &s)
+void zFILE::Read(zSTRING &s)
 {
 	zCHAR file_buffer[zFILE_MAXCHARS];
 	s.Clear();
@@ -165,7 +165,7 @@ zVOID zFILE::Read(zSTRING &s)
 	s += zSTRING(fgets_z(file_buffer, zFILE_MAXCHARS, file_handle));
 }
 
-zVOID zFILE::WriteLine(const zSTRING &s, zBOOL crLf)
+void zFILE::WriteLine(const zSTRING &s, zBOOL crLf)
 {
 	fputs(s.ToChar(), file_handle);
 
@@ -173,7 +173,7 @@ zVOID zFILE::WriteLine(const zSTRING &s, zBOOL crLf)
 	fputc('\n', file_handle);
 }
 
-zVOID zFILE::WriteLineIndented(zUINT numTabs, const zSTRING &s, zBOOL crLf)
+void zFILE::WriteLineIndented(zUINT numTabs, const zSTRING &s, zBOOL crLf)
 {
 	for (zUINT i = 0; i < numTabs; i++)
 	{
@@ -191,7 +191,7 @@ zCFileBIN::zCFileBIN(const zSTRING &fname, zBOOL write)
 	nextStart = -1;
 }
 
-zVOID zCFileBIN::BinOpenChunk(zWORD &id, zLONG &len)
+void zCFileBIN::BinOpenChunk(zWORD &id, zLONG &len)
 {
 	file->Read(&id, sizeof(id));
 
@@ -206,7 +206,7 @@ zVOID zCFileBIN::BinOpenChunk(zWORD &id, zLONG &len)
 	nextStart = file->Pos() + len;
 }
 
-zVOID zCFileBIN::BinSkipChunk()
+void zCFileBIN::BinSkipChunk()
 {
 	if (nextStart >= file->Size())
 	{
@@ -216,7 +216,7 @@ zVOID zCFileBIN::BinSkipChunk()
 	file->Seek(nextStart);
 }
 
-zVOID zCFileBIN::BinStartChunk(const zWORD id)
+void zCFileBIN::BinStartChunk(const zWORD id)
 {
 	BinEndChunk();
 
@@ -226,7 +226,7 @@ zVOID zCFileBIN::BinStartChunk(const zWORD id)
 	file->Write(&len, sizeof(len));
 }
 
-zVOID zCFileBIN::BinEndChunk()
+void zCFileBIN::BinEndChunk()
 {
 	if (lastStart != -1)
 	{
@@ -267,7 +267,7 @@ zBOOL zDATE::IsFileNewer(const zSTRING &one, const zSTRING &two)
 	return FALSE;
 }
 
-zVOID zDATE::SetTime(zFILE &file)
+void zDATE::SetTime(zFILE &file)
 {
 	file_time_info ti;
 
