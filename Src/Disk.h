@@ -65,8 +65,8 @@ public:
 	void BinReadWord(uint16 &w) { file->Read(&w, sizeof(w)); }
 	void BinReadByte(byte &b) { file->Read(&b, sizeof(b)); }
 	void BinReadBool(bool32 &b) { file->Read(&b, sizeof(byte)); }
-	template<typename zENUM> void BinReadEnum(zENUM &e) { file->Read(&e, sizeof(zENUM)); }
-	template<typename zENUM> void BinReadEnumByte(zENUM &e) { file->Read(&e, sizeof(byte)); }
+	template<typename E> void BinReadEnum(E &e) { file->Read(&e, sizeof(E)); }
+	template<typename E> void BinReadEnumByte(E &e) { file->Read(&e, sizeof(byte)); }
 	void BinReadString(zSTRING &s) { file->Read(s); }
 	void BinReadLine(zSTRING &s) { file->ReadLine(s); }
 
@@ -83,8 +83,8 @@ public:
 	void BinWriteWord(const uint16 w) { file->Write(&w, sizeof(w)); }
 	void BinWriteByte(const byte b) { file->Write(&b, sizeof(b)); }
 	void BinWriteBool(const bool32 b) { file->Write(&b, sizeof(byte)); }
-	template<typename zENUM> void BinWriteEnum(const zENUM e) { file->Write(&e, sizeof(zENUM)); }
-	template<typename zENUM> void BinWriteEnumByte(const zENUM e) { file->Write(&e, sizeof(byte)); }
+	template<typename E> void BinWriteEnum(const E e) { file->Write(&e, sizeof(E)); }
+	template<typename E> void BinWriteEnumByte(const E e) { file->Write(&e, sizeof(byte)); }
 	void BinWriteString(const zSTRING &s) { file->Write(s); }
 	void BinWriteLine(const zSTRING &s = zSTR_EMPTY, bool32 crLf = FALSE) { file->WriteLine(s, crLf); }
 	void BinWriteLineIndented(uint32 numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = FALSE) { file->WriteLineIndented(numTabs, s, crLf); }
