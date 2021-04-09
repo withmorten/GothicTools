@@ -36,8 +36,8 @@ public:
 	zSTRING(const zSTRING &xStr1, const zCHAR ch) : string(xStr1) { append(1, ch); };
 
 	inline friend zSTRING operator+ (const zSTRING &xStr1, const zSTRING &xStr2);
-	inline friend zSTRING operator+ (const zSTRING &xStr1, const char *pstring);
-	inline friend zSTRING operator+ (const zSTRING &xStr2, const char ch);
+	inline friend zSTRING operator+ (const zSTRING &xStr1, const zCHAR *pstring);
+	inline friend zSTRING operator+ (const zSTRING &xStr2, const zCHAR ch);
 	inline friend zSTRING operator+ (const zCHAR *pstring, const zSTRING &xStr2);
 	inline friend zSTRING operator+ (const zCHAR ch, const zSTRING &xStr2);
 
