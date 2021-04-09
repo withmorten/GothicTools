@@ -107,7 +107,7 @@ int main(int argc, const char **argv)
 	{
 		scDir.ScanDirectory(argv[4]); // folder in
 
-		for (zINT i = 0; i < scDir.files.numInArray; i++)
+		for (int32 i = 0; i < scDir.files.numInArray; i++)
 		{
 			zCFileBIN file_in(scDir.files[i]);
 
@@ -127,7 +127,7 @@ int main(int argc, const char **argv)
 
 					zSTRING msbPath = scDir.Find(msbName);
 
-					zBOOL writeMsb = TRUE;
+					bool32 writeMsb = TRUE;
 
 					if (msbPath.Length() > 0)
 					{
@@ -182,7 +182,7 @@ int main(int argc, const char **argv)
 
 					zSTRING mdsPath = scDir.Find(mdsName);
 
-					zBOOL writeMds = TRUE;
+					bool32 writeMds = TRUE;
 
 					if (mdsPath.Length() > 0)
 					{
@@ -392,7 +392,7 @@ int main(int argc, const char **argv)
 	{
 		scDir.ScanDirectory(argv[4]); // folder in
 
-		for (zINT i = 0; i < scDir.files.numInArray; i++)
+		for (int32 i = 0; i < scDir.files.numInArray; i++)
 		{
 			zCFileBIN file_in(scDir.files[i]);
 

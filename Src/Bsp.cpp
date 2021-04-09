@@ -94,11 +94,11 @@ void zCBspBase::LoadBINRec(zCFileBIN &file)
 		}
 
 		node->leafList = lastLeaf;
-		node->numLeafs = (zINT)(zCBspTree::actLeafPtr - lastLeaf);
+		node->numLeafs = (int32)(zCBspTree::actLeafPtr - lastLeaf);
 	}
 }
 
-zBOOL zCBspTree::LoadBIN(zCFileBIN &file)
+bool32 zCBspTree::LoadBIN(zCFileBIN &file)
 {
 	zDWORD version;
 	zDWORD chunkLen;
@@ -115,7 +115,7 @@ zBOOL zCBspTree::LoadBIN(zCFileBIN &file)
 	file.BinReadDWord(chunkLen);
 
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	mesh = zNEW(zCMesh);
 
@@ -184,7 +184,7 @@ zBOOL zCBspTree::LoadBIN(zCFileBIN &file)
 				zPOINT3 *lightPositionList = zNEW_ARRAY(zPOINT3, numLeafs);
 				file.BinRead(lightPositionList, numLeafs * sizeof(zPOINT3));
 
-				for (zINT i = 0; i < numLeafs; i++)
+				for (int32 i = 0; i < numLeafs; i++)
 				{
 					leafList[i].lightPosition = lightPositionList[i];
 				}
@@ -199,7 +199,7 @@ zBOOL zCBspTree::LoadBIN(zCFileBIN &file)
 			file.BinReadInt(numSectors);
 			sectorList = zNEW_ARRAY(zCBspSector, numSectors);
 
-			for (zINT i = 0; i < numSectors; i++)
+			for (int32 i = 0; i < numSectors; i++)
 			{
 				zCBspSector *sector = &sectorList[i];
 
@@ -252,9 +252,9 @@ fileEnd:;
 
 	if (deLod)
 	{
-		zBOOL hasLodPolys = FALSE;
+		bool32 hasLodPolys = FALSE;
 
-		for (zINT i = 0; i < numNodes; i++)
+		for (int32 i = 0; i < numNodes; i++)
 		{
 			if (nodeList[i].hasLod)
 			{
@@ -278,11 +278,11 @@ void zCBspTree::LODDegenerate()
 	zCArray<zDWORD> nonLodPolyIndices(numPolys / 8);
 
 	// Get non LOD poly list from leafs, fix index to treePolyIndices
-	for (zINT i = 0; i < numLeafs; i++)
+	for (int32 i = 0; i < numLeafs; i++)
 	{
 		zCBspLeaf *leaf = &leafList[i];
 
-		for (zINT j = 0; j < leaf->numPolys; j++)
+		for (int32 j = 0; j < leaf->numPolys; j++)
 		{
 			nonLodPolyIndices.Insert(treePolyIndices[leaf->treePolyIndex + j]);
 		}
@@ -291,7 +291,7 @@ void zCBspTree::LODDegenerate()
 	}
 
 	// Remove all lod poly counts and indexes from lod nodes
-	for (zINT i = 0; i < numNodes; i++)
+	for (int32 i = 0; i < numNodes; i++)
 	{
 		zCBspNode *node = &nodeList[i];
 
@@ -308,11 +308,11 @@ void zCBspTree::LODDegenerate()
 	zMEMCPY<zDWORD>(treePolyIndices, nonLodPolyIndices.array, numPolys);
 	zREALLOC<zDWORD>(treePolyIndices, numPolys);
 
-	zINT *polyIndexMap = zMALLOC<zINT>(mesh->numPoly);
-	zMEMSET<zINT>(polyIndexMap, -1, mesh->numPoly); // -1 = unused
-	zINT newMeshNumPoly = 0;
+	int32 *polyIndexMap = zMALLOC<int32>(mesh->numPoly);
+	zMEMSET<int32>(polyIndexMap, -1, mesh->numPoly); // -1 = unused
+	int32 newMeshNumPoly = 0;
 
-	for (zINT i = 0; i < numPolys; i++)
+	for (int32 i = 0; i < numPolys; i++)
 	{
 		if (polyIndexMap[treePolyIndices[i]] == -1) // only inc new numPoly once
 		{
@@ -326,17 +326,17 @@ void zCBspTree::LODDegenerate()
 	mesh->LODDegenerate(polyIndexMap, newMeshNumPoly);
 
 	// Fix indices to mesh->polyArray
-	for (zINT i = 0; i < numPolys; i++)
+	for (int32 i = 0; i < numPolys; i++)
 	{
 		treePolyIndices[i] = polyIndexMap[treePolyIndices[i]];
 	}
 
 	// Fix indices to mesh->polyArray
-	for (zINT i = 0; i < numSectors; i++)
+	for (int32 i = 0; i < numSectors; i++)
 	{
 		zCBspSector *sector = &sectorList[i];
 
-		for (zINT j = 0; j < sector->numSectorPortals; j++)
+		for (int32 j = 0; j < sector->numSectorPortals; j++)
 		{
 			sector->sectorIndices[j] = polyIndexMap[sector->sectorIndices[j]];
 		}
@@ -385,12 +385,12 @@ void zCBspBase::SaveBINRec(zCFileBIN &file)
 	}
 }
 
-zBOOL zCBspTree::SaveBIN(zCFileBIN &file)
+bool32 zCBspTree::SaveBIN(zCFileBIN &file)
 {
 	zCBspTree::actBspTree = this;
 
 	file.BinWriteDWord(meshAndBspVersionOut);
-	zLONG chunkLenPos = file.BinPos();
+	int32 chunkLenPos = file.BinPos();
 	file.BinWriteDWord(0); // chunkLen
 
 	if (!mesh->SaveMSH(file))
@@ -423,7 +423,7 @@ zBOOL zCBspTree::SaveBIN(zCFileBIN &file)
 	{
 		file.BinStartChunk(zFCHUNK_BSP_LEAF_LIGHT);
 		{
-			for (zINT i = 0; i < numLeafs; i++)
+			for (int32 i = 0; i < numLeafs; i++)
 			{
 				file.BinWrite(&(leafList[i].lightPosition), sizeof(leafList[i].lightPosition));
 			}
@@ -434,7 +434,7 @@ zBOOL zCBspTree::SaveBIN(zCFileBIN &file)
 	{
 		file.BinWriteInt(numSectors);
 
-		for (zINT i = 0; i < numSectors; i++)
+		for (int32 i = 0; i < numSectors; i++)
 		{
 			zCBspSector *sector = &sectorList[i];
 
@@ -457,7 +457,7 @@ zBOOL zCBspTree::SaveBIN(zCFileBIN &file)
 
 	file.BinEndChunk();
 
-	zLONG actPos = file.BinPos();
+	int32 actPos = file.BinPos();
 	file.BinSeek(chunkLenPos);
 	file.BinWriteDWord(actPos - chunkLenPos - sizeof(zDWORD));
 	file.BinSeek(actPos);

@@ -50,7 +50,7 @@ public:
 	zCArrayAdapt<zPMINDEX> wedgeMap;
 	zCArrayAdapt<zTPMVertexUpdate> vertexUpdates;
 
-	zINT vbStartIndex;
+	int32 vbStartIndex;
 
 public:
 	zCSubMesh() { material = NULL; vbStartIndex = 0; }
@@ -62,13 +62,13 @@ struct zTLODParams
 	zREAL strength;
 	zREAL zDisplace2;
 	zREAL morphPerc;
-	zINT minVerts;
+	int32 minVerts;
 };
 
 class zCProgMeshProto
 {
 public:
-	zBOOL m_bUsesAlphaTesting;
+	bool32 m_bUsesAlphaTesting;
 
 	zTBBox3D bbox3D;
 	zCOBBox3D obbox3D;
@@ -106,11 +106,11 @@ public:
 		zDELETE_ARRAY(subMeshList);
 	}
 
-	zBOOL UnarchiveMatList(zCFileBIN &file);
+	bool32 UnarchiveMatList(zCFileBIN &file);
 	void ArchiveMatList(zCFileBIN &file);
 
-	zBOOL LoadMRM(zCFileBIN &file);
-	zBOOL LoadMRM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMRM(f); }
+	bool32 LoadMRM(zCFileBIN &file);
+	bool32 LoadMRM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMRM(f); }
 
 	void SaveMRM(zCFileBIN &file);
 	void SaveMRM(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMRM(f); }

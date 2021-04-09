@@ -27,9 +27,9 @@ public:
 	zSTRING(const char *pstring) : string(pstring) { }
 	zSTRING(char ch) : string(1, ch) { }
 
-	zSTRING(const zINT xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%d", xWert); assign(buffer); }
+	zSTRING(const int32 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%d", xWert); assign(buffer); }
 	zSTRING(const zDWORD xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%u", xWert); assign(buffer); }
-	zSTRING(const zREAL xWert, zINT digits = 20);
+	zSTRING(const zREAL xWert, int32 digits = 20);
 
 	zSTRING(const zSTRING &xStr1, const char *pstring) : string(xStr1) { append(pstring); };
 	zSTRING(const zSTRING &xStr1, const zSTRING &xStr2) : string(xStr1) { append(xStr2); };
@@ -47,23 +47,23 @@ public:
 
 	zSIZE_T Length() const { return size(); }
 	char *ToChar() const { return (char *)c_str(); }
-	zLONG ToInt() const { return atol(c_str()); }
+	int32 ToInt() const { return atol(c_str()); }
 	zREAL ToFloat() const { return (zREAL)atof(c_str()); }
 
-	zINT CompareTo(zSTRING &xStr2) const { return compare(xStr2); }
-	zINT CompareTo(const char *cstr) const { return compare(cstr); }
+	int32 CompareTo(zSTRING &xStr2) const { return compare(xStr2); }
+	int32 CompareTo(const char *cstr) const { return compare(cstr); }
 
 	zSTRING &Upper();
 	zSTRING &Lower();
 
 	zSTRING PickWord(zUINT num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 	const char *PickWordPos(zUINT num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
-	zSTRING PickWorld_Old(zINT num, const zSTRING &trenn);
+	zSTRING PickWorld_Old(int32 num, const zSTRING &trenn);
 
 	zSTRING PickWordCutMarks(zUINT num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 
 	void Delete(const zSTRING &xStr, zTSTR_KIND kind);
-	zINT Delete(zSIZE_T pos, zSIZE_T = UINT32_MAX);
+	int32 Delete(zSIZE_T pos, zSIZE_T = UINT32_MAX);
 	zSTRING Deleted(zSIZE_T pos, zSIZE_T length = UINT32_MAX) const;
 	void DeleteRight(zSIZE_T length);
 
@@ -75,13 +75,13 @@ public:
 	void Prepend(char c) { insert(0, 1, c); }
 	void Prepend(const char *c) { insert(0, c); }
 
-	zLONG Search(zSIZE_T startIndex, const char *substr, zUINT num = 1) const;
-	zLONG Search(zSIZE_T startIndex, const zSTRING &substr, zUINT num = 1) const { return Search(startIndex, substr.ToChar(), num); }
-	zLONG Search(const char *substr, zUINT num = 1) const { return Search(0, substr, num); }
-	zLONG Search(const zSTRING &substr, zUINT num = 1) const { return Search(0, substr.ToChar(), num); }
+	int32 Search(zSIZE_T startIndex, const char *substr, zUINT num = 1) const;
+	int32 Search(zSIZE_T startIndex, const zSTRING &substr, zUINT num = 1) const { return Search(startIndex, substr.ToChar(), num); }
+	int32 Search(const char *substr, zUINT num = 1) const { return Search(0, substr, num); }
+	int32 Search(const zSTRING &substr, zUINT num = 1) const { return Search(0, substr.ToChar(), num); }
 
-	zBOOL Contains(const char *substr) const { return Search(substr) != -1; }
-	zBOOL Contains(const zSTRING &substr) const { return Search(substr.ToChar()) != -1; }
+	bool32 Contains(const char *substr) const { return Search(substr) != -1; }
+	bool32 Contains(const zSTRING &substr) const { return Search(substr.ToChar()) != -1; }
 
 	char &operator[] (zSIZE_T index) { return at(index); };
 	const char &operator[] (zSIZE_T index) const { return at(index); };
@@ -89,8 +89,8 @@ public:
 	char &First() { return at(0); }
 	char &Last() { return at(size() - 1); }
 
-	zBOOL EndsWith(const zSTRING &suffix) { return size() >= suffix.size() && !compare(size() - suffix.size(), suffix.size(), suffix); }
-	zBOOL StartsWith(const zSTRING &prefix) { return size() >= prefix.size() && !compare(0, prefix.size(), prefix); }
+	bool32 EndsWith(const zSTRING &suffix) { return size() >= suffix.size() && !compare(size() - suffix.size(), suffix.size(), suffix); }
+	bool32 StartsWith(const zSTRING &prefix) { return size() >= prefix.size() && !compare(0, prefix.size(), prefix); }
 
 	void Replace(char s, char r) { for (zSIZE_T i = 0; i < size(); i++) if (at(i) == s) replace(i, 1, 1, r); }
 };

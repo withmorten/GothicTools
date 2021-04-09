@@ -10,7 +10,7 @@ class oCWorld
 {
 public:
 	zCBspTree *bspTree;
-	zBOOL compiled;
+	bool32 compiled;
 
 	zSTRING dateStr;
 	zSTRING userStr;
@@ -29,7 +29,7 @@ public:
 	~oCWorld() { zDELETE(bspTree); }
 
 	void WriteHeader(zCFileBIN &file);
-	zBOOL ReadHeader(zCFileBIN &file);
+	bool32 ReadHeader(zCFileBIN &file);
 
 	void ReadVobTree(zCFileBIN &file);
 	void ReadWayNet(zCFileBIN &file);
@@ -37,8 +37,8 @@ public:
 	void WriteVobTree(zCFileBIN &file);
 	void WriteWayNet(zCFileBIN &file);
 
-	zBOOL LoadZEN(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadZEN(f); }
-	zBOOL LoadZEN(zCFileBIN &file);
+	bool32 LoadZEN(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadZEN(f); }
+	bool32 LoadZEN(zCFileBIN &file);
 
 	void SaveZEN(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveZEN(f); }
 	void SaveZEN(zCFileBIN &file);

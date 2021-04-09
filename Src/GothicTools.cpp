@@ -26,8 +26,8 @@ zDWORD modelMeshVersionOut = 0xFFFFFFFF;
 uint16 modelAnimationVersionOut = 0xFFFF;
 zDWORD modelScriptVersionOut = 0xFFFFFFFF;
 
-zBOOL xZenIn = FALSE;
-zBOOL xZenOut = FALSE;
+bool32 xZenIn = FALSE;
+bool32 xZenOut = FALSE;
 
-zBOOL deCompile = FALSE;
-zBOOL deLod = FALSE;
+bool32 deCompile = FALSE;
+bool32 deLod = FALSE;

@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-zBOOL oCWorld::ReadHeader(zCFileBIN &file)
+bool32 oCWorld::ReadHeader(zCFileBIN &file)
 {
 	zSTRING s;
 
@@ -40,7 +40,7 @@ zBOOL oCWorld::ReadHeader(zCFileBIN &file)
 void oCWorld::ReadVobTree(zCFileBIN &file)
 {
 	zSTRING *line = NULL;
-	zBOOL inVob = FALSE;
+	bool32 inVob = FALSE;
 
 	do
 	{
@@ -88,7 +88,7 @@ void oCWorld::ReadWayNet(zCFileBIN &file)
 	wayNet.RemoveLast();
 }
 
-zBOOL oCWorld::LoadZEN(zCFileBIN &file)
+bool32 oCWorld::LoadZEN(zCFileBIN &file)
 {
 	if (!ReadHeader(file)) return FALSE;
 
@@ -196,13 +196,13 @@ zUINT CountTabsInLine(const zSTRING &line)
 
 void oCWorld::WriteVobTree(zCFileBIN &file)
 {
-	zBOOL sameVersion = meshAndBspVersionIn == meshAndBspVersionOut;
+	bool32 sameVersion = meshAndBspVersionIn == meshAndBspVersionOut;
 
-	for (zINT i = 0; i < vobTree.numInArray; i++)
+	for (int32 i = 0; i < vobTree.numInArray; i++)
 	{
 		zCVob *vob = vobTree[i];
 
-		for (zINT j = 0; j < vob->lines.numInArray; j++)
+		for (int32 j = 0; j < vob->lines.numInArray; j++)
 		{
 			zSTRING *line = vob->lines[j];
 
@@ -340,7 +340,7 @@ void oCWorld::WriteVobTree(zCFileBIN &file)
 
 void oCWorld::WriteWayNet(zCFileBIN &file)
 {
-	for (zINT i = 0; i < wayNet.numInArray; i++)
+	for (int32 i = 0; i < wayNet.numInArray; i++)
 	{
 		file.BinWriteLine(wayNet[i]);
 	}

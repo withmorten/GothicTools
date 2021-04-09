@@ -22,7 +22,7 @@ zCMesh::zCMesh()
 
 zCMesh::~zCMesh()
 {
-	for (zINT i = 0; i < numPoly; i++)
+	for (int32 i = 0; i < numPoly; i++)
 	{
 		zDELETE(polyArray[i]);
 	}
@@ -33,7 +33,7 @@ zCMesh::~zCMesh()
 	zFREE(lightMaps);
 }
 
-zBOOL zCMesh::SaveMSH(zCFileBIN &file)
+bool32 zCMesh::SaveMSH(zCFileBIN &file)
 {
 	if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 && numVert > 65535)
 	{
@@ -79,7 +79,7 @@ zBOOL zCMesh::SaveMSH(zCFileBIN &file)
 	{
 		file.BinWriteInt(numVert);
 
-		for (zINT i = 0; i < numVert; i++)
+		for (int32 i = 0; i < numVert; i++)
 		{
 			zCVertex *vert = &vertArray[i];
 
@@ -91,7 +91,7 @@ zBOOL zCMesh::SaveMSH(zCFileBIN &file)
 	{
 		file.BinWriteInt(numFeat);
 
-		for (zINT i = 0; i < numFeat; i++)
+		for (int32 i = 0; i < numFeat; i++)
 		{
 			zTMSH_FeatureChunk chunk;
 			zCVertFeature *feat = &featArray[i];
@@ -117,10 +117,10 @@ zBOOL zCMesh::SaveMSH(zCFileBIN &file)
 	return TRUE;
 }
 
-zBOOL zCMesh::LoadMSH(zCFileBIN &file)
+bool32 zCMesh::LoadMSH(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{
@@ -184,7 +184,7 @@ zBOOL zCMesh::LoadMSH(zCFileBIN &file)
 
 			file.BinRead(block, numVert * sizeof(zPOINT3));
 
-			for (zINT i = 0; i < numVert; i++)
+			for (int32 i = 0; i < numVert; i++)
 			{
 				vertArray[i].position = block[i];
 			}
@@ -202,7 +202,7 @@ zBOOL zCMesh::LoadMSH(zCFileBIN &file)
 
 			file.BinRead(block, numFeat * sizeof(zTMSH_FeatureChunk));
 
-			for (zINT i = 0; i < numFeat; i++)
+			for (int32 i = 0; i < numFeat; i++)
 			{
 				featArray[i].texu = block[i].texu;
 				featArray[i].texv = block[i].texv;
@@ -275,7 +275,7 @@ void zCMesh::ArchiveMatList(zCFileBIN &file)
 
 	file.BinWriteInt(matList.numInArray);
 
-	for (zINT i = 0; i < matList.numInArray; i++)
+	for (int32 i = 0; i < matList.numInArray; i++)
 	{
 		zCMaterial *mat = matList[i];
 
@@ -290,7 +290,7 @@ void zCMesh::ArchiveMatList(zCFileBIN &file)
 	}
 }
 
-zBOOL zCMesh::UnarchiveMatList(zCFileBIN &file)
+bool32 zCMesh::UnarchiveMatList(zCFileBIN &file)
 {
 	zSTRING s;
 
@@ -304,12 +304,12 @@ zBOOL zCMesh::UnarchiveMatList(zCFileBIN &file)
 	file.BinReadLine(s); // END
 	file.BinReadLine(s); //
 
-	zINT numMats;
+	int32 numMats;
 	file.BinReadInt(numMats);
 
 	matList.AllocAbs(numMats);
 
-	for (zINT i = 0; i < numMats; i++)
+	for (int32 i = 0; i < numMats; i++)
 	{
 		file.BinReadString(s);
 
@@ -337,7 +337,7 @@ void zCMesh::ArchivePolyList(zCFileBIN &file)
 {
 	file.BinWriteInt(numPoly);
 
-	for (zINT i = 0; i < numPoly; i++)
+	for (int32 i = 0; i < numPoly; i++)
 	{
 		zCPolygon *poly = polyArray[i];
 
@@ -361,7 +361,7 @@ void zCMesh::ArchivePolyList(zCFileBIN &file)
 
 			file.BinWrite(&chunk, sizeof(chunk));
 
-			for (zINT j = 0; j < poly->numVert; j++)
+			for (int32 j = 0; j < poly->numVert; j++)
 			{
 				if (!xZenOut)
 				{
@@ -398,7 +398,7 @@ void zCMesh::ArchivePolyList(zCFileBIN &file)
 
 			file.BinWrite(&chunk, sizeof(chunk));
 
-			for (zINT j = 0; j < poly->numVert; j++)
+			for (int32 j = 0; j < poly->numVert; j++)
 			{
 				zTVertIndexG2 vi = (zTVertIndexG2)poly->indexList[j].vertIndex;
 				zTFeatIndex fi = (zTFeatIndex)poly->indexList[j].featIndex;
@@ -410,21 +410,21 @@ void zCMesh::ArchivePolyList(zCFileBIN &file)
 	}
 }
 
-void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
+void zCMesh::UnarchivePolyList(zCFileBIN &file, int32 len)
 {
 	file.BinReadInt(numPoly);
 
 	polyArray = zNEW_ARRAY(zCPolygon *, numPoly);
 
-	byte *block = zMALLOC<byte>(len - sizeof(zINT));
-	file.BinRead(block, len - sizeof(zINT));
+	byte *block = zMALLOC<byte>(len - sizeof(int32));
+	file.BinRead(block, len - sizeof(int32));
 
 	byte *blockPtr = block;
-	zINT inc = 0;
+	int32 inc = 0;
 
 	zTMSH_PolyReadChunk chunk;
 
-	for (zINT i = 0; i < numPoly; i++)
+	for (int32 i = 0; i < numPoly; i++)
 	{
 		zCPolygon *poly = zNEW(zCPolygon);
 		memset(&chunk.flags, 0x00, sizeof(chunk.flags));
@@ -454,7 +454,7 @@ void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 			{
 				zTIndexG1 *indexList = (zTIndexG1 *)blockPtr;
 
-				for (zINT j = 0; j < chunk.polyNumVert; j++)
+				for (int32 j = 0; j < chunk.polyNumVert; j++)
 				{
 					chunk.indexList[j].vertIndex = indexList[j].vertIndex;
 					chunk.indexList[j].featIndex = indexList[j].featIndex;
@@ -466,7 +466,7 @@ void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 			{
 				zTIndexG2 *indexList = (zTIndexG2 *)blockPtr;
 
-				for (zINT j = 0; j < chunk.polyNumVert; j++)
+				for (int32 j = 0; j < chunk.polyNumVert; j++)
 				{
 					chunk.indexList[j].vertIndex = indexList[j].vertIndex;
 					chunk.indexList[j].featIndex = indexList[j].featIndex;
@@ -496,7 +496,7 @@ void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 
 			chunk.polyNumVert = chunkg2->polyNumVert;
 
-			for (zINT j = 0; j < chunk.polyNumVert; j++)
+			for (int32 j = 0; j < chunk.polyNumVert; j++)
 			{
 				chunk.indexList[j].vertIndex = chunkg2->indexList[j].vertIndex;
 				chunk.indexList[j].featIndex = chunkg2->indexList[j].featIndex;
@@ -521,7 +521,7 @@ void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 
 		poly->indexList = zMALLOC<zTIndex>(poly->numVert);
 
-		for (zINT j = 0; j < poly->numVert; j++)
+		for (int32 j = 0; j < poly->numVert; j++)
 		{
 			poly->indexList[j].vertIndex = chunk.indexList[j].vertIndex;
 			poly->indexList[j].featIndex = chunk.indexList[j].featIndex;
@@ -535,13 +535,13 @@ void zCMesh::UnarchivePolyList(zCFileBIN &file, zLONG len)
 	zFREE(block);
 }
 
-void zCMesh::LODDegenerate(zINT *polyIndexMap, zINT newNumPoly)
+void zCMesh::LODDegenerate(int32 *polyIndexMap, int32 newNumPoly)
 {
 	zCPolygon **newPolyArray = zNEW_ARRAY(zCPolygon *, newNumPoly);
 
-	zINT newOffset = 0;
+	int32 newOffset = 0;
 
-	for (zINT i = 0; i < numPoly; i++)
+	for (int32 i = 0; i < numPoly; i++)
 	{
 		if (polyIndexMap[i] == -1)
 		{
@@ -560,7 +560,7 @@ void zCMesh::LODDegenerate(zINT *polyIndexMap, zINT newNumPoly)
 	polyArray = newPolyArray;
 	numPoly = newNumPoly;
 
-	for (zINT i = 0; i < matList.numInArray; i++)
+	for (int32 i = 0; i < matList.numInArray; i++)
 	{
 		if (matList[i]->name == "Z_PORTALMAT")
 		{

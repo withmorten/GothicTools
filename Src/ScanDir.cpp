@@ -84,7 +84,7 @@ zSTRING zCScanDir::Find(const zSTRING &s)
 	zSTRING search = s;
 	search.Upper();
 
-	for (zINT i = 0; i < files.numInArray; i++)
+	for (int32 i = 0; i < files.numInArray; i++)
 	{
 		zSTRING file = files[i];
 		file.Upper();

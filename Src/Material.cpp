@@ -32,8 +32,8 @@ void zCMaterial::InitValues()
 
 void zCMaterial::Archive(zCFileBIN &file, zDWORD objectIndex)
 {
-	zLONG startPos = file.BinPos(); // chunk.startPos
-	zLONG pos;
+	int32 startPos = file.BinPos(); // chunk.startPos
+	int32 pos;
 	zDWORD size;
 
 	// Write chunk header
@@ -82,7 +82,7 @@ void zCMaterial::Archive(zCFileBIN &file, zDWORD objectIndex)
 	file.BinSeek(pos);
 }
 
-zBOOL zCMaterial::Unarchive(zCFileBIN &file)
+bool32 zCMaterial::Unarchive(zCFileBIN &file)
 {
 	zDWORD dw;
 	uint16 version;

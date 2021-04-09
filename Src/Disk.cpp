@@ -64,7 +64,7 @@ FILE *fopen_r(const char *complete_path, const char *folder_path, const char *mo
 	return fopen(complete_path, mode);
 }
 
-zFILE::zFILE(const zSTRING &filepath, zBOOL w)
+zFILE::zFILE(const zSTRING &filepath, bool32 w)
 {
 	complete_path = filepath;
 	unixify_path(complete_path);
@@ -98,7 +98,7 @@ zFILE::zFILE(const zSTRING &filepath, zBOOL w)
 void zFILE::ReadLine(zSTRING &s)
 {
 	char file_buffer[zFILE_MAXCHARS + 1];
-	zBOOL finished = FALSE;
+	bool32 finished = FALSE;
 	s.Clear();
 
 	do
@@ -165,7 +165,7 @@ void zFILE::Read(zSTRING &s)
 	s += zSTRING(fgets_z(file_buffer, zFILE_MAXCHARS, file_handle));
 }
 
-void zFILE::WriteLine(const zSTRING &s, zBOOL crLf)
+void zFILE::WriteLine(const zSTRING &s, bool32 crLf)
 {
 	fputs(s.ToChar(), file_handle);
 
@@ -173,7 +173,7 @@ void zFILE::WriteLine(const zSTRING &s, zBOOL crLf)
 	fputc('\n', file_handle);
 }
 
-void zFILE::WriteLineIndented(zUINT numTabs, const zSTRING &s, zBOOL crLf)
+void zFILE::WriteLineIndented(zUINT numTabs, const zSTRING &s, bool32 crLf)
 {
 	for (zUINT i = 0; i < numTabs; i++)
 	{
@@ -183,7 +183,7 @@ void zFILE::WriteLineIndented(zUINT numTabs, const zSTRING &s, zBOOL crLf)
 	WriteLine(s, crLf);
 }
 
-zCFileBIN::zCFileBIN(const zSTRING &fname, zBOOL write)
+zCFileBIN::zCFileBIN(const zSTRING &fname, bool32 write)
 {
 
 	file = zNEW(zFILE)(fname, write);
@@ -191,7 +191,7 @@ zCFileBIN::zCFileBIN(const zSTRING &fname, zBOOL write)
 	nextStart = -1;
 }
 
-void zCFileBIN::BinOpenChunk(uint16 &id, zLONG &len)
+void zCFileBIN::BinOpenChunk(uint16 &id, int32 &len)
 {
 	file->Read(&id, sizeof(id));
 
@@ -220,7 +220,7 @@ void zCFileBIN::BinStartChunk(const uint16 id)
 {
 	BinEndChunk();
 
-	zINT len = 0;
+	int32 len = 0;
 	lastStart = file->Pos();
 	file->Write(&id, sizeof(id));
 	file->Write(&len, sizeof(len));
@@ -230,8 +230,8 @@ void zCFileBIN::BinEndChunk()
 {
 	if (lastStart != -1)
 	{
-		zINT actPos = file->Pos();
-		zINT len = actPos - lastStart - 6;
+		int32 actPos = file->Pos();
+		int32 len = actPos - lastStart - 6;
 
 		file->Seek(lastStart + sizeof(uint16));
 		file->Write(&len, sizeof(len));
@@ -255,7 +255,7 @@ void get_file_time_info(file_time_info *ti, char *filepath)
 	ti->mtime = st.st_mtime;
 }
 
-zBOOL zDATE::IsFileNewer(const zSTRING &one, const zSTRING &two)
+bool32 zDATE::IsFileNewer(const zSTRING &one, const zSTRING &two)
 {
 	file_time_info t1, t2;
 

@@ -31,13 +31,13 @@ public:
 	zTBBox3D bbox3D;
 
 	zDWORD treePolyIndex; // index to bspTree->treePolyIndices 
-	zINT numPolys;
+	int32 numPolys;
 
 public:
 	zCBspBase() { parent = NULL; numPolys = 0; treePolyIndex = 0; }
 
-	zBOOL IsLeaf() { return nodeType == zBSP_LEAF; }
-	zBOOL IsNode() { return nodeType == zBSP_NODE; }
+	bool32 IsLeaf() { return nodeType == zBSP_LEAF; }
+	bool32 IsNode() { return nodeType == zBSP_NODE; }
 	void LoadBINRec(zCFileBIN &file);
 	void SaveBINRec(zCFileBIN &file);
 };
@@ -49,7 +49,7 @@ public:
 	zCBspBase *back;
 
 	zCBspLeaf *leafList;
-	zINT numLeafs;
+	int32 numLeafs;
 
 	zTPlane plane;
 
@@ -81,10 +81,10 @@ class zCBspSector
 public:
 	zSTRING sectorName;
 
-	zINT numSectorNodes;
+	int32 numSectorNodes;
 	zDWORD *leafIndices;
 
-	zINT numSectorPortals;
+	int32 numSectorPortals;
 	zDWORD *sectorIndices; // indices to mesh->polyArray
 
 public:
@@ -104,19 +104,19 @@ public:
 	zCBspBase *bspRoot;
 	zCMesh *mesh;
 
-	zINT numPolys;
+	int32 numPolys;
 	zDWORD *treePolyIndices; // indices to mesh->polyArray
 
-	zINT numNodes;
+	int32 numNodes;
 	zCBspNode *nodeList;
 
-	zINT numLeafs;
+	int32 numLeafs;
 	zCBspLeaf *leafList;
 
-	zINT numPortals;
+	int32 numPortals;
 	zDWORD *portalIndices; // indices to mesh->polyArray, indoor only
 
-	zINT numSectors;
+	int32 numSectors;
 	zCBspSector *sectorList;
 
 public:
@@ -125,9 +125,9 @@ public:
 
 	void LODDegenerate();
 
-	zBOOL LoadBIN(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadBIN(f); }
-	zBOOL LoadBIN(zCFileBIN &file);
+	bool32 LoadBIN(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadBIN(f); }
+	bool32 LoadBIN(zCFileBIN &file);
 
-	zBOOL SaveBIN(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); return SaveBIN(f); }
-	zBOOL SaveBIN(zCFileBIN &file);
+	bool32 SaveBIN(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); return SaveBIN(f); }
+	bool32 SaveBIN(zCFileBIN &file);
 };

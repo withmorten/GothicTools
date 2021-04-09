@@ -23,7 +23,7 @@ class zCModelAniEvent
 public:
 	zTMdl_AniEventType aniEventType;
 
-	zINT frameNr;
+	int32 frameNr;
 
 	zVALUE value1;
 	zVALUE value2;
@@ -76,7 +76,7 @@ public:
 
 	zTMdl_AniType aniType;
 
-	zINT layer;
+	int32 layer;
 	zREAL fpsRate;
 	zREAL fpsRateSource;
 	zREAL samplePosRangeMin;
@@ -87,8 +87,8 @@ public:
 	zSTRING aniFlagsStr;
 	zSTRING ascName;
 	zSTRING aniDirStr;
-	zINT firstFrame;
-	zINT lastFrame;
+	int32 firstFrame;
+	int32 lastFrame;
 	zREAL maxFps;
 	zREAL speed;
 	zREAL collisionVolumeScale;
@@ -100,14 +100,14 @@ public:
 
 	zDWORD checksum;
 
-	zINT numNodes;
-	zINT *nodeIndexList;
+	int32 numNodes;
+	int32 *nodeIndexList;
 
-	zINT numFrames;
-	zINT numSamples;
+	int32 numFrames;
+	int32 numSamples;
 	zTMdl_AniSample *aniSampleMatrix;
 
-	zINT numAniEvents;
+	int32 numAniEvents;
 	zCModelAniEvent *aniEvents;
 
 public:
@@ -123,8 +123,8 @@ public:
 
 	void InitValues();
 
-	zBOOL LoadMAN(const zSTRING &filename) { zCFileBIN f(filename); return LoadMAN(f); }
-	zBOOL LoadMAN(zCFileBIN &file);
+	bool32 LoadMAN(const zSTRING &filename) { zCFileBIN f(filename); return LoadMAN(f); }
+	bool32 LoadMAN(zCFileBIN &file);
 
 	void SaveMAN(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMAN(f); }
 	void SaveMAN(zCFileBIN &file);

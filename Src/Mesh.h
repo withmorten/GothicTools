@@ -16,40 +16,40 @@ public:
 	zSTRING name;
 	zDATE date;
 
-	zBOOL hasLightmaps;
-	zBOOL m_bUsesAlphaTesting;
+	bool32 hasLightmaps;
+	bool32 m_bUsesAlphaTesting;
 
 	zTBBox3D bbox3D;
 	zCOBBox3D obbox3D;
 
 	zCArray<zCMaterial *> matList;
 
-	zINT numPoly;
-	zINT numVert;
-	zINT numFeat;
+	int32 numPoly;
+	int32 numVert;
+	int32 numFeat;
 
 	zCPolygon **polyArray;
 	zCVertex *vertArray;
 	zCVertFeature *featArray;
 
-	zLONG lightMapsLen;
+	int32 lightMapsLen;
 	byte *lightMaps;
 
 public:
 	zCMesh();
 	~zCMesh();
 
-	zBOOL UnarchiveMatList(zCFileBIN &file);
+	bool32 UnarchiveMatList(zCFileBIN &file);
 	void ArchiveMatList(zCFileBIN &file);
 
-	void UnarchivePolyList(zCFileBIN &file, zLONG len);
+	void UnarchivePolyList(zCFileBIN &file, int32 len);
 	void ArchivePolyList(zCFileBIN &file);
 
-	void LODDegenerate(zINT *polyIndexMap, zINT newNumPoly);
+	void LODDegenerate(int32 *polyIndexMap, int32 newNumPoly);
 
-	zBOOL LoadMSH(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMSH(f); }
-	zBOOL LoadMSH(zCFileBIN &file);
+	bool32 LoadMSH(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMSH(f); }
+	bool32 LoadMSH(zCFileBIN &file);
 
-	zBOOL SaveMSH(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); return SaveMSH(f); }
-	zBOOL SaveMSH(zCFileBIN &file);
+	bool32 SaveMSH(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); return SaveMSH(f); }
+	bool32 SaveMSH(zCFileBIN &file);
 };

@@ -10,16 +10,17 @@
 #include <time.h>
 #include <sys/stat.h>
 
+typedef int8_t int8;
 typedef uint8_t uint8;
 typedef int16_t int16;
 typedef uint16_t uint16;
+typedef int32_t int32;
 
 typedef uint8 byte;
 
-typedef int32_t zINT;
-typedef int32_t zLONG;
-typedef int32_t zBOOL;
-typedef int32_t zFLAGS;
+typedef uint8 bool8;
+typedef int32 bool32;
+
 typedef uint32_t zUINT;
 typedef uint32_t zDWORD;
 typedef uint32_t zUINT32;
@@ -153,8 +154,8 @@ extern zDWORD modelMeshVersionOut;
 extern uint16 modelAnimationVersionOut;
 extern zDWORD modelScriptVersionOut;
 
-extern zBOOL xZenIn;
-extern zBOOL xZenOut;
+extern bool32 xZenIn;
+extern bool32 xZenOut;
 
-extern zBOOL deCompile;
-extern zBOOL deLod;
+extern bool32 deCompile;
+extern bool32 deLod;

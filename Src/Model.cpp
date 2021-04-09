@@ -28,15 +28,15 @@ void GetMDSLineValue(const zSTRING &line, const zSTRING &key, zREAL &result)
 	}
 }
 
-zBOOL zCModelPrototype::ReadAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
+bool32 zCModelPrototype::ReadAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 {
 	file.BinReadInt(aniPtr->numAniEvents);
 	aniPtr->aniEvents = zNEW_ARRAY(zCModelAniEvent, aniPtr->numAniEvents);
 
 	uint16 id;
-	zLONG len;
+	int32 len;
 
-	zINT actEvent = 0;
+	int32 actEvent = 0;
 	zCModelAniEvent *event;
 
 	while (!file.BinEof())
@@ -83,7 +83,7 @@ zBOOL zCModelPrototype::ReadAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 			file.BinReadInt(event->frameNr);
 			file.BinReadLine(event->tagString);
 
-			for (zINT i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
+			for (int32 i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
 			{
 				file.BinReadLine(event->string[i]);
 			}
@@ -184,10 +184,10 @@ fileEnd:;
 	return TRUE;
 }
 
-zBOOL zCModelPrototype::ReadAniEnumMSB(zCFileBIN &file)
+bool32 zCModelPrototype::ReadAniEnumMSB(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	zCModelAni *aniPtr = NULL;
 
@@ -315,7 +315,7 @@ zBOOL zCModelPrototype::ReadAniEnumMSB(zCFileBIN &file)
 
 			file.BinReadLine(event->tagString);
 
-			for (zINT i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
+			for (int32 i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
 			{
 				file.BinReadLine(event->string[i]);
 			}
@@ -357,10 +357,10 @@ fileEnd:;
 	return TRUE;
 }
 
-zBOOL zCModelPrototype::ReadModelMSB(zCFileBIN &file)
+bool32 zCModelPrototype::ReadModelMSB(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{
@@ -453,12 +453,12 @@ fileEnd:;
 	return TRUE;
 }
 
-zBOOL zCModelPrototype::LoadModelScriptMSB(zCFileBIN &file)
+bool32 zCModelPrototype::LoadModelScriptMSB(zCFileBIN &file)
 {
 	SetModelProtoName(file.file->filename);
 
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{
@@ -584,7 +584,7 @@ void zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 				event->frameNr = arg.PickWord(1, trenn, skip).ToInt();
 				event->tagString = CutMarks2(arg.PickWord(2, "\"", "\""));
 
-				for (zINT i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
+				for (int32 i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
 				{
 					event->string[i] = CutMarks2(arg.PickWord(4 + (i * 2), "\"", "\""));
 				}
@@ -658,7 +658,7 @@ void zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 	aniPtr->numAniEvents = aniEvents.numInArray;
 	aniPtr->aniEvents = zNEW_ARRAY(zCModelAniEvent, aniPtr->numAniEvents);
 
-	for (zINT i = 0; i < aniPtr->numAniEvents; i++)
+	for (int32 i = 0; i < aniPtr->numAniEvents; i++)
 	{
 		memcpy((void *)&aniPtr->aniEvents[i], aniEvents[i], sizeof(zCModelAniEvent));
 
@@ -810,7 +810,7 @@ void zCModelPrototype::ReadAniEnum(zFILE &file)
 
 			event->tagString = CutMarks2(arg.PickWord(1, "\"", "\""));
 
-			for (zINT i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
+			for (int32 i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
 			{
 				event->string[i] = CutMarks2(arg.PickWord(3 + (i * 2), "\"", "\""));
 			}
@@ -868,7 +868,7 @@ void zCModelPrototype::ReadModel(zFILE &file)
 	}
 }
 
-zBOOL zCModelPrototype::LoadModelScript(zFILE &file)
+bool32 zCModelPrototype::LoadModelScript(zFILE &file)
 {
 	SetModelProtoName(file.filename);
 
@@ -907,7 +907,7 @@ void zCModelPrototype::WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 			file.BinWriteInt(aniPtr->numAniEvents);
 		}
 
-		for (zINT i = 0; i < aniPtr->numAniEvents; i++)
+		for (int32 i = 0; i < aniPtr->numAniEvents; i++)
 		{
 			zCModelAniEvent *event = &aniPtr->aniEvents[i];
 
@@ -920,7 +920,7 @@ void zCModelPrototype::WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 					file.BinWriteInt(event->frameNr);
 					file.BinWriteLine(event->tagString);
 
-					for (zINT j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
+					for (int32 j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
 					{
 						file.BinWriteLine(event->string[j]);
 					}
@@ -1046,7 +1046,7 @@ void zCModelPrototype::WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr)
 
 void zCModelPrototype::WriteAniEnumMSB(zCFileBIN &file)
 {
-	for (zINT i = 0; i < modelEvents.numInArray; i++)
+	for (int32 i = 0; i < modelEvents.numInArray; i++)
 	{
 		zCModelAniEvent *event = modelEvents[i];
 
@@ -1055,7 +1055,7 @@ void zCModelPrototype::WriteAniEnumMSB(zCFileBIN &file)
 
 			file.BinWriteLine(event->tagString);
 
-			for (zINT j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
+			for (int32 j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
 			{
 				file.BinWriteLine(event->string[j]);
 			}
@@ -1070,7 +1070,7 @@ void zCModelPrototype::WriteAniEnumMSB(zCFileBIN &file)
 		}
 	}
 
-	for (zINT i = 0; i < protoAnis.numInArray; i++)
+	for (int32 i = 0; i < protoAnis.numInArray; i++)
 	{
 		zCModelAni *aniPtr = protoAnis[i];
 
@@ -1178,7 +1178,7 @@ void zCModelPrototype::WriteAniEnumMSB(zCFileBIN &file)
 	}
 
 #if HANDLE_MSB_CHILD_FILES
-	for (zINT i = 0; i < modelAnis.numInArray; i++)
+	for (int32 i = 0; i < modelAnis.numInArray; i++)
 	{
 		zCModelAni *modelAni = modelAnis[i];
 
@@ -1213,7 +1213,7 @@ void zCModelPrototype::WriteModelMSB(zCFileBIN &file)
 #endif
 	}
 
-	for (zINT i = 0; i < ascNames.numInArray; i++)
+	for (int32 i = 0; i < ascNames.numInArray; i++)
 	{
 		file.BinStartChunk(zFCHUNK_MDS_REGISTERMESH);
 		{
@@ -1274,7 +1274,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 		zSTRING line;
 
-		for (zINT i = 0; i < aniPtr->numAniEvents; i++)
+		for (int32 i = 0; i < aniPtr->numAniEvents; i++)
 		{
 			zCModelAniEvent *event = &aniPtr->aniEvents[i];
 
@@ -1287,7 +1287,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 				line.Append(zSTRING(event->frameNr));
 				line.Append(" \"" + event->tagString + "\"");
 
-				for (zINT j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
+				for (int32 j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
 				{
 					if (event->string[j].Length() > 0)
 					{
@@ -1454,13 +1454,13 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 	zSTRING line;
 
-	for (zINT i = 0; i < modelEvents.numInArray; i++)
+	for (int32 i = 0; i < modelEvents.numInArray; i++)
 	{
 		zCModelAniEvent *event = modelEvents[i];
 
 		line = "MODELTAG (\"" + event->tagString + "\"";
 
-		for (zINT j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
+		for (int32 j = 0; j < zMDL_ANIEVENT_MAXSTRING; j++)
 		{
 			if (event->string[j].Length() > 0)
 			{
@@ -1484,7 +1484,7 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 	numTabs++;
 
-	for (zINT i = 0; i < protoAnis.numInArray; i++)
+	for (int32 i = 0; i < protoAnis.numInArray; i++)
 	{
 		zCModelAni *aniPtr = protoAnis[i];
 
@@ -1627,7 +1627,7 @@ void zCModelPrototype::WriteModel(zFILE &file)
 	file.WriteLineIndented(numTabs, line);
 	file.WriteLine();
 
-	for (zINT i = 0; i < ascNames.numInArray; i++)
+	for (int32 i = 0; i < ascNames.numInArray; i++)
 	{
 		file.WriteLineIndented(numTabs, "REGISTERMESH (\"" + ascNames[i] + "\")");
 	}
@@ -1654,7 +1654,7 @@ void zCModelPrototype::SaveModelScript(zFILE &file)
 	file.WriteLineIndented(numTabs, "}");
 }
 
-zBOOL zCModelPrototype::LoadMDL(zCFileBIN &file)
+bool32 zCModelPrototype::LoadMDL(zCFileBIN &file)
 {
 	hierarchy = zNEW(zCModelHierarchy);
 
@@ -1684,10 +1684,10 @@ void zCModelPrototype::SaveMDL(zCFileBIN &file)
 	mesh->SaveMDM(file);
 }
 
-zBOOL zCMeshSoftSkin::Load(zCFileBIN &file)
+bool32 zCMeshSoftSkin::Load(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{
@@ -1723,8 +1723,8 @@ zBOOL zCMeshSoftSkin::Load(zCFileBIN &file)
 			file.BinRead(nodeWedgeNormalList, numNodeWedgeNormals * sizeof(zTNodeWedgeNormal));
 
 			file.BinReadWord(numNodes);
-			nodeIndexList = zMALLOC<zINT>(numNodes);
-			file.BinRead(nodeIndexList, numNodes * sizeof(zINT));
+			nodeIndexList = zMALLOC<int32>(numNodes);
+			file.BinRead(nodeIndexList, numNodes * sizeof(int32));
 
 			nodeOBBList.AllocAbs(numNodes);
 
@@ -1774,7 +1774,7 @@ void zCMeshSoftSkin::Save(zCFileBIN &file)
 		file.BinWrite(nodeWedgeNormalList, numNodeWedgeNormals * sizeof(zTNodeWedgeNormal));
 
 		file.BinWriteWord(numNodes);
-		file.BinWrite(nodeIndexList, numNodes * sizeof(zINT));
+		file.BinWrite(nodeIndexList, numNodes * sizeof(int32));
 
 		for (uint16 i = 0; i < numNodes; i++)
 		{
@@ -1788,10 +1788,10 @@ void zCMeshSoftSkin::Save(zCFileBIN &file)
 	file.BinEndChunk();
 }
 
-zBOOL zCModelMesh::LoadMDM(zCFileBIN &file)
+bool32 zCModelMesh::LoadMDM(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{
@@ -1953,12 +1953,12 @@ void zCModelMesh::SaveMDM(zCFileBIN &file)
 	file.BinEndChunk();
 }
 
-zBOOL zCModelHierarchy::LoadMDH(zCFileBIN &file)
+bool32 zCModelHierarchy::LoadMDH(zCFileBIN &file)
 {
 	SetModelHierarchyName(file.file->filename);
 
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{

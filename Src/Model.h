@@ -88,8 +88,8 @@ public:
 
 	void SetModelHierarchyName(const zSTRING &name) { modelHierarchyName = name; modelHierarchyName.Upper(); }
 
-	zBOOL LoadMDH(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDH(f); }
-	zBOOL LoadMDH(zCFileBIN &file);
+	bool32 LoadMDH(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDH(f); }
+	bool32 LoadMDH(zCFileBIN &file);
 
 	void SaveMDH(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDH(f); }
 	void SaveMDH(zCFileBIN &file);
@@ -98,7 +98,7 @@ public:
 struct zTNodeWedgeNormal
 {
 	zVEC3 normal;
-	zINT nodeIndex;
+	int32 nodeIndex;
 };
 
 class zCMeshSoftSkin : public zCProgMeshProto
@@ -111,7 +111,7 @@ public:
 	zTNodeWedgeNormal *nodeWedgeNormalList;
 
 	uint16 numNodes;
-	zINT *nodeIndexList;
+	int32 *nodeIndexList;
 
 	zCArray<zCOBBox3D *> nodeOBBList;
 
@@ -134,7 +134,7 @@ public:
 		zFREE(nodeIndexList);
 	}
 
-	zBOOL Load(zCFileBIN &file);
+	bool32 Load(zCFileBIN &file);
 	void Save(zCFileBIN &file);
 };
 
@@ -166,8 +166,8 @@ public:
 		zDELETE_ARRAY(softSkinList);
 	}
 
-	zBOOL LoadMDM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDM(f); }
-	zBOOL LoadMDM(zCFileBIN &file);
+	bool32 LoadMDM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDM(f); }
+	bool32 LoadMDM(zCFileBIN &file);
 
 	void SaveMDM(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDM(f); }
 	void SaveMDM(zCFileBIN &file);
@@ -187,7 +187,7 @@ public:
 	zTSrcFileStats srcFileStats;
 
 	zREAL maxFps;
-	zBOOL writeMaxFps;
+	bool32 writeMaxFps;
 
 	zDWORD dontUseMesh;
 	zSTRING ascName;
@@ -227,19 +227,19 @@ public:
 
 	void SetModelProtoName(const zSTRING &name) { modelProtoName = name; modelProtoName.Upper(); }
 
-	zBOOL ReadAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr);
-	zBOOL ReadAniEnumMSB(zCFileBIN &file);
-	zBOOL ReadModelMSB(zCFileBIN &file);
+	bool32 ReadAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr);
+	bool32 ReadAniEnumMSB(zCFileBIN &file);
+	bool32 ReadModelMSB(zCFileBIN &file);
 
-	zBOOL LoadModelScriptMSB(const zSTRING &filename) { zCFileBIN f(filename); return LoadModelScriptMSB(f); }
-	zBOOL LoadModelScriptMSB(zCFileBIN &file);
+	bool32 LoadModelScriptMSB(const zSTRING &filename) { zCFileBIN f(filename); return LoadModelScriptMSB(f); }
+	bool32 LoadModelScriptMSB(zCFileBIN &file);
 
 	void ReadAniEvents(zFILE &file, zCModelAni *aniPtr);
 	void ReadAniEnum(zFILE &file);
 	void ReadModel(zFILE &file);
 
-	zBOOL LoadModelScript(const zSTRING &filename) { zFILE f(filename); return LoadModelScript(f); }
-	zBOOL LoadModelScript(zFILE &file);
+	bool32 LoadModelScript(const zSTRING &filename) { zFILE f(filename); return LoadModelScript(f); }
+	bool32 LoadModelScript(zFILE &file);
 
 	void WriteAniEventsMSB(zCFileBIN &file, zCModelAni *aniPtr);
 	void WriteAniEnumMSB(zCFileBIN &file);
@@ -255,8 +255,8 @@ public:
 	void SaveModelScript(const zSTRING &filename) { zFILE f(filename, TRUE); SaveModelScript(f); }
 	void SaveModelScript(zFILE &file);
 
-	zBOOL LoadMDL(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDL(f); }
-	zBOOL LoadMDL(zCFileBIN &file);
+	bool32 LoadMDL(const zSTRING &filename) { zCFileBIN f(filename); return LoadMDL(f); }
+	bool32 LoadMDL(zCFileBIN &file);
 
 	void SaveMDL(const zSTRING &filename) { zCFileBIN f(filename, TRUE); SaveMDL(f); }
 	void SaveMDL(zCFileBIN &file);

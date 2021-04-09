@@ -8,7 +8,7 @@ public:
 	zREAL blendInSpeed;
 	zREAL blendOutSpeed;
 	zREAL holdTime;
-	zINT layer;
+	int32 layer;
 	zREAL fpsRate;
 
 	struct
@@ -19,10 +19,10 @@ public:
 		uint8 refShape : 1;
 	} flags;
 
-	zINT numVert;
-	zINT *vertIndexList;
+	int32 numVert;
+	int32 *vertIndexList;
 
-	zINT numFrames;
+	int32 numFrames;
 	zPOINT3 *vertPosMatrix;
 
 public:
@@ -75,9 +75,9 @@ public:
 		zDELETE_ARRAY(srcFileStats);
 	}
 
-	zBOOL LoadMMB(const char *fileName) { zSTRING s(fileName); return LoadMMB(s); }
-	zBOOL LoadMMB(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMMB(f); }
-	zBOOL LoadMMB(zCFileBIN &file);
+	bool32 LoadMMB(const char *fileName) { zSTRING s(fileName); return LoadMMB(s); }
+	bool32 LoadMMB(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMMB(f); }
+	bool32 LoadMMB(zCFileBIN &file);
 
 	void SaveMMB(const char *fileName) { zSTRING s(fileName); SaveMMB(s); }
 	void SaveMMB(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveMMB(f); }

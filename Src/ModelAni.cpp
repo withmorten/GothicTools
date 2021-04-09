@@ -6,7 +6,7 @@ void zCModelAniEvent::Load(zCFileBIN &file)
 	file.BinReadInt(frameNr);
 	file.BinReadLine(tagString);
 
-	for (zINT i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
+	for (int32 i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
 	{
 		file.BinReadLine(string[i]);
 	}
@@ -25,7 +25,7 @@ void zCModelAniEvent::Save(zCFileBIN &file)
 	file.BinWriteInt(frameNr);
 	file.BinWriteLine(tagString);
 
-	for (zINT i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
+	for (int32 i = 0; i < zMDL_ANIEVENT_MAXSTRING; i++)
 	{
 		file.BinWriteLine(string[i]);
 	}
@@ -50,10 +50,10 @@ void zCModelAni::InitValues()
 	numSamples = 0;
 }
 
-zBOOL zCModelAni::LoadMAN(zCFileBIN &file)
+bool32 zCModelAni::LoadMAN(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{
@@ -107,7 +107,7 @@ zBOOL zCModelAni::LoadMAN(zCFileBIN &file)
 
 			aniEvents = zNEW_ARRAY(zCModelAniEvent, numAniEvents);
 
-			for (zINT i = 0; i < numAniEvents; i++)
+			for (int32 i = 0; i < numAniEvents; i++)
 			{
 				zCModelAniEvent *event = &aniEvents[i];
 
@@ -120,8 +120,8 @@ zBOOL zCModelAni::LoadMAN(zCFileBIN &file)
 		{
 			file.BinReadDWord(checksum);
 
-			nodeIndexList = zMALLOC<zINT>(numNodes);
-			file.BinRead(nodeIndexList, sizeof(zINT) * numNodes);
+			nodeIndexList = zMALLOC<int32>(numNodes);
+			file.BinRead(nodeIndexList, sizeof(int32) * numNodes);
 
 			numSamples = numFrames * numNodes;
 
@@ -183,7 +183,7 @@ void zCModelAni::SaveMAN(zCFileBIN &file)
 		{
 			file.BinWriteInt(numAniEvents);
 
-			for (zINT i = 0; i < numAniEvents; i++)
+			for (int32 i = 0; i < numAniEvents; i++)
 			{
 				zCModelAniEvent *event = &aniEvents[i];
 
@@ -196,7 +196,7 @@ void zCModelAni::SaveMAN(zCFileBIN &file)
 	{
 		file.BinWriteDWord(checksum);
 
-		file.BinWrite(nodeIndexList, sizeof(zINT) * numNodes);
+		file.BinWrite(nodeIndexList, sizeof(int32) * numNodes);
 
 		if (numSamples)
 		{

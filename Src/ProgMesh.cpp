@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-zBOOL zCProgMeshProto::UnarchiveMatList(zCFileBIN &file)
+bool32 zCProgMeshProto::UnarchiveMatList(zCFileBIN &file)
 {
 	zSTRING s;
 
@@ -38,10 +38,10 @@ zBOOL zCProgMeshProto::UnarchiveMatList(zCFileBIN &file)
 	return TRUE;
 }
 
-zBOOL zCProgMeshProto::LoadMRM(zCFileBIN &file)
+bool32 zCProgMeshProto::LoadMRM(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{

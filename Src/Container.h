@@ -6,8 +6,8 @@ template<class T> class zCArray
 {
 public:
 	T *array;
-	zINT numAlloc;
-	zINT numInArray;
+	int32 numAlloc;
+	int32 numInArray;
 
 public:
 	zCArray()
@@ -17,7 +17,7 @@ public:
 		numInArray = 0;
 	}
 
-	zCArray(const zINT startSize)
+	zCArray(const int32 startSize)
 	{
 		array = NULL;
 
@@ -32,7 +32,7 @@ public:
 
 	~zCArray() { EmptyList(); }
 
-	void AllocDelta(const zINT numDelta)
+	void AllocDelta(const int32 numDelta)
 	{
 		if (numDelta <= 0)
 		{
@@ -54,7 +54,7 @@ public:
 		numAlloc += numDelta;
 	}
 
-	void AllocAbs(const zINT size)
+	void AllocAbs(const int32 size)
 	{
 		if (numAlloc >= size)
 		{
@@ -64,8 +64,8 @@ public:
 		AllocDelta(size - numAlloc);
 	}
 
-	const T &operator[](const zINT nr) const { return array[nr]; }
-	T &operator[](const zINT nr) { return array[nr]; }
+	const T &operator[](const int32 nr) const { return array[nr]; }
+	T &operator[](const int32 nr) { return array[nr]; }
 
 	zCArray<T> &operator=(const zCArray<T> &array2)
 	{
@@ -73,7 +73,7 @@ public:
 		AllocAbs(array2.numInArray);
 		numInArray = array2.numInArray;
 
-		for (zINT i = 0; i < numInArray; i++) array[i] = array2[i];
+		for (int32 i = 0; i < numInArray; i++) array[i] = array2[i];
 
 		return *this;
 	}
@@ -109,11 +109,11 @@ public:
 		numInArray = 0;
 	}
 
-	zINT Search(const T &data) const
+	int32 Search(const T &data) const
 	{
 		if (numInArray > 0)
 		{
-			for (zINT i = 0; i < numInArray; i++)
+			for (int32 i = 0; i < numInArray; i++)
 			{
 				if (array[i] == data) return i;
 			}
@@ -122,11 +122,11 @@ public:
 		return -1;
 	}
 
-	zBOOL IsInList(const T &data) const
+	bool32 IsInList(const T &data) const
 	{
 		if (numInArray > 0)
 		{
-			for (zINT i = 0; i < numInArray; i++)
+			for (int32 i = 0; i < numInArray; i++)
 			{
 				if (array[i] == data) return TRUE;
 			}
@@ -148,7 +148,7 @@ public:
 		{
 			T *newArray = zNEW_ARRAY(T, numInArray);
 
-			for (zINT i = 0; i < numInArray; i++)
+			for (int32 i = 0; i < numInArray; i++)
 			{
 				newArray[i] = array[i];
 			}
@@ -160,7 +160,7 @@ public:
 		}
 	}
 
-	void RemoveLast(zBOOL release = FALSE)
+	void RemoveLast(bool32 release = FALSE)
 	{
 		if (numInArray <= 0) return;
 
@@ -169,7 +169,7 @@ public:
 		if (release) zDELETE(array[numInArray]);
 	}
 
-	void RemoveOrderIndex(const zINT index, zBOOL release = FALSE)
+	void RemoveOrderIndex(const int32 index, bool32 release = FALSE)
 	{
 		if (index > numInArray) return;
 
@@ -177,7 +177,7 @@ public:
 
 		if (index != numInArray - 1)
 		{
-			for (zINT i = index; i < numInArray; i++)
+			for (int32 i = index; i < numInArray; i++)
 			{
 				array[i] = array[i + 1];
 			}
@@ -191,10 +191,10 @@ template<class T> class zCArrayAdapt
 {
 public:
 	T *array;
-	zINT numInArray;
+	int32 numInArray;
 
 public:
-	zDWORD SetArray(void *ptr, const zINT num)
+	zDWORD SetArray(void *ptr, const int32 num)
 	{
 		array = (T *)ptr;
 		numInArray = num;
@@ -207,7 +207,7 @@ public:
 		return array;
 	}
 
-	zINT GetNum()
+	int32 GetNum()
 	{
 		return numInArray;
 	}

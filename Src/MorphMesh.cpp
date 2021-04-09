@@ -14,10 +14,10 @@ void zCMorphMeshAni::Load(zCFileBIN &file)
 	file.BinReadInt(numVert);
 	file.BinReadInt(numFrames);
 
-	vertIndexList = zMALLOC<zINT>(numVert);
+	vertIndexList = zMALLOC<int32>(numVert);
 	vertPosMatrix = zNEW_ARRAY(zPOINT3, numVert * numFrames);
 
-	file.BinRead(vertIndexList, sizeof(zINT) * numVert);
+	file.BinRead(vertIndexList, sizeof(int32) * numVert);
 	file.BinRead(vertPosMatrix, sizeof(zPOINT3) * numVert * numFrames);
 }
 
@@ -35,14 +35,14 @@ void zCMorphMeshAni::Save(zCFileBIN &file)
 	file.BinWriteInt(numVert);
 	file.BinWriteInt(numFrames);
 
-	file.BinWrite(vertIndexList, sizeof(zINT) * numVert);
+	file.BinWrite(vertIndexList, sizeof(int32) * numVert);
 	file.BinWrite(vertPosMatrix, sizeof(zPOINT3) * numVert * numFrames);
 }
 
-zBOOL zCMorphMeshProto::LoadMMB(zCFileBIN &file)
+bool32 zCMorphMeshProto::LoadMMB(zCFileBIN &file)
 {
 	uint16 id;
-	zLONG len;
+	int32 len;
 
 	while (!file.BinEof())
 	{

@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-zSTRING::zSTRING(const zREAL xWert, zINT digits)
+zSTRING::zSTRING(const zREAL xWert, int32 digits)
 {
 	if (digits > 9 || digits < 0) digits = 9;
 
@@ -63,7 +63,7 @@ zSTRING zSTRING::PickWord(zUINT num, const zSTRING &trenn, const zSTRING &skip) 
 		return result;
 	}
 
-	zINT pos = 0;
+	int32 pos = 0;
 
 	if (trenn.find_first_of(str[pos]) != string::npos)
 	{
@@ -127,7 +127,7 @@ const char *zSTRING::PickWordPos(zUINT num, const zSTRING &trenn, const zSTRING 
 	return NULL;
 }
 
-zSTRING zSTRING::PickWorld_Old(zINT num, const zSTRING &trenn)
+zSTRING zSTRING::PickWorld_Old(int32 num, const zSTRING &trenn)
 {
 	return PickWord(num, trenn, " ");
 }
@@ -190,7 +190,7 @@ void zSTRING::Delete(const zSTRING &xStr, zTSTR_KIND kind)
 	}
 }
 
-zINT zSTRING::Delete(zSIZE_T pos, zSIZE_T length)
+int32 zSTRING::Delete(zSIZE_T pos, zSIZE_T length)
 {
 	if (pos >= size()) return 0;
 	erase(pos, length);
@@ -214,18 +214,18 @@ void zSTRING::DeleteRight(zSIZE_T length)
 	erase(size() - length, length);
 }
 
-zLONG zSTRING::Search(zSIZE_T startIndex, const char *substr, zUINT num) const
+int32 zSTRING::Search(zSIZE_T startIndex, const char *substr, zUINT num) const
 {
 	if (!substr) return -1;
 
 	zSIZE_T index = startIndex;
-	zLONG pos = -1;
+	int32 pos = -1;
 
 	for (zUINT i = 0; i < num; i++)
 	{
-		pos = (zLONG)find(substr, index);
+		pos = (int32)find(substr, index);
 
-		if (pos == (zLONG)string::npos) return -1;
+		if (pos == (int32)string::npos) return -1;
 
 		index = pos + 1;
 	}
