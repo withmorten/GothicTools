@@ -1,4 +1,4 @@
-#include "GothicTools.h"
+#include "Material.h"
 
 void zCMaterial::InitValues()
 {
@@ -99,7 +99,6 @@ bool32 zCMaterial::Unarchive(zCFileBIN &file)
 		&& ((materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_30 && version != MATERIAL_VERSION_SUM_GOTHIC_OLD1)
 		&& (materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_30 && version != MATERIAL_VERSION_SUM_GOTHIC_OLD2)))
 	{
-
 		printf("Wrong Material version\n");
 
 		return FALSE;

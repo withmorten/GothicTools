@@ -1,5 +1,10 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "3D.h"
+#include "ProgMesh.h"
+
 #define HANDLE_MSB_CHILD_FILES 0
 
 #define zFCHUNK_MODELSCRIPT ((uint16)0xF000)
@@ -58,6 +63,7 @@ public:
 	zMATRIX4 trafo;
 };
 
+// TODO not actually a class
 class zCModelHierarchy
 {
 public:
@@ -104,6 +110,9 @@ struct zTNodeWedgeNormal
 class zCMeshSoftSkin : public zCProgMeshProto
 {
 public:
+	static const zSTRING GetClassName() { return "zCMeshSoftSkin"; }
+
+public:
 	uint32 size;
 	byte *vertWeightStream;
 
@@ -138,7 +147,7 @@ public:
 	void Save(zCFileBIN &file);
 };
 
-class zCModelMesh
+class zCModelMeshLib : public zCObject
 {
 public:
 	zTSrcFileStats srcFileStats;
@@ -152,7 +161,7 @@ public:
 	zCMeshSoftSkin *softSkinList;
 
 public:
-	zCModelMesh()
+	zCModelMeshLib()
 	{
 		numNodeMeshes = 0;
 		numSoftSkins = 0;
@@ -160,7 +169,7 @@ public:
 		softSkinList = NULL;
 	}
 
-	~zCModelMesh()
+	~zCModelMeshLib()
 	{
 		zDELETE_ARRAY(nodeMeshList);
 		zDELETE_ARRAY(softSkinList);
@@ -195,7 +204,7 @@ public:
 	zCArray<zSTRING> ascNames;
 
 #if HANDLE_MSB_CHILD_FILES
-	zCArray<zCModelMesh *> meshList;
+	zCArray<zCModelMeshLib *> meshList;
 	zCArray<zCModelAni *> modelAnis;
 #endif
 
@@ -203,7 +212,7 @@ public:
 	zCArray<zCModelAniEvent *> modelEvents;
 
 	zCModelHierarchy *hierarchy;
-	zCModelMesh *mesh;
+	zCModelMeshLib *mesh;
 
 	uint32 numTabs;
 

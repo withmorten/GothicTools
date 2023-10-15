@@ -1,4 +1,6 @@
-#include "GothicTools.h"
+#include "Model.h"
+
+#include "ModelAni.h"
 
 const zSTRING sep = " \t";
 const zSTRING trenn = " \t\r";
@@ -379,7 +381,7 @@ bool32 zCModelPrototype::ReadModelMSB(zCFileBIN &file)
 
 			if (!dontUseMesh)
 			{
-				mesh = zNEW(zCModelMesh);
+				mesh = zNEW(zCModelMeshLib);
 
 				zSTRING mdmName(ascName);
 				if (mdmName.EndsWith(".ASC")) mdmName.DeleteRight(4);
@@ -406,7 +408,7 @@ bool32 zCModelPrototype::ReadModelMSB(zCFileBIN &file)
 			zSTRING mdmName(ascName);
 			if (mdmName.EndsWith(".ASC")) mdmName.DeleteRight(4);
 
-			zCModelMesh *mesh = zNEW(zCModelMesh);
+			zCModelMeshLib *mesh = zNEW(zCModelMeshLib);
 
 			if (!mesh->LoadMDM(file.file->path + "/" + mdmName + ".MDM"))
 			{
@@ -530,7 +532,7 @@ void zCModelPrototype::ReadAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 	while (!file.Eof())
 	{
-		file.ReadLine(line);
+		file.ReadLine(line, FALSE);
 		line.Upper();
 
 		if (line.Contains("//")) continue;
@@ -675,7 +677,7 @@ void zCModelPrototype::ReadAniEnum(zFILE &file)
 
 	while (!file.Eof())
 	{
-		file.ReadLine(line);
+		file.ReadLine(line, FALSE);
 		line.Upper();
 
 		if (line.Contains("//")) continue;
@@ -834,7 +836,7 @@ void zCModelPrototype::ReadModel(zFILE &file)
 
 	while (!file.Eof())
 	{
-		file.ReadLine(line);
+		file.ReadLine(line, FALSE);
 		line.Upper();
 
 		if (line.Contains("//")) continue;
@@ -887,7 +889,7 @@ bool32 zCModelPrototype::LoadModelScript(zFILE &file)
 
 	while (!file.Eof())
 	{
-		file.ReadLine(line);
+		file.ReadLine(line, FALSE);
 		line.Upper();
 
 		if (line.Contains("//")) continue;
@@ -1268,7 +1270,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 {
 	if (aniPtr->numAniEvents > 0)
 	{
-		file.WriteLineIndented(numTabs, "{");
+		file.WriteLineIndented(numTabs, "{", TRUE);
 
 		numTabs++;
 
@@ -1297,7 +1299,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1313,7 +1315,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1329,7 +1331,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1343,7 +1345,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1359,7 +1361,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1371,7 +1373,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1384,7 +1386,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1397,7 +1399,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1413,7 +1415,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1429,7 +1431,7 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 				line.Append(")");
 
-				file.WriteLineIndented(numTabs, line);
+				file.WriteLineIndented(numTabs, line, TRUE);
 
 				break;
 			}
@@ -1442,9 +1444,9 @@ void zCModelPrototype::WriteAniEvents(zFILE &file, zCModelAni *aniPtr)
 
 		numTabs--;
 
-		file.WriteLineIndented(numTabs, "}");
+		file.WriteLineIndented(numTabs, "}", TRUE);
 
-		file.WriteLine();
+		file.WriteLine(TRUE);
 	}
 }
 
@@ -1470,16 +1472,16 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 		line.Append(")");
 
-		file.WriteLineIndented(numTabs, line);
+		file.WriteLineIndented(numTabs, line, TRUE);
 	}
 
-	if (line.Length() > 0) file.WriteLine();
+	if (line.Length() > 0) file.WriteLine(TRUE);
 
 	if (writeMaxFps)
 	{
-		file.WriteLineIndented(numTabs, "ANIMAXFPS (" + zSTRING(maxFps) + ")");
+		file.WriteLineIndented(numTabs, "ANIMAXFPS (" + zSTRING(maxFps) + ")", TRUE);
 
-		file.WriteLine();
+		file.WriteLine(TRUE);
 	}
 
 	numTabs++;
@@ -1510,7 +1512,7 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 			line.Append(")");
 
-			file.WriteLineIndented(numTabs, line);
+			file.WriteLineIndented(numTabs, line, TRUE);
 
 			WriteAniEvents(file, aniPtr);
 
@@ -1531,7 +1533,7 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 			line.Append(")");
 
-			file.WriteLineIndented(numTabs, line);
+			file.WriteLineIndented(numTabs, line, TRUE);
 
 			break;
 		}
@@ -1546,7 +1548,7 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 			line.Append(")");
 
-			file.WriteLineIndented(numTabs, line);
+			file.WriteLineIndented(numTabs, line, TRUE);
 
 			WriteAniEvents(file, aniPtr);
 
@@ -1561,7 +1563,7 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 			line.Append(")");
 
-			file.WriteLineIndented(numTabs, line);
+			file.WriteLineIndented(numTabs, line, TRUE);
 
 			WriteAniEvents(file, aniPtr);
 
@@ -1582,7 +1584,7 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 			line.Append(")");
 
-			file.WriteLineIndented(numTabs, line);
+			file.WriteLineIndented(numTabs, line, TRUE);
 
 			WriteAniEvents(file, aniPtr);
 
@@ -1596,7 +1598,7 @@ void zCModelPrototype::WriteAniEnum(zFILE &file)
 
 			line.Append(")");
 
-			file.WriteLineIndented(numTabs, line);
+			file.WriteLineIndented(numTabs, line, TRUE);
 
 			WriteAniEvents(file, aniPtr);
 
@@ -1624,34 +1626,34 @@ void zCModelPrototype::WriteModel(zFILE &file)
 
 	line.Append(")");
 
-	file.WriteLineIndented(numTabs, line);
-	file.WriteLine();
+	file.WriteLineIndented(numTabs, line, TRUE);
+	file.WriteLine(TRUE);
 
 	for (int32 i = 0; i < ascNames.numInArray; i++)
 	{
-		file.WriteLineIndented(numTabs, "REGISTERMESH (\"" + ascNames[i] + "\")");
+		file.WriteLineIndented(numTabs, "REGISTERMESH (\"" + ascNames[i] + "\")", TRUE);
 	}
 
-	file.WriteLine();
+	file.WriteLine(TRUE);
 
-	file.WriteLineIndented(numTabs, "ANIENUM");
-	file.WriteLineIndented(numTabs, "{");
+	file.WriteLineIndented(numTabs, "ANIENUM", TRUE);
+	file.WriteLineIndented(numTabs, "{", TRUE);
 
 	WriteAniEnum(file);
 
-	file.WriteLineIndented(numTabs, "}");
+	file.WriteLineIndented(numTabs, "}", TRUE);
 
 	numTabs--;
 }
 
 void zCModelPrototype::SaveModelScript(zFILE &file)
 {
-	file.WriteLineIndented(numTabs, "MODEL (\"" + modelProtoName + "\")");
-	file.WriteLineIndented(numTabs, "{");
+	file.WriteLineIndented(numTabs, "MODEL (\"" + modelProtoName + "\")", TRUE);
+	file.WriteLineIndented(numTabs, "{", TRUE);
 
 	WriteModel(file);
 
-	file.WriteLineIndented(numTabs, "}");
+	file.WriteLineIndented(numTabs, "}", TRUE);
 }
 
 bool32 zCModelPrototype::LoadMDL(zCFileBIN &file)
@@ -1665,7 +1667,7 @@ bool32 zCModelPrototype::LoadMDL(zCFileBIN &file)
 		return FALSE;
 	}
 
-	mesh = zNEW(zCModelMesh);
+	mesh = zNEW(zCModelMeshLib);
 
 	if (!mesh->LoadMDM(file))
 	{
@@ -1788,7 +1790,7 @@ void zCMeshSoftSkin::Save(zCFileBIN &file)
 	file.BinEndChunk();
 }
 
-bool32 zCModelMesh::LoadMDM(zCFileBIN &file)
+bool32 zCModelMeshLib::LoadMDM(zCFileBIN &file)
 {
 	uint16 id;
 	int32 len;
@@ -1899,7 +1901,7 @@ fileEnd:;
 	return TRUE;
 }
 
-void zCModelMesh::SaveMDM(zCFileBIN &file)
+void zCModelMeshLib::SaveMDM(zCFileBIN &file)
 {
 	file.BinStartChunk(zFCHUNK_MODELMESH);
 	{

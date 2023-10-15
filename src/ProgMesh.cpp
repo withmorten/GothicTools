@@ -1,4 +1,17 @@
-#include "GothicTools.h"
+#include "Progmesh.h"
+
+#include "Material.h"
+
+zCProgMeshProto::zCSubMesh::zCSubMesh()
+{
+	material = NULL;
+	vbStartIndex = 0;
+}
+
+zCProgMeshProto::zCSubMesh::~zCSubMesh()
+{
+	zDELETE(material);
+}
 
 bool32 zCProgMeshProto::UnarchiveMatList(zCFileBIN &file)
 {

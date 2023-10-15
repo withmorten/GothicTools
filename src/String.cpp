@@ -1,4 +1,4 @@
-#include "GothicTools.h"
+#include "GothicTools.h" // shrug
 
 zSTRING::zSTRING(const float xWert, int32 digits)
 {
@@ -16,7 +16,7 @@ char zSTRING::GetLastChar()
 {
 	if (size() == 0)
 	{
-		return  ' ';
+		return ' ';
 	}
 	else
 	{
@@ -48,7 +48,7 @@ zSTRING &zSTRING::Lower()
 	return *this;
 }
 
-zSTRING zSTRING::PickWord(uint32 num, const zSTRING &trenn, const zSTRING &skip) const
+zSTRING zSTRING::PickWord(size_t num, const zSTRING &trenn, const zSTRING &skip) const
 {
 	if (size() <= 0)
 	{
@@ -85,7 +85,7 @@ zSTRING zSTRING::PickWord(uint32 num, const zSTRING &trenn, const zSTRING &skip)
 	return result;
 }
 
-const char *zSTRING::PickWordPos(uint32 num, const zSTRING &trenn, const zSTRING &skip) const
+const char *zSTRING::PickWordPos(size_t num, const zSTRING &trenn, const zSTRING &skip) const
 {
 	const size_t strsize = size();
 
@@ -127,12 +127,12 @@ const char *zSTRING::PickWordPos(uint32 num, const zSTRING &trenn, const zSTRING
 	return NULL;
 }
 
-zSTRING zSTRING::PickWorld_Old(int32 num, const zSTRING &trenn)
+zSTRING zSTRING::PickWorld_Old(size_t num, const zSTRING &trenn)
 {
 	return PickWord(num, trenn, " ");
 }
 
-zSTRING zSTRING::PickWordCutMarks(uint32 num, const zSTRING &trenn, const zSTRING &skip) const
+zSTRING zSTRING::PickWordCutMarks(size_t num, const zSTRING &trenn, const zSTRING &skip) const
 {
 	zSTRING word = PickWord(num, trenn, skip);
 
@@ -212,6 +212,36 @@ void zSTRING::DeleteRight(size_t length)
 	}
 
 	erase(size() - length, length);
+}
+
+void zSTRING::TrimLeft(char ch)
+{
+	size_t pos = 0;
+
+	while (pos < size() && (*this)[pos] == ch)
+	{
+		pos++;
+	}
+
+	if (pos > 0)
+	{
+		Delete(0, pos);
+	}
+}
+
+void zSTRING::TrimRight(char ch)
+{
+	size_t pos = size() - 1;
+
+	while (pos >= 0 && (*this)[pos] == ch)
+	{
+		pos++;
+	}
+
+	if (pos < size() - 1)
+	{
+		Delete(pos + 1);
+	}
 }
 
 int32 zSTRING::Search(size_t startIndex, const char *substr, uint32 num) const

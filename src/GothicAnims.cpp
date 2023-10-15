@@ -1,21 +1,38 @@
 #include "GothicTools.h"
 
+#include "ScanDir.h"
+#include "Model.h"
+#include "ModelAni.h"
+#include "MorphMesh.h"
+#include "ProgMesh.h"
+#include "Mesh.h"
+
+enum
+{
+	ARG_PROG_NAME,
+	ARG_TYPE,
+	ARG_FOLDER_IN,
+	ARG_VERSION_IN,
+	ARG_OPTIONAL_FOLDER_OUT, // not really optional
+	ARG_OPTIONAL_VERSION_OUT, // not really optional
+};
+
 int main(int argc, const char **argv)
 {
-	if (argc < 5)
+	if (argc < ARG_OPTIONAL_FOLDER_OUT)
 	{
 		printf("GothicAnims v0.1 by withmorten\n\n");
 		printf("GothicAnims can convert an entire anims or meshes directory from 1.08k to 2.6 and vice versa\n\n");
 		printf("usage:\n");
-		printf("GothicAnims <filetype> <version_in> <version_out> <folder_in> <folder_out>\n\n");
-		printf("for <filetype>, use \"anims\" or \"a\" to convert animations, \"meshes\" or \"m\" to convert meshes\n\n");
-		printf("version in/out can be 108 (1.08k) or 130 (1.30) / 26 (2.6f)\n\n");
+		printf("GothicAnims <type> <folder_in> <version_in> <folder_out> <version_out>\n\n");
+		printf("for <type>, use \"anims\" or \"a\" to convert animations, \"meshes\" or \"m\" to convert meshes\n\n");
+		printf("version in/out can be 108 (1.08k) or 130 (1.30) / 260 (2.6f)\n\n");
 		printf("the animation and mesh formats are the same from 1.01d (101) to 1.08k (108), and probably 1.12f (112)\n");
 
 		return zOK;
 	}
 
-	switch (atoi(argv[2])) // version in
+	switch (atoi(argv[ARG_VERSION_IN]))
 	{
 	case 101:
 	case 104:
@@ -35,7 +52,7 @@ int main(int argc, const char **argv)
 
 		break;
 	case 130:
-	case 26:
+	case 260:
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_30;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_30;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_30;
@@ -51,61 +68,64 @@ int main(int argc, const char **argv)
 
 		break;
 	default:
-		printf("Unrecognized version in, needs to be 101/104/108 or 130/26\n");
+		printf("Unrecognized version in, needs to be 101/104/108 or 130/260\n");
 
 		return zERROR;
 
 		break;
 	}
 
-	switch (atoi(argv[3])) // version out
+	if (argc > ARG_OPTIONAL_VERSION_OUT)
 	{
-	case 101:
-	case 104:
-	case 108:
-	case 112:
-		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
-		meshVersionOut = MESH_VERSION_GOTHIC_1_04;
-		bspVersionOut = BSP_VERSION_GOTHIC_1_04;
-		materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_04;
+		switch (atoi(argv[ARG_OPTIONAL_VERSION_OUT]))
+		{
+		case 101:
+		case 104:
+		case 108:
+		case 112:
+			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
+			meshVersionOut = MESH_VERSION_GOTHIC_1_04;
+			bspVersionOut = BSP_VERSION_GOTHIC_1_04;
+			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_04;
 
-		morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_04;
-		progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_04;
-		meshSoftSkinVersionOut = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_04;
-		modelHierarchyVersionOut = MODELHIERARCHY_VERSION_GOTHIC_1_04;
-		modelMeshVersionOut = MODELMESH_VERSION_GOTHIC_1_04;
-		modelAnimationVersionOut = MAN_FILE_VERSION_GOTHIC_1_04;
+			morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_04;
+			progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_04;
+			meshSoftSkinVersionOut = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_04;
+			modelHierarchyVersionOut = MODELHIERARCHY_VERSION_GOTHIC_1_04;
+			modelMeshVersionOut = MODELMESH_VERSION_GOTHIC_1_04;
+			modelAnimationVersionOut = MAN_FILE_VERSION_GOTHIC_1_04;
 
-		break;
-	case 130:
-	case 26:
-		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
-		meshVersionOut = MESH_VERSION_GOTHIC_1_30;
-		bspVersionOut = BSP_VERSION_GOTHIC_1_30;
-		materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_30;
+			break;
+		case 130:
+		case 260:
+			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
+			meshVersionOut = MESH_VERSION_GOTHIC_1_30;
+			bspVersionOut = BSP_VERSION_GOTHIC_1_30;
+			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_30;
 
-		morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_30;
-		progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_30;
-		meshSoftSkinVersionOut = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_30;
-		modelHierarchyVersionOut = MODELHIERARCHY_VERSION_GOTHIC_1_30;
-		modelMeshVersionOut = MODELMESH_VERSION_GOTHIC_1_30;
-		modelAnimationVersionOut = MAN_FILE_VERSION_GOTHIC_1_30;
-		modelScriptVersionOut = MSB_FILE_VERSION_GOTHIC_1_30;
+			morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_30;
+			progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_30;
+			meshSoftSkinVersionOut = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_30;
+			modelHierarchyVersionOut = MODELHIERARCHY_VERSION_GOTHIC_1_30;
+			modelMeshVersionOut = MODELMESH_VERSION_GOTHIC_1_30;
+			modelAnimationVersionOut = MAN_FILE_VERSION_GOTHIC_1_30;
+			modelScriptVersionOut = MSB_FILE_VERSION_GOTHIC_1_30;
 
-		break;
-	default:
-		printf("Unrecognized version out, needs to be 101/104/108 or 130/26\n");
+			break;
+		default:
+			printf("Unrecognized version out, needs to be 101/104/108 or 130/260\n");
 
-		return zERROR;
+			return zERROR;
 
-		break;
+			break;
+		}
 	}
 
 	zCScanDir scDir;
 
-	if ((argv[1][1] == '\0' && argv[1][0] == 'a') || !stricmp(argv[1], "anims")) // compiled type
+	if ((argv[ARG_TYPE][1] == '\0' && argv[ARG_TYPE][0] == 'a') || !stricmp(argv[ARG_TYPE], "anims"))
 	{
-		scDir.ScanDirectory(argv[4]); // folder in
+		scDir.ScanDirectory(argv[ARG_FOLDER_IN]);
 
 		for (int32 i = 0; i < scDir.files.numInArray; i++)
 		{
@@ -140,7 +160,7 @@ int main(int argc, const char **argv)
 					}
 					else
 					{
-						msbPath = argv[5] + zSTRING("/_compiled/") + msbName; // folder out
+						msbPath = argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + msbName;
 					}
 
 					if (writeMsb)
@@ -202,7 +222,7 @@ int main(int argc, const char **argv)
 						{
 							if (!mdsPath.Length())
 							{
-								mdsPath = argv[5]; // folder out
+								mdsPath = argv[ARG_OPTIONAL_FOLDER_OUT];
 
 								if (msb->srcFileStats.fileName.Contains("MDS_MOBSI")) mdsPath.Append("/MDS_MOBSI");
 								else if (msb->srcFileStats.fileName.Contains("MDS_OVERLAY")) mdsPath.Append("/MDS_OVERLAY");
@@ -230,7 +250,7 @@ int main(int argc, const char **argv)
 
 					if (msb->LoadModelScriptMSB(file_in))
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						msb->SaveModelScriptMSB(file_out);
 
@@ -252,9 +272,9 @@ int main(int argc, const char **argv)
 
 				if (mmb->LoadMMB(file_in))
 				{
-					if (argc > 5)
+					if (argc > ARG_OPTIONAL_VERSION_OUT)
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						mmb->SaveMMB(file_out);
 
@@ -280,9 +300,9 @@ int main(int argc, const char **argv)
 
 				if (mdl->LoadMDL(file_in))
 				{
-					if (argc > 5)
+					if (argc > ARG_OPTIONAL_VERSION_OUT)
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						mdl->SaveMDL(file_out);
 
@@ -308,9 +328,9 @@ int main(int argc, const char **argv)
 
 				if (mdh->LoadMDH(file_in))
 				{
-					if (argc > 5)
+					if (argc > ARG_OPTIONAL_VERSION_OUT)
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						mdh->SaveMDH(file_out);
 
@@ -332,13 +352,13 @@ int main(int argc, const char **argv)
 			}
 			else if (extension == "MDM")
 			{
-				zCModelMesh *mdm = zNEW(zCModelMesh);
+				zCModelMeshLib *mdm = zNEW(zCModelMeshLib);
 
 				if (mdm->LoadMDM(file_in))
 				{
-					if (argc > 5)
+					if (argc > ARG_OPTIONAL_VERSION_OUT)
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						mdm->SaveMDM(file_out);
 
@@ -364,9 +384,9 @@ int main(int argc, const char **argv)
 
 				if (man->LoadMAN(file_in))
 				{
-					if (argc > 5)
+					if (argc > ARG_OPTIONAL_VERSION_OUT)
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						man->SaveMAN(file_out);
 
@@ -388,9 +408,9 @@ int main(int argc, const char **argv)
 			}
 		}
 	}
-	else if ((argv[1][1] == '\0' && argv[1][0] == 'm') || !stricmp(argv[1], "meshes")) // compiled type
+	else if ((argv[ARG_TYPE][1] == '\0' && argv[ARG_TYPE][0] == 'm') || !stricmp(argv[ARG_TYPE], "meshes"))
 	{
-		scDir.ScanDirectory(argv[4]); // folder in
+		scDir.ScanDirectory(argv[ARG_FOLDER_IN]);
 
 		for (int32 i = 0; i < scDir.files.numInArray; i++)
 		{
@@ -405,9 +425,9 @@ int main(int argc, const char **argv)
 
 				if (mrm->LoadMRM(file_in))
 				{
-					if (argc > 5)
+					if (argc > ARG_OPTIONAL_VERSION_OUT)
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						mrm->SaveMRM(file_out);
 
@@ -433,9 +453,9 @@ int main(int argc, const char **argv)
 
 				if (msh->LoadMSH(file_in))
 				{
-					if (argc > 5)
+					if (argc > ARG_OPTIONAL_VERSION_OUT)
 					{
-						zCFileBIN file_out(argv[5] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE); // folder out
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
 
 						msh->SaveMSH(file_out);
 

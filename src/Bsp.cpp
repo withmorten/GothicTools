@@ -1,4 +1,6 @@
-#include "GothicTools.h"
+#include "Bsp.h"
+
+#include "Mesh.h"
 
 zCBspTree *zCBspTree::actBspTree = NULL;
 zCBspNode *zCBspTree::actNodePtr = NULL;
@@ -148,7 +150,7 @@ bool32 zCBspTree::LoadBIN(zCFileBIN &file)
 			}
 
 			file.BinReadEnum(bspTreeMode);
-			if (bspTreeMode == zBSP_MODE_INDOOR) deLod = FALSE;
+			if (bspTreeMode == zBSP_MODE_INDOOR) deLOD = FALSE;
 
 			break;
 		}
@@ -250,7 +252,7 @@ bool32 zCBspTree::LoadBIN(zCFileBIN &file)
 
 fileEnd:;
 
-	if (deLod)
+	if (deLOD)
 	{
 		bool32 hasLodPolys = FALSE;
 

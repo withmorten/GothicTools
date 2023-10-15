@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GothicTools.h"
+
 #define zARRAY_START_ALLOC 16
 
 template<class T> class zCArray

@@ -1,45 +1,35 @@
 #pragma once
 
-class zCVob
+#include "GothicTools.h"
+
+#include "Object.h"
+
+class zCBspTree;
+class zCVob;
+class zCWayNet;
+
+class zCWorld : public zCObject
 {
 public:
-	zCArray<zSTRING *> lines;
-};
+	static const zSTRING GetClassName() { return "zCWorld"; }
 
-class oCWorld
-{
 public:
 	zCBspTree *bspTree;
 	bool32 compiled;
 
-	zSTRING dateStr;
-	zSTRING userStr;
-	zSTRING objectsStr;
-	zSTRING worldStr;
-	zSTRING meshAndBspStr;
-	zSTRING vobTreeStr;
-	zSTRING vobTreeChildsStr;
-	zSTRING wayNetStr;
-
-	zCArray<zCVob *> vobTree;
-	zCArray<zSTRING *> wayNet;
+	zCVob *vobTree;
+	zCWayNet *wayNet;
 
 public:
-	oCWorld() { bspTree = NULL; compiled = FALSE; }
-	~oCWorld() { zDELETE(bspTree); }
+	zCWorld();
+	~zCWorld();
 
-	void WriteHeader(zCFileBIN &file);
-	bool32 ReadHeader(zCFileBIN &file);
+	bool32 UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs);
+	bool32 Unarchive(zCArchiver &arc);
 
-	void ReadVobTree(zCFileBIN &file);
-	void ReadWayNet(zCFileBIN &file);
+	void ArchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs);
+	void Archive(zCArchiver &arc);
 
-	void WriteVobTree(zCFileBIN &file);
-	void WriteWayNet(zCFileBIN &file);
-
-	bool32 LoadZEN(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadZEN(f); }
-	bool32 LoadZEN(zCFileBIN &file);
-
-	void SaveZEN(const zSTRING &fileName) { zCFileBIN f(fileName, TRUE); SaveZEN(f); }
-	void SaveZEN(zCFileBIN &file);
+	bool32 LoadZEN(zCArchiver &arc);
+	void SaveZEN(zCArchiver &arc);
 };

@@ -1,5 +1,12 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "3D.h"
+#include "Visual.h"
+
+class zCProgMeshProto;
+
 class zCMorphMeshAni
 {
 public:
@@ -61,19 +68,8 @@ public:
 	zCArray<zCMorphMeshAni *> aniList;
 
 public:
-	zCMorphMeshProto()
-	{
-		morphRefMesh = NULL;
-		morphRefMeshVertPos = NULL;
-		srcFileStats = NULL;
-	}
-
-	~zCMorphMeshProto()
-	{
-		zDELETE(morphRefMesh);
-		zDELETE_ARRAY(morphRefMeshVertPos);
-		zDELETE_ARRAY(srcFileStats);
-	}
+	zCMorphMeshProto();
+	~zCMorphMeshProto();
 
 	bool32 LoadMMB(const char *fileName) { zSTRING s(fileName); return LoadMMB(s); }
 	bool32 LoadMMB(const zSTRING &fileName) { zCFileBIN f(fileName); return LoadMMB(f); }

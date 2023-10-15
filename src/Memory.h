@@ -1,10 +1,12 @@
 #pragma once
 
+#include "GothicTools.h"
+
 #define zNEW(className) new className
 #define zNEW_ARRAY(className, count) new className[count]
 
-#define zDELETE(obj) { delete obj; obj = NULL; }
-#define zDELETE_ARRAY(arr) { delete[] arr; arr = NULL; }
+#define zDELETE(obj) do { if (obj) { delete obj; obj = NULL; } } while(0)
+#define zDELETE_ARRAY(arr) do { if (arr) { delete[] arr; arr = NULL; } } while(0)
 
 template<typename T> T *zMALLOC(size_t _Count) { return (T *)malloc(_Count * sizeof(T)); }
 template<typename T> T *zREALLOC(T *_Block, size_t _Count) { return (T *)realloc(_Block, _Count * sizeof(T)); }

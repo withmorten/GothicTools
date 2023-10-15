@@ -1,5 +1,10 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "3D.h"
+#include "Visual.h"
+
 #define zFCHUNK_PROGMESH ((uint16)0xB100)
 #define zFCHUNK_PROGMESH_END ((uint16)0xB1FF)
 
@@ -33,30 +38,6 @@ struct zTPMVertexUpdate
 	zPMINDEX numNewWedge;
 };
 
-class zCSubMesh
-{
-public:
-	zCMaterial *material;
-
-	zCArrayAdapt<zTPMTriangle> triList;
-	zCArrayAdapt<zTPMWedge> wedgeList;
-	zCArrayAdapt<float> colorList;
-	zCArrayAdapt<zPMINDEX> triPlaneIndexList;
-	zCArrayAdapt<zTPlane> triPlaneList;
-	zCArrayAdapt<zTPMTriangleEdges> triEdgeList;
-	zCArrayAdapt<zTPMEdge> edgeList;
-	zCArrayAdapt<float> edgeScoreList;
-
-	zCArrayAdapt<zPMINDEX> wedgeMap;
-	zCArrayAdapt<zTPMVertexUpdate> vertexUpdates;
-
-	int32 vbStartIndex;
-
-public:
-	zCSubMesh() { material = NULL; vbStartIndex = 0; }
-	~zCSubMesh() { zDELETE(material); }
-};
-
 struct zTLODParams
 {
 	float strength;
@@ -65,8 +46,35 @@ struct zTLODParams
 	int32 minVerts;
 };
 
-class zCProgMeshProto
+class zCProgMeshProto : public zCVisual
 {
+public:
+	static const zSTRING GetClassName() { return "zCProgMeshProto"; }
+
+public:
+	class zCSubMesh
+	{
+	public:
+		zCMaterial *material;
+
+		zCArrayAdapt<zTPMTriangle> triList;
+		zCArrayAdapt<zTPMWedge> wedgeList;
+		zCArrayAdapt<float> colorList;
+		zCArrayAdapt<zPMINDEX> triPlaneIndexList;
+		zCArrayAdapt<zTPlane> triPlaneList;
+		zCArrayAdapt<zTPMTriangleEdges> triEdgeList;
+		zCArrayAdapt<zTPMEdge> edgeList;
+		zCArrayAdapt<float> edgeScoreList;
+
+		zCArrayAdapt<zPMINDEX> wedgeMap;
+		zCArrayAdapt<zTPMVertexUpdate> vertexUpdates;
+
+		int32 vbStartIndex;
+
+	public:
+		zCSubMesh();
+		~zCSubMesh();
+	};
 public:
 	bool32 m_bUsesAlphaTesting;
 
@@ -163,7 +171,7 @@ struct zTPMProtoDirectorySubMesh
 	zTPMProtoDirEntry edgeList;
 	zTPMProtoDirEntry edgeScoreList;
 
-	void TransferFromProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
+	void TransferFromProto(zCProgMeshProto *pmProto, zCProgMeshProto::zCSubMesh *subMesh)
 	{
 #define SetDirEntry(FIELD) FIELD.Set((uint32)((byte *)subMesh->FIELD.GetArray() - pmProto->dataPool), subMesh->FIELD.GetNum())
 		SetDirEntry(triList);
@@ -179,7 +187,7 @@ struct zTPMProtoDirectorySubMesh
 #undef SetDirEntry
 	}
 
-	void TransferToProto(zCProgMeshProto *pmProto, zCSubMesh *subMesh)
+	void TransferToProto(zCProgMeshProto *pmProto, zCProgMeshProto::zCSubMesh *subMesh)
 	{
 #define GetFromEntry(FIELD) subMesh->FIELD.SetArray((byte *)(pmProto->dataPool + FIELD.offset), FIELD.size)
 		GetFromEntry(triList);

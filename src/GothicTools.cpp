@@ -29,5 +29,5 @@ uint32 modelScriptVersionOut = 0xFFFFFFFF;
 bool32 xZenIn = FALSE;
 bool32 xZenOut = FALSE;
 
-bool32 deCompile = FALSE;
-bool32 deLod = FALSE;
+bool32 decompile = FALSE;
+bool32 deLOD = FALSE;

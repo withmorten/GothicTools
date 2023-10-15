@@ -1,4 +1,20 @@
-#include "GothicTools.h"
+#include "MorphMesh.h"
+
+#include "ProgMesh.h"
+
+zCMorphMeshProto::zCMorphMeshProto()
+{
+	morphRefMesh = NULL;
+	morphRefMeshVertPos = NULL;
+	srcFileStats = NULL;
+}
+
+zCMorphMeshProto::~zCMorphMeshProto()
+{
+	zDELETE(morphRefMesh);
+	zDELETE_ARRAY(morphRefMeshVertPos);
+	zDELETE_ARRAY(srcFileStats);
+}
 
 void zCMorphMeshAni::Load(zCFileBIN &file)
 {

@@ -1,5 +1,9 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "3D.h"
+
 #define zFCHUNK_BSP ((uint16)0xC000)
 #define zFCHUNK_BSP_POLYLIST ((uint16)0xC010)
 #define zFCHUNK_BSP_TREE ((uint16)0xC040)
@@ -16,6 +20,7 @@
 class zCBspTree;
 class zCBspNode;
 class zCBspLeaf;
+class zCMesh;
 
 enum zTBspNodeType
 {

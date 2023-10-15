@@ -1,14 +1,29 @@
 #include "GothicTools.h"
 
+#include "Archiver.h"
+#include "World.h"
+
+enum
+{
+	ARG_PROG_NAME,
+	ARG_FILE_IN,
+	ARG_VERSION_IN,
+	ARG_OPTIONAL_FILE_OUT,
+	ARG_OPTIONAL_VERSION_OUT,
+	ARG_OPTIONAL_0,
+	ARG_OPTIONAL_1,
+	ARG_OPTIONAL_2,
+};
+
 int main(int argc, const char **argv)
 {
-	if (argc < 4)
+	if (argc < ARG_OPTIONAL_FILE_OUT)
 	{
 		printf("GothicZEN v0.4 by withmorten\n\n");
 		printf("GothicZEN can convert a compiled ZEN to another Gothic version, or remove LOD polygons when saving to the same version\n\n");
 		printf("usage:\n");
-		printf("GothicZEN <version in> <version out> <filename in> <filename out> [xzen] [nodelod] [uncompiled]\n\n");
-		printf("version in/out can be 101 (1.01e), 108 (1.08k) or 130 (1.30) / 26 (2.6f)\n\n");
+		printf("GothicZEN <filename in> <version in> <filename out> <version out> [xzen] [nodelod] [decompile]\n\n");
+		printf("version in/out can be 101 (1.01e), 108 (1.08k) or 130 (1.30) / 260 (2.6f)\n\n");
 		printf("GothicZEN works with compiled (ASCII) and uncompiled ZENs\n");
 		printf("GothicZEN keeps existing lightmaps, but after converting a ZEN you should \"Compile Light\" in the Spacer just in case\n\n");
 		printf("for 1.08k, \"xzen\" can be appended to save mesh as GRM mesh format which uses 32bit vertex indices, but requires GRMFixes_DLL to load ingame\n\n");
@@ -22,25 +37,25 @@ int main(int argc, const char **argv)
 		return zOK;
 	}
 
-	if (argc > 5)
+	if (argc > ARG_OPTIONAL_0)
 	{
-		if (!stricmp(argv[5], "xzen")) xZenOut = TRUE;
-		if (!stricmp(argv[5], "decompile")) deCompile = TRUE;
+		if (!stricmp(argv[ARG_OPTIONAL_0], "xzen")) xZenOut = TRUE;
+		if (!stricmp(argv[ARG_OPTIONAL_0], "decompile")) decompile = TRUE;
 
-		if (argc > 6)
+		if (argc > ARG_OPTIONAL_1)
 		{
-			if (!stricmp(argv[6], "xzen")) xZenOut = TRUE;
-			if (!stricmp(argv[6], "decompile")) deCompile = TRUE;
+			if (!stricmp(argv[ARG_OPTIONAL_1], "xzen")) xZenOut = TRUE;
+			if (!stricmp(argv[ARG_OPTIONAL_1], "decompile")) decompile = TRUE;
 
-			if (argc > 7)
+			if (argc > ARG_OPTIONAL_2)
 			{
-				if (!stricmp(argv[7], "xzen")) xZenOut = TRUE;
-				if (!stricmp(argv[7], "decompile")) deCompile = TRUE;
+				if (!stricmp(argv[ARG_OPTIONAL_2], "xzen")) xZenOut = TRUE;
+				if (!stricmp(argv[ARG_OPTIONAL_2], "decompile")) decompile = TRUE;
 			}
 		}
 	}
 
-	switch (atoi(argv[1])) // version in
+	switch (atoi(argv[ARG_VERSION_IN]))
 	{
 	case 101:
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_01;
@@ -48,7 +63,7 @@ int main(int argc, const char **argv)
 		bspVersionIn = BSP_VERSION_GOTHIC_1_01;
 		materialVersionIn = MATERIAL_VERSION_SUM_GOTHIC_1_01;
 
-		deLod = TRUE;
+		deLOD = TRUE;
 
 		break;
 	case 104:
@@ -59,11 +74,11 @@ int main(int argc, const char **argv)
 		bspVersionIn = BSP_VERSION_GOTHIC_1_04;
 		materialVersionIn = MATERIAL_VERSION_SUM_GOTHIC_1_04;
 
-		deLod = TRUE;
+		deLOD = TRUE;
 
 		break;
 	case 130:
-	case 26:
+	case 260:
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_30;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_30;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_30;
@@ -71,71 +86,84 @@ int main(int argc, const char **argv)
 
 		break;
 	default:
-		printf("Unrecognized version in, needs to be 101, 104/108/112 or 130/26\n");
+		printf("Unrecognized version in, needs to be 101, 104/108/112 or 130/260\n");
 
 		return zERROR;
 
 		break;
 	}
 
-	switch (atoi(argv[2])) // version out
+	if (argc > ARG_OPTIONAL_VERSION_OUT)
 	{
-	case 101:
-		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_01;
-		meshVersionOut = MESH_VERSION_GOTHIC_1_01;
-		bspVersionOut = BSP_VERSION_GOTHIC_1_01;
-		materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_01;
-
-		xZenOut = FALSE;
-
-		break;
-	case 104:
-	case 108:
-	case 112:
-		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
-		meshVersionOut = MESH_VERSION_GOTHIC_1_04;
-		bspVersionOut = BSP_VERSION_GOTHIC_1_04;
-		materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_04;
-
-		break;
-	case 130:
-	case 26:
-		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
-		meshVersionOut = MESH_VERSION_GOTHIC_1_30;
-		bspVersionOut = BSP_VERSION_GOTHIC_1_30;
-		materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_30;
-
-		break;
-	default:
-		printf("Unrecognized version out, needs to be 101, 104/108/112 or 130/26\n");
-
-		return zERROR;
-
-		break;
-	}
-
-	if (argc > 5)
-	{
-		if (!stricmp(argv[5], "nodelod")) deLod = FALSE;
-
-		if (argc > 6)
+		switch (atoi(argv[ARG_OPTIONAL_VERSION_OUT]))
 		{
-			if (!stricmp(argv[6], "nodelod")) deLod = FALSE;
+		case 101:
+			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_01;
+			meshVersionOut = MESH_VERSION_GOTHIC_1_01;
+			bspVersionOut = BSP_VERSION_GOTHIC_1_01;
+			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_01;
 
-			if (argc > 7)
+			xZenOut = FALSE;
+
+			break;
+		case 104:
+		case 108:
+		case 112:
+			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
+			meshVersionOut = MESH_VERSION_GOTHIC_1_04;
+			bspVersionOut = BSP_VERSION_GOTHIC_1_04;
+			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_04;
+
+			break;
+		case 130:
+		case 260:
+			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
+			meshVersionOut = MESH_VERSION_GOTHIC_1_30;
+			bspVersionOut = BSP_VERSION_GOTHIC_1_30;
+			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_30;
+
+			break;
+		default:
+			printf("Unrecognized version out, needs to be 101, 104/108/112 or 130/260\n");
+
+			return zERROR;
+
+			break;
+		}
+	}
+
+	if (argc > ARG_OPTIONAL_0)
+	{
+		if (!stricmp(argv[ARG_OPTIONAL_0], "nodelod")) deLOD = FALSE;
+
+		if (argc > ARG_OPTIONAL_1)
+		{
+			if (!stricmp(argv[ARG_OPTIONAL_1], "nodelod")) deLOD = FALSE;
+
+			if (argc > ARG_OPTIONAL_2)
 			{
-				if (!stricmp(argv[7], "nodelod")) deLod = FALSE;
+				if (!stricmp(argv[ARG_OPTIONAL_2], "nodelod")) deLOD = FALSE;
 			}
 		}
 	}
 
-	oCWorld *world = zNEW(oCWorld);
+	zCWorld *world = zNEW(zCWorld);
 
-	if (world->LoadZEN(argv[3])) // filename in
+	zCArchiver arc;
+	arc.OpenFile(argv[ARG_FILE_IN]);
+
+	if (arc.ReadHeader() && world->LoadZEN(arc))
 	{
-		if (argc > 4)
+		arc.CloseFile();
+
+		if (argc > ARG_OPTIONAL_VERSION_OUT)
 		{
-			world->SaveZEN(argv[4]); // filename out
+			arc.OpenFile(argv[ARG_OPTIONAL_FILE_OUT], TRUE);
+			arc.WriteHeader();
+
+			world->SaveZEN(arc);
+
+			arc.CloseFile();
 
 			printf("Zen saved\n");
 		}

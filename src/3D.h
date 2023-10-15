@@ -1,5 +1,12 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "Algebra.h"
+#include "Color.h"
+
+class zCMaterial;
+
 struct zTBBox3D
 {
 	zPOINT3 mins;

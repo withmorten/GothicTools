@@ -1,5 +1,10 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "3D.h"
+#include "Object.h"
+
 enum zTMdl_AniEventType
 {
 	zMDL_EVENT_TAG,
@@ -67,8 +72,11 @@ enum zTMdl_AniType
 	zMDL_ANI_TYPE_DISABLED
 };
 
-class zCModelAni
+class zCModelAni : public zCObject
 {
+public:
+	static const zSTRING GetClassName() { return "zCModelAni"; }
+
 public:
 	zSTRING aniName;
 	zSTRING nextAniName;

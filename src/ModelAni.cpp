@@ -1,4 +1,4 @@
-#include "GothicTools.h"
+#include "ModelAni.h"
 
 void zCModelAniEvent::Load(zCFileBIN &file)
 {

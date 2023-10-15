@@ -26,8 +26,13 @@ typedef int32 bool32;
 #define stricmp strcasecmp
 #endif
 
+#ifndef FALSE
 #define FALSE 0
+#endif
+
+#ifndef TRUE
 #define TRUE 1
+#endif
 
 #define zOK 0
 #define zERROR 1
@@ -105,19 +110,8 @@ typedef int32 bool32;
 #include "Memory.h"
 #include "String.h"
 #include "Container.h"
-#include "Disk.h"
-#include "ScanDir.h"
 #include "Algebra.h"
-#include "Color.h"
-#include "Material.h"
-#include "3D.h"
-#include "Mesh.h"
-#include "Bsp.h"
-#include "World.h"
-#include "ProgMesh.h"
-#include "MorphMesh.h"
-#include "Model.h"
-#include "ModelAni.h"
+#include "Disk.h"
 
 extern uint32 meshAndBspVersionIn;
 extern uint16 meshVersionIn;
@@ -148,5 +142,5 @@ extern uint32 modelScriptVersionOut;
 extern bool32 xZenIn;
 extern bool32 xZenOut;
 
-extern bool32 deCompile;
-extern bool32 deLod;
+extern bool32 decompile;
+extern bool32 deLOD;

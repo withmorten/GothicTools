@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GothicTools.h"
+
 #define zFILE_MAXCHARS 1024
 
 #define unixify_path(zStr) zStr.Replace('\\', '/')
@@ -30,13 +32,13 @@ public:
 	void Seek(int32 pos) { fseek(file_handle, pos, SEEK_SET); }
 	void SeekRel(int32 rel) { fseek(file_handle, rel, SEEK_CUR); }
 
-	void WriteLine(const zSTRING &s = zSTR_EMPTY, bool32 crLf = TRUE);
-	void WriteLineIndented(uint32 numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = TRUE);
+	void WriteLine(const zSTRING &s = zSTR_EMPTY, bool32 crLf = FALSE);
+	void WriteLineIndented(uint32 numTabs, const zSTRING &s = zSTR_EMPTY, bool32 crLf = FALSE);
 	void Write(const zSTRING &s) { fputs(s.ToChar(), file_handle); fputc('\0', file_handle); }
 	size_t Write(const void *scr, int32 bytes) { return fwrite(scr, 1, bytes, file_handle); }
 
-	void ReadLine(zSTRING &s);
-	void Read(zSTRING &s);
+	void ReadLine(zSTRING &s, bool32 trimTabs = FALSE);
+	void Read(zSTRING &s, bool32 trimTabs = FALSE);
 	size_t Read(void *scr, int32 bytes) { return fread(scr, 1, bytes, file_handle); }
 };
 
@@ -46,11 +48,15 @@ public:
 	int32 lastStart;
 	int32 nextStart;
 
+	bool32 externalFile;
 	zFILE *file;
 
 public:
 	zCFileBIN(const zSTRING &fname, bool32 write = FALSE);
-	~zCFileBIN() { zDELETE(file); }
+	zCFileBIN(zFILE *inFile);
+	~zCFileBIN();
+
+	void Init();
 
 	bool32 BinEof() { return nextStart >= file->Size(); }
 	int32 BinSize() { return file->Size(); }
@@ -67,8 +73,8 @@ public:
 	void BinReadBool(bool32 &b) { file->Read(&b, sizeof(byte)); }
 	template<typename E> void BinReadEnum(E &e) { file->Read(&e, sizeof(E)); }
 	template<typename E> void BinReadEnumByte(E &e) { file->Read(&e, sizeof(byte)); }
-	void BinReadString(zSTRING &s) { file->Read(s); }
-	void BinReadLine(zSTRING &s) { file->ReadLine(s); }
+	void BinReadString(zSTRING &s, bool32 trimTabs = FALSE) { file->Read(s, trimTabs); }
+	void BinReadLine(zSTRING &s, bool32 trimTabs = FALSE) { file->ReadLine(s, trimTabs); }
 
 	void BinOpenChunk(uint16 &id, int32 &len);
 	void BinSkipChunk();
@@ -101,7 +107,7 @@ public:
 	uint16 second;
 
 public:
-	zDATE() { memset(this, 0x00, sizeof(*this)); }
+	zDATE() { year = 0; month = 0; day = 0; hour = 0; minute = 0; second = 0; }
 
 	void SetTime(zCFileBIN &file) { SetTime(*file.file); }
 	void SetTime(zFILE &file);

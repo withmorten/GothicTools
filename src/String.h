@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "GothicTools.h"
+
 using std::string;
 
 #define zSTR_SKIP zSTRING("\r\t ")
@@ -56,16 +58,19 @@ public:
 	zSTRING &Upper();
 	zSTRING &Lower();
 
-	zSTRING PickWord(uint32 num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
-	const char *PickWordPos(uint32 num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
-	zSTRING PickWorld_Old(int32 num, const zSTRING &trenn);
+	zSTRING PickWord(size_t num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
+	const char *PickWordPos(size_t num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
+	zSTRING PickWorld_Old(size_t num, const zSTRING &trenn);
 
-	zSTRING PickWordCutMarks(uint32 num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
+	zSTRING PickWordCutMarks(size_t num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 
 	void Delete(const zSTRING &xStr, zTSTR_KIND kind);
 	int32 Delete(size_t pos, size_t = UINT32_MAX);
 	zSTRING Deleted(size_t pos, size_t length = UINT32_MAX) const;
 	void DeleteRight(size_t length);
+
+	void TrimLeft(char ch = ' ');
+	void TrimRight(char ch = ' ');
 
 	void Append(char c) { append(zSTRING(c)); }
 	void Append(const char *c) { append(c); }

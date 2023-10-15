@@ -12,8 +12,6 @@ workspace "GothicTools"
 
 	defines { "WIN32", "WIN32_LEAN_AND_MEAN", "_CRT_SECURE_NO_WARNINGS", "_CRT_NONSTDC_NO_DEPRECATE", "_CRT_NONSTDC_NO_WARNINGS" }
 
-	buildoptions { "/Zc:sizedDealloc-" }
-
 	staticruntime "on"
 
 	filter "configurations:Debug*"
@@ -31,6 +29,7 @@ workspace "GothicTools"
 		flags { "LinkTimeOptimization" }
 
 	filter { "platforms:x86" }
+		vectorextensions "IA32"
 		architecture "x86"
 
 	filter { "platforms:x64" }
@@ -45,6 +44,7 @@ project "GothicTools"
 	files { "src/GothicTools.h" }
 	files { "src/3D.h" }
 	files { "src/Algebra.h" }
+	files { "src/Archiver.h" }
 	files { "src/Bsp.h" }
 	files { "src/Color.h" }
 	files { "src/Container.h" }
@@ -55,12 +55,17 @@ project "GothicTools"
 	files { "src/Model.h" }
 	files { "src/ModelAni.h" }
 	files { "src/MorphMesh.h" }
+	files { "src/Object.h" }
 	files { "src/ProgMesh.h" }
 	files { "src/ScanDir.h" }
 	files { "src/String.h" }
+	files { "src/Visual.h" }
+	files { "src/Vob.h" }
+	files { "src/WayNet.h" }
 	files { "src/World.h" }
 
 	files { "src/GothicTools.cpp" }
+	files { "src/Archiver.cpp" }
 	files { "src/Bsp.cpp" }
 	files { "src/Disk.cpp" }
 	files { "src/Material.cpp" }
@@ -71,6 +76,9 @@ project "GothicTools"
 	files { "src/ProgMesh.cpp" }
 	files { "src/ScanDir.cpp" }
 	files { "src/String.cpp" }
+	files { "src/Visual.cpp" }
+	files { "src/Vob.cpp" }
+	files { "src/WayNet.cpp" }
 	files { "src/World.cpp" }
 
 project "GothicZEN"

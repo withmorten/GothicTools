@@ -1,5 +1,10 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "Color.h"
+#include "Object.h"
+
 enum zTMat_Group
 {
 	zMAT_GROUP_UNDEF,
@@ -45,8 +50,11 @@ enum zTRnd_AlphaBlendFunc
 	zRND_ALPHA_FUNC_BLEND_TEST
 };
 
-class zCMaterial
+class zCMaterial : public zCObject
 {
+public:
+	static const zSTRING GetClassName() { return "zCMaterial"; }
+
 public:
 	zSTRING name;
 

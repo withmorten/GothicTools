@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GothicTools.h"
+
 template<class T> inline void zClamp(T &x, const T min, const T max)
 {
 	if (x < min)
@@ -70,7 +72,7 @@ public:
 	float n[2];
 
 public:
-	zVEC2() { n[VX] = 0.0f; n[VY] = 0.0f; }
+	zVEC2() { /* n[VX] = 0.0f; n[VY] = 0.0f; */ }
 	zVEC2(const float f) { n[VX] = f; n[VY] = f; }
 	zVEC2(const float x, const float y) { n[VX] = x; n[VY] = y; }
 
@@ -87,7 +89,7 @@ public:
 	float n[3];
 
 public:
-	zVEC3() { n[VX] = 0.0f; n[VY] = 0.0f; n[VZ] = 0.0f; }
+	zVEC3() { /* n[VX] = 0.0f; n[VY] = 0.0f; n[VZ] = 0.0f; */ }
 	zVEC3(const float f) { n[VX] = f; n[VY] = f; n[VZ] = f; }
 	zVEC3(const float x, const float y, const float z) { n[VX] = x; n[VY] = y; n[VZ] = z; }
 
@@ -103,7 +105,7 @@ public:
 	float n[4];
 
 public:
-	zVEC4() { n[VX] = 0.0f; n[VY] = 0.0f; n[VZ] = 0.0f; n[VW] = 0.0f; }
+	zVEC4() { /* n[VX] = 0.0f; n[VY] = 0.0f; n[VZ] = 0.0f; n[VW] = 0.0f; */}
 	zVEC4(const float f) { n[VX] = f; n[VY] = f; n[VZ] = f; n[VW] = f; }
 	zVEC4(const float x, const float y, const float z, const float w) { n[VX] = x; n[VY] = y; n[VZ] = z; n[VW] = w; }
 
@@ -121,7 +123,7 @@ public:
 	zVEC3 v[3];
 
 public:
-	zMAT3() { v[0] = zVEC3(); v[1] = zVEC3(); v[2] = zVEC3(); v[3] = zVEC3(); }
+	zMAT3() { /* v[0] = zVEC3(); v[1] = zVEC3(); v[2] = zVEC3(); */ }
 	zMAT3(const float f) { v[0] = zVEC3(f); v[1] = zVEC3(f); v[2] = zVEC3(f); v[3] = zVEC3(f); }
 	zMAT3(const zVEC3 &v0, const zVEC3 &v1, const zVEC3 &v2, const zVEC3 &v3) { v[0] = v0; v[1] = v1; v[2] = v2; v[3] = v3; }
 
@@ -135,7 +137,7 @@ public:
 	zVEC4 v[4];
 
 public:
-	zMAT4() { v[0] = zVEC4(); v[1] = zVEC4(); v[2] = zVEC4(); v[3] = zVEC4(); }
+	zMAT4() { /* v[0] = zVEC4(); v[1] = zVEC4(); v[2] = zVEC4(); v[3] = zVEC4(); */ }
 	zMAT4(const float f) { v[0] = zVEC4(f); v[1] = zVEC4(f); v[2] = zVEC4(f); v[3] = zVEC4(f); }
 	zMAT4(const zVEC4 &v0, const zVEC4 &v1, const zVEC4 &v2, const zVEC4 &v3) { v[0] = v0; v[1] = v1; v[2] = v2; v[3] = v3; }
 
@@ -145,3 +147,15 @@ public:
 
 typedef zMAT3 zMATRIX3;
 typedef zMAT4 zMATRIX4;
+
+class zCQuat
+{
+public:
+	float qx;
+	float qy;
+	float qz;
+	float qw;
+
+public:
+	zCQuat() { }
+};

@@ -1,5 +1,10 @@
 #pragma once
 
+#include "GothicTools.h"
+
+#include "3D.h"
+#include "Visual.h"
+
 #define zFCHUNK_MESH ((uint16)0xB000)
 #define zFCHUNK_BBOX3D ((uint16)0xB010)
 #define zFCHUNK_MATLIST ((uint16)0xB020)
@@ -10,8 +15,11 @@
 #define zFCHUNK_POLYLIST ((uint16)0xB050)
 #define zFCHUNK_MESH_END ((uint16)0xB060)
 
-class zCMesh
+class zCMesh : public zCVisual
 {
+public:
+	static const zSTRING GetClassName() { return "zCMesh"; }
+
 public:
 	zSTRING name;
 	zDATE date;
@@ -32,6 +40,7 @@ public:
 	zCVertex *vertArray;
 	zCVertFeature *featArray;
 
+	// TODO do this properly at some point :)
 	int32 lightMapsLen;
 	byte *lightMaps;
 

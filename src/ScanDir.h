@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GothicTools.h"
+
 class zCScanDir
 {
 public:

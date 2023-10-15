@@ -1,5 +1,3 @@
-#include "GothicTools.h"
-
 #ifdef _WIN32
 #include <direct.h>
 #else
@@ -7,6 +5,8 @@
 #define _MAX_PATH PATH_MAX
 #define _mkdir(path) mkdir(path, S_IRWXU)
 #endif
+
+#include "Disk.h"
 
 int mkdir_p(const char *path)
 {
@@ -95,8 +95,10 @@ zFILE::zFILE(const zSTRING &filepath, bool32 w)
 	size = st.st_size;
 }
 
-void zFILE::ReadLine(zSTRING &s)
+void zFILE::ReadLine(zSTRING &s, bool32 trimTabs)
 {
+	//printf("ReadLine pos: %d\n", Pos());
+
 	char file_buffer[zFILE_MAXCHARS + 1];
 	bool32 finished = FALSE;
 	s.Clear();
@@ -109,6 +111,7 @@ void zFILE::ReadLine(zSTRING &s)
 		}
 		else
 		{
+			//printf("file_buffer: %s\n", file_buffer);
 			s += zSTRING(file_buffer);
 
 			while (s.Length() > 0 && (s.GetLastChar() == '\n' || s.GetLastChar() == '\r'))
@@ -123,9 +126,16 @@ void zFILE::ReadLine(zSTRING &s)
 		}
 	}
 	while (!finished);
+
+	//printf("ReadResult pos: %d, %s\n", Pos(), s.ToChar());
+
+	if (trimTabs)
+	{
+		s.TrimLeft('\t');
+	}
 }
 
-inline char *fgets_z(char *_Buffer, int _MaxCount, FILE *_Stream)
+char *fgets_z(char *_Buffer, int _MaxCount, FILE *_Stream)
 {
 	int _Char;
 	char *_Backup = _Buffer;
@@ -157,12 +167,17 @@ inline char *fgets_z(char *_Buffer, int _MaxCount, FILE *_Stream)
 	return _Backup;
 }
 
-void zFILE::Read(zSTRING &s)
+void zFILE::Read(zSTRING &s, bool32 trimTabs)
 {
 	char file_buffer[zFILE_MAXCHARS];
 	s.Clear();
 
 	s += zSTRING(fgets_z(file_buffer, zFILE_MAXCHARS, file_handle));
+
+	if (trimTabs)
+	{
+		s.TrimLeft('\t');
+	}
 }
 
 void zFILE::WriteLine(const zSTRING &s, bool32 crLf)
@@ -185,8 +200,27 @@ void zFILE::WriteLineIndented(uint32 numTabs, const zSTRING &s, bool32 crLf)
 
 zCFileBIN::zCFileBIN(const zSTRING &fname, bool32 write)
 {
-
+	externalFile = FALSE;
 	file = zNEW(zFILE)(fname, write);
+
+	Init();
+}
+
+zCFileBIN::zCFileBIN(zFILE *inFile)
+{
+	externalFile = TRUE;
+	file = inFile;
+
+	Init();
+}
+
+zCFileBIN::~zCFileBIN()
+{
+	if (!externalFile) zDELETE(file);
+}
+
+void zCFileBIN::Init()
+{
 	lastStart = -1;
 	nextStart = -1;
 }

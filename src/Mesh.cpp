@@ -1,4 +1,6 @@
-#include "GothicTools.h"
+#include "Mesh.h"
+
+#include "Material.h"
 
 zCMesh::zCMesh()
 {
@@ -244,34 +246,34 @@ fileEnd:;
 
 void zCMesh::ArchiveMatList(zCFileBIN &file)
 {
-	file.BinWriteLine("ZenGin Archive");
-	file.BinWriteLine("ver 1");
-	file.BinWriteLine("zCArchiverGeneric");
-	file.BinWriteLine("BINARY");
-	file.BinWriteLine("saveGame 0");
-	file.BinWriteLine("END");
+	file.file->WriteLine("ZenGin Archive");
+	file.file->WriteLine("ver 1");
+	file.file->WriteLine("zCArchiverGeneric");
+	file.file->WriteLine("BINARY");
+	file.file->WriteLine("saveGame 0");
+	file.file->WriteLine("END");
 
 	if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
 	{
-		file.BinWriteLine("objects 0        ");
+		file.file->WriteLine("objects 0        ");
 	}
 	else
 	{
-		zSTRING l;
+		zSTRING s;
 
-		l += "objects " + zSTRING(matList.numInArray);
-		size_t fill = strlen("objects 0        ") - l.Length();
+		s += "objects " + zSTRING(matList.numInArray);
+		size_t fill = strlen("objects 0        ") - s.Length();
 
 		for (size_t i = 0; i < fill; i++)
 		{
-			l.Append(" ");
+			s.Append(" ");
 		}
 
-		file.BinWriteLine(l);
+		file.file->WriteLine(s);
 	}
 
-	file.BinWriteLine("END");
-	file.BinWriteLine();
+	file.file->WriteLine("END");
+	file.file->WriteLine();
 
 	file.BinWriteInt(matList.numInArray);
 
@@ -294,15 +296,15 @@ bool32 zCMesh::UnarchiveMatList(zCFileBIN &file)
 {
 	zSTRING s;
 
-	file.BinReadLine(s); // ZenGin Archive
-	file.BinReadLine(s); // ver 1
-	file.BinReadLine(s); // zCArchiverGeneric
-	file.BinReadLine(s); // BINARY
-	file.BinReadLine(s); // saveGame 0
-	file.BinReadLine(s); // END
-	file.BinReadLine(s); // objects [num]
-	file.BinReadLine(s); // END
-	file.BinReadLine(s); //
+	file.file->ReadLine(s); // ZenGin Archive
+	file.file->ReadLine(s); // ver 1
+	file.file->ReadLine(s); // zCArchiverGeneric
+	file.file->ReadLine(s); // BINARY
+	file.file->ReadLine(s); // saveGame 0
+	file.file->ReadLine(s); // END
+	file.file->ReadLine(s); // objects [num]
+	file.file->ReadLine(s); // END
+	file.file->ReadLine(s); //
 
 	int32 numMats;
 	file.BinReadInt(numMats);
