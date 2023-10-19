@@ -25,7 +25,7 @@ public:
 	zDATE date;
 
 	bool32 hasLightmaps;
-	bool32 m_bUsesAlphaTesting;
+	bool32 usesAlphaTesting;
 
 	zTBBox3D bbox3D;
 	zCOBBox3D obbox3D;
@@ -48,11 +48,11 @@ public:
 	zCMesh();
 	~zCMesh();
 
-	bool32 UnarchiveMatList(zCFileBIN &file);
-	void ArchiveMatList(zCFileBIN &file);
+	bool32 LoadMatList(zCFileBIN &file);
+	void SaveMatList(zCFileBIN &file);
 
-	void UnarchivePolyList(zCFileBIN &file, int32 len);
-	void ArchivePolyList(zCFileBIN &file);
+	void LoadPolyList(zCFileBIN &file, int32 len);
+	void SavePolyList(zCFileBIN &file);
 
 	void LODDegenerate(int32 *polyIndexMap, int32 newNumPoly);
 

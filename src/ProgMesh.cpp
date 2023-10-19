@@ -13,39 +13,28 @@ zCProgMeshProto::zCSubMesh::~zCSubMesh()
 	zDELETE(material);
 }
 
-bool32 zCProgMeshProto::UnarchiveMatList(zCFileBIN &file)
+bool32 zCProgMeshProto::LoadMatList(zCFileBIN &file)
 {
-	zSTRING s;
+	zCArchiver arc;
+	arc.SetFile(file.GetFile());
 
-	file.BinReadLine(s); // ZenGin Archive
-	file.BinReadLine(s); // ver 1
-	file.BinReadLine(s); // zCArchiverGeneric
-	file.BinReadLine(s); // BINARY
-	file.BinReadLine(s); // saveGame 0
-	file.BinReadLine(s); // END
-	file.BinReadLine(s); // objects [num]
-	file.BinReadLine(s); // END
-	file.BinReadLine(s); //
+	if (!arc.ReadHeader()) return FALSE;
 
 	for (byte i = 0; i < numSubMeshes; i++)
 	{
-		file.BinReadString(s);
+		zSTRING name;
+		arc.ReadString("", name);
 
-		s.Upper();
+		zCMaterial *mat = zNEW(zCMaterial);
 
-		zCMaterial *mat = zNEW(zCMaterial)(s);
-
-		if (!mat->Unarchive(file))
-		{
-			return FALSE;
-		}
+		if (!arc.ReadObject(mat)) return FALSE;
 
 		subMeshList[i].material = mat;
 	}
 
-	if (materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_30)
+	if (progMeshVersionIn == PROGMESH_VERSION_GOTHIC_1_30)
 	{
-		file.BinReadBool(m_bUsesAlphaTesting);
+		arc.ReadBool("", usesAlphaTesting);
 	}
 
 	return TRUE;
@@ -104,7 +93,7 @@ bool32 zCProgMeshProto::LoadMRM(zCFileBIN &file)
 				subMeshDir[i].TransferToProto(this, &(subMeshList[i]));
 			}
 
-			if (!UnarchiveMatList(file))
+			if (!LoadMatList(file))
 			{
 				printf("Materials could not be loaded!\n");
 
@@ -140,49 +129,29 @@ fileEnd:;
 	return TRUE;
 }
 
-void zCProgMeshProto::ArchiveMatList(zCFileBIN &file)
+void zCProgMeshProto::SaveMatList(zCFileBIN &file)
 {
-	file.BinWriteLine("ZenGin Archive");
-	file.BinWriteLine("ver 1");
-	file.BinWriteLine("zCArchiverGeneric");
-	file.BinWriteLine("BINARY");
-	file.BinWriteLine("saveGame 0");
-	file.BinWriteLine("END");
+	zCArchiver arc;
+	arc.SetMode(zARC_MODE_BINARY);
+	arc.SetObjCount(meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : numSubMeshes);
+	arc.SetFile(file.GetFile());
 
-	if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
-	{
-		file.BinWriteLine("objects 0        ");
-	}
-	else
-	{
-		zSTRING l;
-
-		l += "objects " + zSTRING(numSubMeshes);
-		size_t fill = strlen("objects 0        ") - l.Length();
-
-		for (size_t i = 0; i < fill; i++)
-		{
-			l.Append(" ");
-		}
-
-		file.BinWriteLine(l);
-	}
-
-	file.BinWriteLine("END");
-	file.BinWriteLine();
+	arc.WriteHeader(zARC_FLAG_WRITE_BRIEF_HEADER);
 
 	for (byte i = 0; i < numSubMeshes; i++)
 	{
 		zCMaterial *mat = subMeshList[i].material;
-			
-		file.BinWriteString(mat->name);
 
-		mat->Archive(file, i);
+		mat->chunk.classVersion = materialVersionOut;
+
+		arc.WriteString("", mat->name);
+
+		arc.WriteObject(mat);
 	}
 
-	if (materialVersionOut == MATERIAL_VERSION_SUM_GOTHIC_1_30)
+	if (progMeshVersionOut == PROGMESH_VERSION_GOTHIC_1_30)
 	{
-		file.BinWriteBool(m_bUsesAlphaTesting);
+		arc.WriteBool("", usesAlphaTesting);
 	}
 }
 
@@ -210,7 +179,7 @@ void zCProgMeshProto::SaveMRM(zCFileBIN &file)
 
 		file.BinWrite(&subMeshDir, sizeof(zTPMProtoDirectorySubMesh) * numSubMeshes);
 
-		ArchiveMatList(file);
+		SaveMatList(file);
 
 		file.BinWrite(&bbox3D, sizeof(bbox3D));
 		obbox3D.SaveBIN(file);

@@ -41,7 +41,7 @@ int main(int argc, const char **argv)
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_04;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_04;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_04;
-		materialVersionIn = MATERIAL_VERSION_SUM_GOTHIC_1_04;
+		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
 
 		morphMeshVersionIn = MORPHMESH_VERSION_GOTHIC_1_04;
 		progMeshVersionIn = PROGMESH_VERSION_GOTHIC_1_04;
@@ -56,7 +56,7 @@ int main(int argc, const char **argv)
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_30;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_30;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_30;
-		materialVersionIn = MATERIAL_VERSION_SUM_GOTHIC_1_30;
+		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
 
 		morphMeshVersionIn = MORPHMESH_VERSION_GOTHIC_1_30;
 		progMeshVersionIn = PROGMESH_VERSION_GOTHIC_1_30;
@@ -86,7 +86,7 @@ int main(int argc, const char **argv)
 			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
 			meshVersionOut = MESH_VERSION_GOTHIC_1_04;
 			bspVersionOut = BSP_VERSION_GOTHIC_1_04;
-			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_04;
+			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
 
 			morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_04;
 			progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_04;
@@ -101,7 +101,7 @@ int main(int argc, const char **argv)
 			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
 			meshVersionOut = MESH_VERSION_GOTHIC_1_30;
 			bspVersionOut = BSP_VERSION_GOTHIC_1_30;
-			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_30;
+			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
 
 			morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_30;
 			progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_30;

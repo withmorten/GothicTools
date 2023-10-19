@@ -13,7 +13,7 @@ enum zTMat_Group
 	zMAT_GROUP_WOOD,
 	zMAT_GROUP_EARTH,
 	zMAT_GROUP_WATER,
-	zMAT_GROUP_SNOW,
+	zMAT_GROUP_SNOW, // Gothic 2
 	zMAT_NUM_MAT_GROUP,
 };
 
@@ -50,6 +50,12 @@ enum zTRnd_AlphaBlendFunc
 	zRND_ALPHA_FUNC_BLEND_TEST
 };
 
+enum
+{
+	zMAT_TEX_ANI_MAP_NONE,
+	zMAT_TEX_ANI_MAP_LINEAR,
+};
+
 class zCMaterial : public zCObject
 {
 public:
@@ -57,44 +63,38 @@ public:
 
 public:
 	zSTRING name;
-
-	zSTRING texture;
+	zTMat_Group matGroup;
 	zCOLOR color;
 	float smoothAngle;
-	zTMat_Group matGroup;
-	float aniFPS;
-
-	float m_bEnvironmentalMappingStrength;
-
-	uint8 dontUseLightmaps;
-	uint8 texAniMap;
-	uint8 lodDontCollapse;
-	uint8 noCollDet;
-	uint8 forceOccluder;
-	uint8 m_bEnvironmentalMapping;
-	uint8 polyListNeedsSort;
-	uint8 libFlag;
-	zTRnd_AlphaBlendFunc rndAlphaBlendFunc;
-	uint8 m_bIgnoreSun;
-
-	zTWaveAniMode m_enuWaveMode;
-	zTFFT m_enuWaveSpeed;
-	float m_fWaveMaxAmplitude;
-	float m_fWaveGridSize;
-
-	zSTRING detailTexture;
-	float detailTextureScale;
-	zSTRING texAniMapDelta;
-
-	zPOINT2 default_mapping;
+	zSTRING texture;
 	zSTRING texScale;
+	float texAniFPS;
+	int32 texAniMapMode;
+	zSTRING texAniMapDir;
+
+	bool32 noCollDet;
+	bool32 noLightmap;
+	bool32 lodDontCollapse;
+
+	zSTRING detailObject;
+	float detailObjectScale;
+
+	bool32 forceOccluder;
+	bool32 environmentalMapping;
+	float environmentalMappingStrength;
+
+	zTWaveAniMode waveMode;
+	zTFFT waveSpeed;
+	float waveMaxAmplitude;
+	float waveGridSize;
+
+	bool32 ignoreSunLight;
+	zTRnd_AlphaBlendFunc alphaFunc;
+
+	zPOINT2 defaultMapping;
 
 public:
-	zCMaterial() { InitValues(); }
-	zCMaterial(const zSTRING &n) { InitValues(); name = n; }
-
-	void InitValues();
-	bool32 Unarchive(zCFileBIN &file);
-	void Archive(zCFileBIN &file, uint32 objectIndex);
+	bool32 Unarchive(zCArchiver &arc);
+	void Archive(zCArchiver &arc);
 };
 

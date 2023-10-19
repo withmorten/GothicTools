@@ -97,8 +97,6 @@ zFILE::zFILE(const zSTRING &filepath, bool32 w)
 
 void zFILE::ReadLine(zSTRING &s, bool32 trimTabs)
 {
-	//printf("ReadLine pos: %d\n", Pos());
-
 	char file_buffer[zFILE_MAXCHARS + 1];
 	bool32 finished = FALSE;
 	s.Clear();
@@ -111,7 +109,6 @@ void zFILE::ReadLine(zSTRING &s, bool32 trimTabs)
 		}
 		else
 		{
-			//printf("file_buffer: %s\n", file_buffer);
 			s += zSTRING(file_buffer);
 
 			while (s.Length() > 0 && (s.GetLastChar() == '\n' || s.GetLastChar() == '\r'))
@@ -126,8 +123,6 @@ void zFILE::ReadLine(zSTRING &s, bool32 trimTabs)
 		}
 	}
 	while (!finished);
-
-	//printf("ReadResult pos: %d, %s\n", Pos(), s.ToChar());
 
 	if (trimTabs)
 	{

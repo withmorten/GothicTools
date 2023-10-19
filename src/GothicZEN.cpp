@@ -61,7 +61,7 @@ int main(int argc, const char **argv)
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_01;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_01;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_01;
-		materialVersionIn = MATERIAL_VERSION_SUM_GOTHIC_1_01;
+		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_01;
 
 		deLOD = TRUE;
 
@@ -72,7 +72,7 @@ int main(int argc, const char **argv)
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_04;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_04;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_04;
-		materialVersionIn = MATERIAL_VERSION_SUM_GOTHIC_1_04;
+		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
 
 		deLOD = TRUE;
 
@@ -82,7 +82,7 @@ int main(int argc, const char **argv)
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_30;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_30;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_30;
-		materialVersionIn = MATERIAL_VERSION_SUM_GOTHIC_1_30;
+		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
 
 		break;
 	default:
@@ -101,7 +101,7 @@ int main(int argc, const char **argv)
 			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_01;
 			meshVersionOut = MESH_VERSION_GOTHIC_1_01;
 			bspVersionOut = BSP_VERSION_GOTHIC_1_01;
-			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_01;
+			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_01;
 
 			xZenOut = FALSE;
 
@@ -112,7 +112,7 @@ int main(int argc, const char **argv)
 			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
 			meshVersionOut = MESH_VERSION_GOTHIC_1_04;
 			bspVersionOut = BSP_VERSION_GOTHIC_1_04;
-			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_04;
+			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
 
 			break;
 		case 130:
@@ -120,7 +120,7 @@ int main(int argc, const char **argv)
 			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
 			meshVersionOut = MESH_VERSION_GOTHIC_1_30;
 			bspVersionOut = BSP_VERSION_GOTHIC_1_30;
-			materialVersionOut = MATERIAL_VERSION_SUM_GOTHIC_1_30;
+			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
 
 			break;
 		default:
@@ -159,6 +159,7 @@ int main(int argc, const char **argv)
 		if (argc > ARG_OPTIONAL_VERSION_OUT)
 		{
 			arc.OpenFile(argv[ARG_OPTIONAL_FILE_OUT], TRUE);
+			arc.SetMode(zARC_MODE_ASCII);
 			arc.WriteHeader();
 
 			world->SaveZEN(arc);

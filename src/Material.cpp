@@ -1,177 +1,140 @@
 #include "Material.h"
 
-void zCMaterial::InitValues()
+bool32 zCMaterial::Unarchive(zCArchiver &arc)
 {
-	smoothAngle = 60.0f;
-	libFlag = 0;
-	default_mapping = zVEC2(2.34375f, 2.34375f);
-	texScale = "1 1";
-	texAniMap = FALSE;
-	texAniMapDelta = "0 0";
-	lodDontCollapse = FALSE;
-	noCollDet = FALSE;
-	rndAlphaBlendFunc = zRND_ALPHA_FUNC_NONE;
+	if (!zCObject::Unarchive(arc)) return FALSE;
 
-	forceOccluder = FALSE;
-	detailTextureScale = 1.0f;
-
-	m_bEnvironmentalMapping = FALSE;
-	m_bEnvironmentalMappingStrength = 1.0f;
-
-	m_bIgnoreSun = FALSE;
-
-	m_enuWaveMode = zWAVEANI_NONE;
-	m_enuWaveSpeed = zTFFT_NORMAL;
-	m_fWaveMaxAmplitude = 30.0f;
-	m_fWaveGridSize = 100.0f;
-
-	color.SetRGBA(150, 150, 150, 255);
-	matGroup = zMAT_GROUP_UNDEF;
-	dontUseLightmaps = FALSE;
-}
-
-void zCMaterial::Archive(zCFileBIN &file, uint32 objectIndex)
-{
-	int32 startPos = file.BinPos(); // chunk.startPos
-	int32 pos;
-	uint32 size;
-
-	// Write chunk header
-	file.BinWriteDWord(0); // chunk.size
-	file.BinWriteWord(materialVersionOut); // chunk.version
-	file.BinWriteDWord(objectIndex); // chunk.objectIndex
-	file.BinWriteString("%"); // chunk.name
-	file.BinWriteString("zCMaterial"); // chunk.className
-
-	// Write chunk data
-	file.BinWriteString(name); // name
-	file.BinWriteEnumByte(matGroup); // matGroup
-	file.BinWriteDWord(color.dword); // color
-	file.BinWriteFloat(smoothAngle); // smoothAngle
-	file.BinWriteString(texture); // texture
-	file.BinWriteString(texScale); // texScale
-	file.BinWriteFloat(aniFPS); // texAniFPS
-	file.BinWriteByte(texAniMap); // texAniMapMode
-	file.BinWriteString(texAniMapDelta); // texAniMapDir
-	file.BinWriteByte(noCollDet); // noCollDet
-	file.BinWriteByte(dontUseLightmaps); // noLightmap
-	file.BinWriteByte(lodDontCollapse); // lodDontCollapse
-	file.BinWriteString(detailTexture); // detailObject
-
-	if (materialVersionOut == MATERIAL_VERSION_SUM_GOTHIC_1_30)
-	{
-		file.BinWriteFloat(detailTextureScale); // detailObjectScale
-		file.BinWriteByte(forceOccluder); // forceOccluder
-		file.BinWriteByte(m_bEnvironmentalMapping); // environmentalMapping
-		file.BinWriteFloat(m_bEnvironmentalMappingStrength); // environmentalMappingStrength
-		file.BinWriteEnumByte(m_enuWaveMode); // waveMode
-		file.BinWriteEnumByte(m_enuWaveSpeed); // waveSpeed
-		file.BinWriteFloat(m_fWaveMaxAmplitude); // waveMaxAmplitude
-		file.BinWriteFloat(m_fWaveGridSize); // waveGridSize
-		file.BinWriteByte(m_bIgnoreSun); // ignoreSunLight
-		file.BinWriteEnumByte(rndAlphaBlendFunc); // alphaFunc
-	}
-
-	file.BinWrite(&default_mapping, sizeof(default_mapping));
-
-	// Fix chunk size
-	pos = file.BinPos();
-	size = pos - startPos;
-	file.BinSeek(startPos);
-	file.BinWriteDWord(size);
-	file.BinSeek(pos);
-}
-
-bool32 zCMaterial::Unarchive(zCFileBIN &file)
-{
-	uint32 dw;
-	uint16 version;
-	zSTRING s;
-
-	// Read chunk header
-	file.BinReadDWord(dw); // chunk.size
-	file.BinReadWord(version); // chunk.version
-	file.BinReadDWord(dw); // chunk.objectIndex, 0
-	file.BinReadString(s); // chunk.name, %
-	file.BinReadString(s); // chunk.className, zCMaterial
-
-	if (version != materialVersionIn
-		&& ((materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_30 && version != MATERIAL_VERSION_SUM_GOTHIC_OLD1)
-		&& (materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_30 && version != MATERIAL_VERSION_SUM_GOTHIC_OLD2)))
+	if (chunk.classVersion != materialVersionIn
+		&& ((materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_30 && chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD1)
+		&& (materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_30 && chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD2)))
 	{
 		printf("Wrong Material version\n");
 
 		return FALSE;
 	}
 
-	// Read chunk data
-	file.BinReadString(s); // name
-	file.BinReadEnumByte(matGroup); // matGroup
-	file.BinReadDWord(color.dword); // color
+	arc.ReadString("name", name);
+	arc.ReadEnum("matGroup", matGroup);
+	arc.ReadColor("color", color);
+	arc.ReadFloat("smoothAngle", smoothAngle);
 
-	file.BinReadFloat(smoothAngle); // smoothAngle
+	arc.ReadString("texture", texture);
+	arc.ReadString("texScale", texScale);
+	arc.ReadFloat("texAniFPS", texAniFPS);
+	arc.ReadEnum("texAniMapMode", texAniMapMode);
+	arc.ReadString("texAniMapDir", texAniMapDir);
 
-	file.BinReadString(texture); // texture
+	arc.ReadBool("noCollDet", noCollDet);
+	arc.ReadBool("noLightmap", noLightmap);
+	arc.ReadBool("lodDontCollapse", lodDontCollapse);
 
-	file.BinReadString(texScale); // texScale
+	arc.ReadString("detailObject", detailObject);
 
-	file.BinReadFloat(aniFPS); // texAniFPS
-	file.BinReadByte(texAniMap); // texAniMapMode
-
-	file.BinReadString(texAniMapDelta); // texAniMapDir
-
-	file.BinReadByte(noCollDet); // noCollDet
-	file.BinReadByte(dontUseLightmaps); // noLightmap
-	file.BinReadByte(lodDontCollapse); // lodDontCollapse
-
-	file.BinReadString(detailTexture); // detailObject
-
-	if (materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_01 || materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_04)
+	if (materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_01 || materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_04
+		|| chunk.classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD1 || chunk.classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD2)
 	{
-		if (color.alpha == 0xFF) rndAlphaBlendFunc = zRND_ALPHA_FUNC_NONE;
-		else rndAlphaBlendFunc = zRND_ALPHA_FUNC_BLEND;
+		alphaFunc = color.alpha == 0xFF ? zRND_ALPHA_FUNC_NONE : zRND_ALPHA_FUNC_BLEND;
 
-		if (matGroup == zMAT_GROUP_WATER && rndAlphaBlendFunc == zRND_ALPHA_FUNC_NONE) rndAlphaBlendFunc = zRND_ALPHA_FUNC_BLEND;
+		if (matGroup == zMAT_GROUP_WATER && alphaFunc == zRND_ALPHA_FUNC_NONE)
+		{
+			alphaFunc = zRND_ALPHA_FUNC_BLEND;
+		}
 	}
 
-	if (materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_30)
+	if (materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_30)
 	{
-		file.BinReadFloat(detailTextureScale); // detailObjectScale
-		if (detailTextureScale < 0.0f) detailTextureScale = 1.0f;
+		arc.ReadFloat("detailObjectScale", detailObjectScale);
 
-		file.BinReadByte(forceOccluder); // forceOccluder
-		file.BinReadByte(m_bEnvironmentalMapping); // environmentalMapping
-		file.BinReadFloat(m_bEnvironmentalMappingStrength); // environmentalMappingStrength
-		file.BinReadEnumByte(m_enuWaveMode); // waveMode
-		file.BinReadEnumByte(m_enuWaveSpeed); // waveSpeed
+		arc.ReadBool("forceOccluder", forceOccluder);
+		arc.ReadBool("environmentalMapping", environmentalMapping);
+		arc.ReadFloat("environmentalMappingStrength", environmentalMappingStrength);
 
-		if (version == MATERIAL_VERSION_SUM_GOTHIC_OLD1)
+		arc.ReadEnum("waveMode", waveMode);
+		arc.ReadEnum("waveSpeed", waveSpeed);
+
+		if (chunk.classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD1)
 		{
-			uint16 waveMaxAmplitude;
-			uint16 waveGridSize;
+			uint16 w;
 
-			file.BinReadWord(waveMaxAmplitude); // waveMaxAmplitude
-			file.BinReadWord(waveGridSize); // waveGridSize
+			arc.ReadWord("waveMaxAmplitude", w);
+			waveMaxAmplitude = w;
 
-			m_fWaveMaxAmplitude = waveMaxAmplitude;
-			m_fWaveGridSize = waveGridSize;
+			arc.ReadWord("waveGridSize", w);
+			waveGridSize = w;
 		}
 		else
 		{
-			file.BinReadFloat(m_fWaveMaxAmplitude); // waveMaxAmplitude
-			file.BinReadFloat(m_fWaveGridSize); // waveGridSize
+			arc.ReadFloat("waveMaxAmplitude", waveMaxAmplitude);
+			arc.ReadFloat("waveGridSize", waveGridSize);
 		}
 
-		file.BinReadByte(m_bIgnoreSun); // ignoreSunLight
+		arc.ReadBool("ignoreSunLight", ignoreSunLight);
 
-		if (version != MATERIAL_VERSION_SUM_GOTHIC_OLD1 && version != MATERIAL_VERSION_SUM_GOTHIC_OLD2)
+		if (chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD1 && chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD2)
 		{
-			file.BinReadEnumByte(rndAlphaBlendFunc); // alphaFunc
-			if (rndAlphaBlendFunc == zRND_ALPHA_FUNC_SUB || (color.alpha < 255 && rndAlphaBlendFunc == zRND_ALPHA_FUNC_NONE)) rndAlphaBlendFunc = zRND_ALPHA_FUNC_BLEND;
+			arc.ReadEnum("alphaFunc", alphaFunc);
 		}
 	}
+	else
+	{
+		detailObjectScale = 1.0f;
 
-	file.BinRead(&default_mapping, sizeof(default_mapping)); // defaultMapping
+		forceOccluder = FALSE;
+		environmentalMapping = FALSE;
+		environmentalMappingStrength = 1.0f;
+
+		waveMode = zWAVEANI_NONE;
+		waveSpeed = zTFFT_NORMAL;
+		waveMaxAmplitude = 30.0f;
+		waveGridSize = 100.0f;
+
+		ignoreSunLight = FALSE;
+	}
+
+	arc.ReadRawFloat("defaultMapping", &defaultMapping, sizeof(defaultMapping));
 
 	return TRUE;
+}
+
+void zCMaterial::Archive(zCArchiver &arc)
+{
+	zCObject::Archive(arc);
+
+	arc.WriteString("name", name);
+	arc.WriteEnum("matGroup", matGroup);
+	arc.WriteColor("color", color);
+	arc.WriteFloat("smoothAngle", smoothAngle);
+
+	arc.WriteString("texture", texture);
+	arc.WriteString("texScale", texScale);
+	arc.WriteFloat("texAniFPS", texAniFPS);
+	arc.WriteEnum("texAniMapMode", texAniMapMode);
+	arc.WriteString("texAniMapDir", texAniMapDir);
+
+	arc.WriteBool("noCollDet", noCollDet);
+	arc.WriteBool("noLightmap", noLightmap);
+	arc.WriteBool("lodDontCollapse", lodDontCollapse);
+
+	arc.WriteString("detailObject", detailObject);
+
+	if (materialVersionOut == MATERIAL_CLASS_VERSION_GOTHIC_1_30)
+	{
+		arc.WriteFloat("detailObjectScale", detailObjectScale);
+
+		arc.WriteBool("forceOccluder", forceOccluder);
+		arc.WriteBool("environmentalMapping", environmentalMapping);
+		arc.WriteFloat("environmentalMappingStrength", environmentalMappingStrength);
+
+		arc.WriteEnum("waveMode", waveMode);
+		arc.WriteEnum("waveSpeed", waveSpeed);
+
+		arc.WriteFloat("waveMaxAmplitude", waveMaxAmplitude);
+		arc.WriteFloat("waveGridSize", waveGridSize);
+
+		arc.WriteBool("ignoreSunLight", ignoreSunLight);
+
+		arc.WriteEnum("alphaFunc", alphaFunc);
+	}
+
+	arc.WriteRawFloat("defaultMapping", &defaultMapping, sizeof(defaultMapping));
 }

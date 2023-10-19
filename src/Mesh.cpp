@@ -16,7 +16,7 @@ zCMesh::zCMesh()
 	bbox3D.maxs = zVEC3(0.0f, 0.0f, 0.0f);
 
 	hasLightmaps = FALSE;
-	m_bUsesAlphaTesting = FALSE;
+	usesAlphaTesting = FALSE;
 
 	lightMapsLen = 0;
 	lightMaps = NULL;
@@ -66,7 +66,7 @@ bool32 zCMesh::SaveMSH(zCFileBIN &file)
 
 	file.BinStartChunk(zFCHUNK_MATLIST);
 	{
-		ArchiveMatList(file);
+		SaveMatList(file);
 	}
 
 	if (hasLightmaps)
@@ -109,7 +109,7 @@ bool32 zCMesh::SaveMSH(zCFileBIN &file)
 
 	file.BinStartChunk(zFCHUNK_POLYLIST);
 	{
-		ArchivePolyList(file);
+		SavePolyList(file);
 	}
 
 	file.BinStartChunk(zFCHUNK_MESH_END);
@@ -157,7 +157,7 @@ bool32 zCMesh::LoadMSH(zCFileBIN &file)
 		}
 		case zFCHUNK_MATLIST:
 		{
-			if (!UnarchiveMatList(file))
+			if (!LoadMatList(file))
 			{
 				printf("Materials could not be loaded!\n");
 
@@ -218,7 +218,7 @@ bool32 zCMesh::LoadMSH(zCFileBIN &file)
 		}
 		case zFCHUNK_POLYLIST:
 		{
-			UnarchivePolyList(file, len);
+			LoadPolyList(file, len);
 
 			break;
 		}
@@ -244,98 +244,67 @@ fileEnd:;
 	return TRUE;
 }
 
-void zCMesh::ArchiveMatList(zCFileBIN &file)
+void zCMesh::SaveMatList(zCFileBIN &file)
 {
-	file.file->WriteLine("ZenGin Archive");
-	file.file->WriteLine("ver 1");
-	file.file->WriteLine("zCArchiverGeneric");
-	file.file->WriteLine("BINARY");
-	file.file->WriteLine("saveGame 0");
-	file.file->WriteLine("END");
+	zCArchiver arc;
+	arc.SetMode(zARC_MODE_BINARY);
+	arc.SetObjCount(meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : matList.numInArray);
+	arc.SetFile(file.GetFile());
 
-	if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01)
-	{
-		file.file->WriteLine("objects 0        ");
-	}
-	else
-	{
-		zSTRING s;
+	arc.WriteHeader(zARC_FLAG_WRITE_BRIEF_HEADER);
 
-		s += "objects " + zSTRING(matList.numInArray);
-		size_t fill = strlen("objects 0        ") - s.Length();
-
-		for (size_t i = 0; i < fill; i++)
-		{
-			s.Append(" ");
-		}
-
-		file.file->WriteLine(s);
-	}
-
-	file.file->WriteLine("END");
-	file.file->WriteLine();
-
-	file.BinWriteInt(matList.numInArray);
+	arc.WriteInt("", matList.numInArray);
 
 	for (int32 i = 0; i < matList.numInArray; i++)
 	{
 		zCMaterial *mat = matList[i];
 
-		file.BinWriteString(mat->name);
+		mat->chunk.classVersion = materialVersionOut;
 
-		mat->Archive(file, i);
+		arc.WriteString("", mat->name);
+
+		arc.WriteObject(mat);
 	}
 
-	if (materialVersionOut == MATERIAL_VERSION_SUM_GOTHIC_1_30)
+	if (meshVersionOut == MESH_VERSION_GOTHIC_1_30)
 	{
-		file.BinWriteBool(m_bUsesAlphaTesting);
+		arc.WriteBool("", usesAlphaTesting);
 	}
 }
 
-bool32 zCMesh::UnarchiveMatList(zCFileBIN &file)
+bool32 zCMesh::LoadMatList(zCFileBIN &file)
 {
-	zSTRING s;
+	zCArchiver arc;
+	arc.SetFile(file.GetFile());
 
-	file.file->ReadLine(s); // ZenGin Archive
-	file.file->ReadLine(s); // ver 1
-	file.file->ReadLine(s); // zCArchiverGeneric
-	file.file->ReadLine(s); // BINARY
-	file.file->ReadLine(s); // saveGame 0
-	file.file->ReadLine(s); // END
-	file.file->ReadLine(s); // objects [num]
-	file.file->ReadLine(s); // END
-	file.file->ReadLine(s); //
+	if (!arc.ReadHeader()) return FALSE;
 
 	int32 numMats;
-	file.BinReadInt(numMats);
+	arc.ReadInt("", numMats);
 
 	matList.AllocAbs(numMats);
 
 	for (int32 i = 0; i < numMats; i++)
 	{
-		file.BinReadString(s);
+		zSTRING name;
+		arc.ReadString("", name);
 
-		s.Upper();
+		zCMaterial *mat = zNEW(zCMaterial);
 
-		zCMaterial *mat = zNEW(zCMaterial)(s);
-
-		if (!mat->Unarchive(file))
-		{
-			return FALSE;
-		}
+		if (!arc.ReadObject(mat)) return FALSE;
 
 		matList.InsertEnd(mat);
 	}
 
-	if (materialVersionIn == MATERIAL_VERSION_SUM_GOTHIC_1_30)
+	if (meshVersionIn == MESH_VERSION_GOTHIC_1_30)
 	{
-		file.BinReadBool(m_bUsesAlphaTesting);
+		arc.ReadBool("", usesAlphaTesting);
 	}
 
 	return TRUE;
 }
 
-void zCMesh::ArchivePolyList(zCFileBIN &file)
+void zCMesh::SavePolyList(zCFileBIN &file)
 {
 	file.BinWriteInt(numPoly);
 
@@ -412,7 +381,7 @@ void zCMesh::ArchivePolyList(zCFileBIN &file)
 	}
 }
 
-void zCMesh::UnarchivePolyList(zCFileBIN &file, int32 len)
+void zCMesh::LoadPolyList(zCFileBIN &file, int32 len)
 {
 	file.BinReadInt(numPoly);
 

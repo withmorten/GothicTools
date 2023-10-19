@@ -65,6 +65,7 @@ public:
 	zFILE *file;
 	zTArchiveMode mode;
 	int32 chunkDepth;
+	int32 lastChunkStart; // for BINARY
 
 	zSTRING user;
 	zSTRING date;
@@ -79,6 +80,9 @@ public:
 public:
 	zCArchiver();
 	~zCArchiver();
+
+	void SetObjCount(int32 oC) { objCount = oC; }
+	void SetMode(zTArchiveMode m) { mode = m; }
 
 	void OpenFile(const zSTRING &fileName, bool32 write = FALSE);
 	void CloseFile();
@@ -113,8 +117,8 @@ public:
 	void ReadColor(const char *entryName, zCOLOR &value);
 	template<typename E> void ReadEnum(const char *entryName, E &value) { ReadEnum(entryName, (int32 &)value); }
 	void ReadEnum(const char *entryName, int32 &value);
-	void ReadRaw(const char *entryName, void *buffer, size_t size);
-	void ReadRawFloat(const char *entryName, void *buffer, size_t size);
+	void ReadRaw(const char *entryName, void *buffer, uint32 size);
+	void ReadRawFloat(const char *entryName, void *buffer, uint32 size);
 
 	void WriteChunkStart(const char *chunkName);
 	void WriteChunkStart(zTChunkRecord &chunk);
@@ -134,6 +138,6 @@ public:
 	void WriteColor(const char *entryName, zCOLOR &value);
 	template<typename E> void WriteEnum(const char *entryName, E value) { WriteEnum(entryName, (int32)value); }
 	void WriteEnum(const char *entryName, int32 value);
-	void WriteRaw(const char *entryName, void *buffer, size_t size);
-	void WriteRawFloat(const char *entryName, void *buffer, size_t size);
+	void WriteRaw(const char *entryName, void *buffer, uint32 size);
+	void WriteRawFloat(const char *entryName, void *buffer, uint32 size);
 };

@@ -76,7 +76,7 @@ public:
 		~zCSubMesh();
 	};
 public:
-	bool32 m_bUsesAlphaTesting;
+	bool32 usesAlphaTesting;
 
 	zTBBox3D bbox3D;
 	zCOBBox3D obbox3D;
@@ -101,7 +101,7 @@ public:
 		dataSize = 0;
 		dataPool = NULL;
 
-		m_bUsesAlphaTesting = FALSE;
+		usesAlphaTesting = FALSE;
 
 		bbox3D.mins = zVEC3(0.0f, 0.0f, 0.0f);
 		bbox3D.maxs = zVEC3(0.0f, 0.0f, 0.0f);
@@ -114,8 +114,8 @@ public:
 		zDELETE_ARRAY(subMeshList);
 	}
 
-	bool32 UnarchiveMatList(zCFileBIN &file);
-	void ArchiveMatList(zCFileBIN &file);
+	bool32 LoadMatList(zCFileBIN &file);
+	void SaveMatList(zCFileBIN &file);
 
 	bool32 LoadMRM(zCFileBIN &file);
 	bool32 LoadMRM(const zSTRING &filename) { zCFileBIN f(filename); return LoadMRM(f); }

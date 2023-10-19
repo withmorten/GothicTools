@@ -18,6 +18,7 @@ zCArchiver::zCArchiver()
 	nCount = 0;
 	stringHashMap = NULL;
 	chunkDepth = 0;
+	lastChunkStart = 0;
 }
 
 zCArchiver::~zCArchiver()
@@ -100,7 +101,6 @@ bool32 zCArchiver::ReadHeader()
 		file->ReadLine(s); // END
 	}
 
-	// TODO also _BINARY for Material list
 	if (mode == zARC_MODE_BINARY || mode == zARC_MODE_ASCII)
 	{
 		file->ReadLine(s); // objects
@@ -167,7 +167,7 @@ void zCArchiver::WriteHeader(int32 flags)
 	file->WriteLine("ZenGin Archive");
 	file->WriteLine("ver 1");
 	file->WriteLine("zCArchiverGeneric");
-	file->WriteLine("ASCII");
+	file->WriteLine(mode == zARC_MODE_ASCII ? "ASCII" : "BINARY");
 	file->WriteLine("saveGame 0");
 
 	if (!(flags & zARC_FLAG_WRITE_BRIEF_HEADER))
@@ -589,7 +589,17 @@ void ParseChunkStartLine(zTChunkRecord &chunk, zSTRING &s)
 
 bool32 zCArchiver::ReadChunkStart(zTChunkRecord &chunk)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		uint32 size;
+		file->Read(&size, sizeof(size));
+
+		file->Read(&chunk.classVersion, sizeof(chunk.classVersion));
+		file->Read(&chunk.objectIndex, sizeof(chunk.objectIndex));
+		file->Read(chunk.name);
+		file->Read(chunk.className);
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING s;
 		file->ReadLine(s, TRUE);
@@ -614,7 +624,11 @@ bool32 zCArchiver::ReadChunkEnd()
 {
 	PopChunk();
 
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		// do nothing
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING s;
 		file->ReadLine(s, TRUE);
@@ -834,7 +848,11 @@ bool32 zCArchiver::ReadBinSafeValue(zTArchiveTypeID entryType, void *buffer)
 
 void zCArchiver::ReadInt(const char *entryName, int32 &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -851,7 +869,11 @@ void zCArchiver::ReadInt(const char *entryName, int32 &value)
 
 void zCArchiver::ReadByte(const char *entryName, byte &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -868,7 +890,11 @@ void zCArchiver::ReadByte(const char *entryName, byte &value)
 
 void zCArchiver::ReadWord(const char *entryName, uint16 &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -885,7 +911,11 @@ void zCArchiver::ReadWord(const char *entryName, uint16 &value)
 
 void zCArchiver::ReadFloat(const char *entryName, float &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -902,7 +932,13 @@ void zCArchiver::ReadFloat(const char *entryName, float &value)
 
 void zCArchiver::ReadBool(const char *entryName, bool32 &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		byte b;
+		file->Read(&b, sizeof(b));
+		value = b;
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -919,7 +955,11 @@ void zCArchiver::ReadBool(const char *entryName, bool32 &value)
 
 void zCArchiver::ReadString(const char *entryName, zSTRING &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(value);
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -936,7 +976,11 @@ void zCArchiver::ReadString(const char *entryName, zSTRING &value)
 
 void zCArchiver::ReadVec3(const char *entryName, zVEC3 &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -953,7 +997,11 @@ void zCArchiver::ReadVec3(const char *entryName, zVEC3 &value)
 
 void zCArchiver::ReadColor(const char *entryName, zCOLOR &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -976,7 +1024,13 @@ void zCArchiver::ReadColor(const char *entryName, zCOLOR &value)
 
 void zCArchiver::ReadEnum(const char *entryName, int32 &value)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		byte b;
+		file->Read(&b, sizeof(b));
+		value = b;
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -991,9 +1045,13 @@ void zCArchiver::ReadEnum(const char *entryName, int32 &value)
 	}
 }
 
-void zCArchiver::ReadRaw(const char *entryName, void *buffer, size_t size)
+void zCArchiver::ReadRaw(const char *entryName, void *buffer, uint32 size)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(buffer, size);
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
@@ -1003,7 +1061,7 @@ void zCArchiver::ReadRaw(const char *entryName, void *buffer, size_t size)
 			char *charBuffer = v.ToChar();
 			int32 val;
 
-			for (size_t i = 0; i < size; i++)
+			for (uint32 i = 0; i < size; i++)
 			{
 				sscanf(charBuffer + i * 2, "%2x", &val);
 
@@ -1017,18 +1075,22 @@ void zCArchiver::ReadRaw(const char *entryName, void *buffer, size_t size)
 	}
 }
 
-void zCArchiver::ReadRawFloat(const char *entryName, void *buffer, size_t size)
+void zCArchiver::ReadRawFloat(const char *entryName, void *buffer, uint32 size)
 {
-	if (mode == zARC_MODE_ASCII)
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Read(buffer, size);
+	}
+	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING v;
 
 		if (ReadASCIIValue(entryName, "rawFloat", v))
 		{
-			size_t numFloats = size / sizeof(float);
+			uint32 numFloats = size / sizeof(float);
 			float *destBuffer = (float *)buffer;
 
-			for (size_t i = 0; i < numFloats; i++)
+			for (uint32 i = 0; i < numFloats; i++)
 			{
 				destBuffer[i] = v.PickWord(i + 1, " ", " ").ToFloat();
 			}
@@ -1054,9 +1116,24 @@ void zCArchiver::WriteChunkStart(const char *chunkName)
 
 void zCArchiver::WriteChunkStart(zTChunkRecord &chunk)
 {
-	zSTRING s = "[" + chunk.name + " " + chunk.className + " " + zSTRING(chunk.classVersion) + " " + zSTRING(chunk.objectIndex) + "]";
+	if (mode == zARC_MODE_BINARY)
+	{
+		lastChunkStart = file->Pos();
 
-	file->WriteLineIndented(chunkDepth, s);
+		uint32 size = 0;
+		file->Write(&size, sizeof(size));
+
+		file->Write(&chunk.classVersion, sizeof(chunk.classVersion));
+		file->Write(&chunk.objectIndex, sizeof(chunk.objectIndex));
+		file->Write(chunk.name);
+		file->Write(chunk.className);
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		zSTRING s = "[" + chunk.name + " " + chunk.className + " " + zSTRING(chunk.classVersion) + " " + zSTRING(chunk.objectIndex) + "]";
+
+		file->WriteLineIndented(chunkDepth, s);
+	}
 
 	PushChunk();
 }
@@ -1065,7 +1142,20 @@ void zCArchiver::WriteChunkEnd()
 {
 	PopChunk();
 
-	file->WriteLineIndented(chunkDepth, "[]");
+	if (mode == zARC_MODE_BINARY)
+	{
+		int32 savePos = file->Pos();
+		file->Seek(lastChunkStart);
+
+		uint32 size = savePos - lastChunkStart;
+		file->Write(&size, sizeof(size));
+
+		file->Seek(savePos);
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		file->WriteLineIndented(chunkDepth, "[]");
+	}
 }
 
 void zCArchiver::WriteChunk(const char *chunkName)
@@ -1098,76 +1188,155 @@ void zCArchiver::WriteASCIILine(const char *entryName, const char *entryType, zS
 
 void zCArchiver::WriteInt(const char *entryName, int32 value)
 {
-	WriteASCIILine(entryName, "int", zSTRING(value));
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Write(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "int", zSTRING(value));
+	}
 }
 
 void zCArchiver::WriteByte(const char *entryName, byte value)
 {
-	WriteASCIILine(entryName, "int", zSTRING(value));
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Write(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "int", zSTRING(value));
+	}
 }
 
 void zCArchiver::WriteWord(const char *entryName, uint16 value)
 {
-	WriteASCIILine(entryName, "int", zSTRING(value));
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Write(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "int", zSTRING(value));
+	}
 }
 
 void zCArchiver::WriteFloat(const char *entryName, float value)
 {
-	WriteASCIILine(entryName, "float", zSTRING(value));
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Write(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "float", zSTRING(value));
+	}
 }
 
 void zCArchiver::WriteBool(const char *entryName, bool32 value)
 {
-	WriteASCIILine(entryName, "bool", zSTRING(value));
+	if (mode == zARC_MODE_BINARY)
+	{
+		byte b = value;
+		file->Write(&b, sizeof(b));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "bool", zSTRING(value));
+	}
 }
 
 void zCArchiver::WriteString(const char *entryName, zSTRING &value)
 {
-	WriteASCIILine(entryName, "string", value);
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Write(value);
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "string", value);
+	}
 }
 
 void zCArchiver::WriteVec3(const char *entryName, zVEC3 &value)
 {
-	WriteASCIILine(entryName, "vec3", zSTRING(value[VX]) + " " + zSTRING(value[VY]) + " " + zSTRING(value[VZ]));
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Write(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "vec3", zSTRING(value[VX]) + " " + zSTRING(value[VY]) + " " + zSTRING(value[VZ]));
+	}
 }
 
 void zCArchiver::WriteColor(const char *entryName, zCOLOR &value)
 {
-	WriteASCIILine(entryName, "color", zSTRING(value.r) + " " + zSTRING(value.g) + " " + zSTRING(value.b) + " " + zSTRING(value.alpha));
+	if (mode == zARC_MODE_BINARY)
+	{
+		file->Write(&value, sizeof(value));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "color", zSTRING(value.r) + " " + zSTRING(value.g) + " " + zSTRING(value.b) + " " + zSTRING(value.alpha));
+	}
 }
 
 void zCArchiver::WriteEnum(const char *entryName, int32 value)
 {
-	WriteASCIILine(entryName, "enum", zSTRING(value));
+	if (mode == zARC_MODE_BINARY)
+	{
+		byte b = value;
+		file->Write(&b, sizeof(b));
+	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		WriteASCIILine(entryName, "enum", zSTRING(value));
+	}
 }
 
-void zCArchiver::WriteRaw(const char *entryName, void *buffer, size_t size)
+void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size)
 {
-	zSTRING value;
-	byte *sourceBuffer = (byte *)buffer;
-
-	for (size_t i = 0; i < size; i++)
+	if (mode == zARC_MODE_BINARY)
 	{
-		char charBuffer[32];
-		sprintf(charBuffer, "%02x", sourceBuffer[i]);
-
-		value += charBuffer;
+		file->Write(buffer, size);
 	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		zSTRING value;
+		byte *sourceBuffer = (byte *)buffer;
 
-	WriteASCIILine(entryName, "raw", value);
+		for (uint32 i = 0; i < size; i++)
+		{
+			char charBuffer[32];
+			sprintf(charBuffer, "%02x", sourceBuffer[i]);
+
+			value += charBuffer;
+		}
+
+		WriteASCIILine(entryName, "raw", value);
+	}
 }
 
-void zCArchiver::WriteRawFloat(const char *entryName, void *buffer, size_t size)
+void zCArchiver::WriteRawFloat(const char *entryName, void *buffer, uint32 size)
 {
-	zSTRING value;
-	size_t numFloats = size / sizeof(float);
-	float *sourceBuffer = (float *)buffer;
-
-	for (size_t i = 0; i < numFloats; i++)
+	if (mode == zARC_MODE_BINARY)
 	{
-		value += zSTRING(sourceBuffer[i]) + " ";
+		file->Write(buffer, size);
 	}
+	else if (mode == zARC_MODE_ASCII)
+	{
+		zSTRING value;
+		uint32 numFloats = size / sizeof(float);
+		float *sourceBuffer = (float *)buffer;
 
-	WriteASCIILine(entryName, "rawFloat", value);
+		for (uint32 i = 0; i < numFloats; i++)
+		{
+			value += zSTRING(sourceBuffer[i]) + " ";
+		}
+
+		WriteASCIILine(entryName, "rawFloat", value);
+	}
 }
 
