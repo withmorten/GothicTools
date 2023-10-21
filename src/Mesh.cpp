@@ -29,6 +29,11 @@ zCMesh::~zCMesh()
 		zDELETE(polyArray[i]);
 	}
 
+	for (int32 i = 0; i < matList.numInArray; i++)
+	{
+		zDELETE(matList[i]);
+	}
+
 	zDELETE_ARRAY(polyArray);
 	zDELETE_ARRAY(vertArray);
 	zDELETE_ARRAY(featArray);
@@ -171,7 +176,7 @@ bool32 zCMesh::LoadMSH(zCFileBIN &file)
 			hasLightmaps = TRUE;
 
 			lightMapsLen = len;
-			lightMaps = zMALLOC<byte>(len);
+			lightMaps = zMALLOC(byte, len);
 
 			file.BinRead(lightMaps, lightMapsLen);
 
@@ -200,7 +205,7 @@ bool32 zCMesh::LoadMSH(zCFileBIN &file)
 			file.BinReadInt(numFeat);
 
 			featArray = zNEW_ARRAY(zCVertFeature, numFeat);
-			zTMSH_FeatureChunk *block = zMALLOC<zTMSH_FeatureChunk>(numFeat);
+			zTMSH_FeatureChunk *block = zMALLOC(zTMSH_FeatureChunk, numFeat);
 
 			file.BinRead(block, numFeat * sizeof(zTMSH_FeatureChunk));
 
@@ -387,7 +392,7 @@ void zCMesh::LoadPolyList(zCFileBIN &file, int32 len)
 
 	polyArray = zNEW_ARRAY(zCPolygon *, numPoly);
 
-	byte *block = zMALLOC<byte>(len - sizeof(int32));
+	byte *block = zMALLOC(byte, len - sizeof(int32));
 	file.BinRead(block, len - sizeof(int32));
 
 	byte *blockPtr = block;
@@ -490,7 +495,7 @@ void zCMesh::LoadPolyList(zCFileBIN &file, int32 len)
 
 		poly->numVert = chunk.polyNumVert;
 
-		poly->indexList = zMALLOC<zTIndex>(poly->numVert);
+		poly->indexList = zMALLOC(zTIndex, poly->numVert);
 
 		for (int32 j = 0; j < poly->numVert; j++)
 		{
@@ -535,7 +540,9 @@ void zCMesh::LODDegenerate(int32 *polyIndexMap, int32 newNumPoly)
 	{
 		if (matList[i]->name == "Z_PORTALMAT")
 		{
-			matList.RemoveOrderIndex(i, TRUE);
+			zDELETE(matList[i]);
+
+			matList.RemoveOrderIndex(i);
 
 			break;
 		}

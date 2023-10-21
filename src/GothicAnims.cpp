@@ -19,9 +19,14 @@ enum
 
 int main(int argc, const char **argv)
 {
+#ifdef _CRTDBG_MAP_ALLOC
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+#endif
+
 	if (argc < ARG_OPTIONAL_FOLDER_OUT)
 	{
-		printf("GothicAnims v0.1 by withmorten\n\n");
+		printf("GothicAnims v0.2 by withmorten\n\n");
 		printf("GothicAnims can convert an entire anims or meshes directory from 1.08k to 2.6 and vice versa\n\n");
 		printf("usage:\n");
 		printf("GothicAnims <type> <folder_in> <version_in> <folder_out> <version_out>\n\n");

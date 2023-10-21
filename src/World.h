@@ -20,6 +20,8 @@ public:
 	zCVob *vobTree;
 	zCWayNet *wayNet;
 
+	zCArray<zCVob *> vobs; // for easy access that doesn't require recursion
+
 public:
 	zCWorld();
 	~zCWorld();

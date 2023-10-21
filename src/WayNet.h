@@ -45,12 +45,15 @@ public:
 
 public:
 	int32 numWaypoints;
-	zCArray<zCWaypoint *> waypoints; // TODO make ptr array?
+	zCWaypoint **waypoints; // TODO make ptr array?
 
 	int32 numWays;
-	zCArray<zCWay *> ways; // TODO make ptr array?
+	zCWay **ways; // TODO make ptr array?
 
 public:
+	zCWayNet();
+	~zCWayNet();
+
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 };

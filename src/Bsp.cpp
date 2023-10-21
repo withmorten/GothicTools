@@ -158,7 +158,7 @@ bool32 zCBspTree::LoadBIN(zCFileBIN &file)
 		{
 			file.BinReadInt(numPolys);
 
-			treePolyIndices = zMALLOC<uint32>(numPolys);
+			treePolyIndices = zMALLOC(uint32, numPolys);
 			file.BinRead(treePolyIndices, numPolys * sizeof(uint32)); // indices to mesh->polyArray
 
 			break;
@@ -210,15 +210,15 @@ bool32 zCBspTree::LoadBIN(zCFileBIN &file)
 				file.BinReadInt(sector->numSectorNodes);
 				file.BinReadInt(sector->numSectorPortals);
 
-				sector->leafIndices = zMALLOC<uint32>(sector->numSectorNodes);
-				sector->sectorIndices = zMALLOC<uint32>(sector->numSectorPortals);
+				sector->leafIndices = zMALLOC(uint32, sector->numSectorNodes);
+				sector->sectorIndices = zMALLOC(uint32, sector->numSectorPortals);
 
 				file.BinRead(sector->leafIndices, sector->numSectorNodes * sizeof(uint32));
 				file.BinRead(sector->sectorIndices, sector->numSectorPortals * sizeof(uint32)); // indices to mesh->polyArray
 			}
 
 			file.BinReadInt(numPortals);
-			portalIndices = zMALLOC<uint32>(numPortals);
+			portalIndices = zMALLOC(uint32, numPortals);
 			file.BinRead(portalIndices, numPortals * sizeof(uint32)); // indices to mesh->polyArray
 
 			break;
@@ -308,9 +308,9 @@ void zCBspTree::LODDegenerate()
 	// Switch treePolyIndices
 	numPolys = nonLodPolyIndices.numInArray;
 	zMEMCPY<uint32>(treePolyIndices, nonLodPolyIndices.array, numPolys);
-	zREALLOC<uint32>(treePolyIndices, numPolys);
+	zREALLOC(uint32, treePolyIndices, numPolys);
 
-	int32 *polyIndexMap = zMALLOC<int32>(mesh->numPoly);
+	int32 *polyIndexMap = zMALLOC(int32, mesh->numPoly);
 	zMEMSET<int32>(polyIndexMap, -1, mesh->numPoly); // -1 = unused
 	int32 newMeshNumPoly = 0;
 

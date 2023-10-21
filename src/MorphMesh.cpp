@@ -30,7 +30,7 @@ void zCMorphMeshAni::Load(zCFileBIN &file)
 	file.BinReadInt(numVert);
 	file.BinReadInt(numFrames);
 
-	vertIndexList = zMALLOC<int32>(numVert);
+	vertIndexList = zMALLOC(int32, numVert);
 	vertPosMatrix = zNEW_ARRAY(zPOINT3, numVert * numFrames);
 
 	file.BinRead(vertIndexList, sizeof(int32) * numVert);

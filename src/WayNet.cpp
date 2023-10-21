@@ -2,6 +2,32 @@
 
 #include "Archiver.h"
 
+zCWayNet::zCWayNet()
+{
+	waypoints = NULL;
+	ways = NULL;
+}
+
+zCWayNet::~zCWayNet()
+{
+	for (int32 i = 0; i < numWaypoints; i++)
+	{
+		zDELETE(waypoints[i]);
+	}
+
+	zDELETE_ARRAY(waypoints);
+
+	for (int32 i = 0; i < numWays; i++)
+	{
+		zDELETE(ways[i]->left);
+		zDELETE(ways[i]->right);
+
+		zDELETE(ways[i]);
+	}
+
+	zDELETE_ARRAY(ways);
+}
+
 bool32 zCWaypoint::Unarchive(zCArchiver &arc)
 {
 	if (!zCObject::Unarchive(arc)) return FALSE;
@@ -36,6 +62,7 @@ bool32 zCWayNet::Unarchive(zCArchiver &arc)
 	if (waynetVersion != zWAYNET_VERSION) return FALSE;
 
 	arc.ReadInt("numWaypoints", numWaypoints);
+	waypoints = zNEW_ARRAY(zCWaypoint *, numWaypoints);
 
 	for (int32 i = 0; i < numWaypoints; i++)
 	{
@@ -44,10 +71,11 @@ bool32 zCWayNet::Unarchive(zCArchiver &arc)
 
 		if (!waypoint) return FALSE;
 
-		waypoints.Insert(waypoint);
+		waypoints[i] = waypoint;
 	}
 
 	arc.ReadInt("numWays", numWays);
+	ways = zNEW_ARRAY(zCWay *, numWays);
 
 	for (int32 i = 0; i < numWays; i++)
 	{
@@ -58,7 +86,7 @@ bool32 zCWayNet::Unarchive(zCArchiver &arc)
 
 		if (!left || !right) return FALSE;
 
-		ways.Insert(zNEW(zCWay)(left, right));
+		ways[i] = zNEW(zCWay)(left, right);
 	}
 
 	return TRUE;

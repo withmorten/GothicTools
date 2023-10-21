@@ -281,6 +281,29 @@ void zCCamTrj_KeyFrame::Archive(zCArchiver &arc)
 	arc.WriteRaw("originalPose", &originalPose, sizeof(originalPose));
 }
 
+zCCSCamera::zCCSCamera()
+{
+	posKeys = NULL;
+	targetKeys = NULL;
+}
+
+zCCSCamera::~zCCSCamera()
+{
+	for (int32 i = 0; i < numPos; i++)
+	{
+		zDELETE(posKeys[i]);
+	}
+
+	zDELETE_ARRAY(posKeys);
+
+	for (int32 i = 0; i < numTargets; i++)
+	{
+		zDELETE(targetKeys[i]);
+	}
+
+	zDELETE_ARRAY(targetKeys);
+}
+
 bool32 zCCSCamera::Unarchive(zCArchiver &arc)
 {
 	if (!zCVob::Unarchive(arc)) return FALSE;
@@ -303,16 +326,19 @@ bool32 zCCSCamera::Unarchive(zCArchiver &arc)
 	arc.ReadFloat("autoCamUntriggerOnLastKeyDelay", autoCamUntriggerOnLastKeyDelay);
 
 	arc.ReadInt("numPos", numPos);
+	posKeys = zNEW_ARRAY(zCCamTrj_KeyFrame *, numPos);
+
 	arc.ReadInt("numTargets", numTargets);
+	targetKeys = zNEW_ARRAY(zCCamTrj_KeyFrame *, numTargets);
 
 	for (int32 i = 0; i < numPos; i++)
 	{
-		posKeys.Insert((zCCamTrj_KeyFrame *)arc.ReadObject());
+		posKeys[i] = (zCCamTrj_KeyFrame *)arc.ReadObject();
 	}
 
 	for (int32 i = 0; i < numTargets; i++)
 	{
-		targetKeys.Insert((zCCamTrj_KeyFrame *)arc.ReadObject());
+		targetKeys[i] = (zCCamTrj_KeyFrame *)arc.ReadObject();
 	}
 
 	return TRUE;

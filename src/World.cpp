@@ -9,13 +9,21 @@ zCWorld::zCWorld()
 {
 	bspTree = NULL;
 	vobTree = NULL;
+	wayNet = NULL;
 	compiled = FALSE;
 }
 
 zCWorld::~zCWorld()
 {
 	zDELETE(bspTree);
+
+	for (int32 i = 0; i < vobs.numInArray; i++)
+	{
+		zDELETE(vobs[i]);
+	}
+
 	zDELETE(vobTree);
+	zDELETE(wayNet);
 }
 
 bool32 zCWorld::UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs)
@@ -33,6 +41,7 @@ bool32 zCWorld::UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs)
 		if (!vob) return FALSE;
 
 		parent->childs.Insert(vob);
+		vobs.Insert(vob);
 	}
 
 	zSTRING n = numVobs;
@@ -58,15 +67,34 @@ bool32 zCWorld::Unarchive(zCArchiver &arc)
 
 	if (chunk.name == "MeshAndBsp")
 	{
-		compiled = TRUE;
-
-		bspTree = zNEW(zCBspTree);
-
-		if (!bspTree->LoadBIN(zCFileBIN(arc.GetFile())))
+		if (decompile)
 		{
-			printf("BspTree could not be loaded\n");
+			compiled = FALSE;
 
-			return FALSE;
+			zCFileBIN file(arc.GetFile());
+
+			uint32 version;
+			uint32 chunkLen;
+
+			file.BinReadDWord(version);
+			file.BinReadDWord(chunkLen);
+
+			file.BinSeekRel(chunkLen);
+
+			printf("Skipping BspTree\n");
+		}
+		else
+		{
+			compiled = TRUE;
+
+			bspTree = zNEW(zCBspTree);
+
+			if (!bspTree->LoadBIN(zCFileBIN(arc.GetFile())))
+			{
+				printf("BspTree could not be loaded\n");
+
+				return FALSE;
+			}
 		}
 
 		if (!arc.ReadChunkEnd()) return FALSE; // MeshAndBsp

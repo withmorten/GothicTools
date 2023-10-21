@@ -14,8 +14,10 @@ workspace "GothicTools"
 
 	staticruntime "on"
 
-	filter "configurations:Debug*"
-		defines { "DEBUG" }
+	filter "configurations:Debug"
+		-- editandcontinue "off"
+		-- flags { "NoIncrementalLink" }
+		defines { "_DEBUG", "_CRTDBG_MAP_ALLOC" }
 		symbols "full"
 		optimize "off"
 		runtime "debug"

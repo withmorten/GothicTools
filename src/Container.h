@@ -32,7 +32,7 @@ public:
 		numInArray = 0;
 	}
 
-	~zCArray() { EmptyList(); }
+	~zCArray() { DeleteList(); }
 
 	void AllocDelta(const int32 numDelta)
 	{
@@ -171,11 +171,9 @@ public:
 		if (release) zDELETE(array[numInArray]);
 	}
 
-	void RemoveOrderIndex(const int32 index, bool32 release = FALSE)
+	void RemoveOrderIndex(const int32 index)
 	{
 		if (index > numInArray) return;
-
-		if (release) zDELETE(array[index]);
 
 		if (index != numInArray - 1)
 		{

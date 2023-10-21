@@ -23,6 +23,13 @@ zCArchiver::zCArchiver()
 
 zCArchiver::~zCArchiver()
 {
+	for (uint32 i = 0; i < nCount; i++)
+	{
+		GESStringMapStorage *strMapStorage = stringHashMap + i;
+
+		zFREE(strMapStorage->MapValue);
+	}
+
 	zFREE(stringHashMap);
 }
 
@@ -131,7 +138,7 @@ bool32 zCArchiver::ReadHeader()
 		file->Seek(chunkPos);
 		file->Read(&nCount, sizeof(nCount));
 
-		stringHashMap = zMALLOC<GESStringMapStorage>(nCount);
+		stringHashMap = zMALLOC(GESStringMapStorage, nCount);
 
 		for (uint32 i = 0; i < nCount; i++)
 		{
@@ -141,7 +148,7 @@ bool32 zCArchiver::ReadHeader()
 			file->Read(&strMapStorage->LinearValue, sizeof(strMapStorage->LinearValue));
 			file->Read(&strMapStorage->HashValue, sizeof(strMapStorage->HashValue));
 
-			strMapStorage->MapValue = zMALLOC<char>(strMapStorage->HashMapStringLen + 1);
+			strMapStorage->MapValue = zMALLOC(char, strMapStorage->HashMapStringLen + 1);
 			file->Read(strMapStorage->MapValue, strMapStorage->HashMapStringLen);
 			strMapStorage->MapValue[strMapStorage->HashMapStringLen] = '\0';
 		}

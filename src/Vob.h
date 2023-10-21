@@ -217,11 +217,15 @@ public:
 	float autoCamUntriggerOnLastKeyDelay;
 
 	int32 numPos;
+	zCCamTrj_KeyFrame **posKeys;
+
 	int32 numTargets;
-	zCArray<zCCamTrj_KeyFrame *> posKeys;
-	zCArray<zCCamTrj_KeyFrame *> targetKeys;
+	zCCamTrj_KeyFrame **targetKeys;
 
 public:
+	zCCSCamera();
+	~zCCSCamera();
+
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 };

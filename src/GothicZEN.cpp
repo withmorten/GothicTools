@@ -17,9 +17,14 @@ enum
 
 int main(int argc, const char **argv)
 {
+#ifdef _CRTDBG_MAP_ALLOC
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+#endif
+
 	if (argc < ARG_OPTIONAL_FILE_OUT)
 	{
-		printf("GothicZEN v0.4 by withmorten\n\n");
+		printf("GothicZEN v0.5 by withmorten\n\n");
 		printf("GothicZEN can convert a compiled ZEN to another Gothic version, or remove LOD polygons when saving to the same version\n\n");
 		printf("usage:\n");
 		printf("GothicZEN <filename in> <version in> <filename out> <version out> [xzen] [nodelod] [decompile]\n\n");

@@ -67,7 +67,7 @@ bool32 zCProgMeshProto::LoadMRM(zCFileBIN &file)
 			}
 
 			file.BinReadDWord(dataSize);
-			dataPool = zMALLOC<byte>(dataSize);
+			dataPool = zMALLOC(byte, dataSize);
 			file.BinRead(dataPool, dataSize);
 
 			file.BinReadByte(numSubMeshes);

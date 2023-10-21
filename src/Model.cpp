@@ -1717,15 +1717,15 @@ bool32 zCMeshSoftSkin::Load(zCFileBIN &file)
 			}
 
 			file.BinReadDWord(size);
-			vertWeightStream = zMALLOC<byte>(size);
+			vertWeightStream = zMALLOC(byte, size);
 			file.BinRead(vertWeightStream, size);
 
 			file.BinReadDWord(numNodeWedgeNormals);
-			nodeWedgeNormalList = zMALLOC<zTNodeWedgeNormal>(numNodeWedgeNormals);
+			nodeWedgeNormalList = zMALLOC(zTNodeWedgeNormal, numNodeWedgeNormals);
 			file.BinRead(nodeWedgeNormalList, numNodeWedgeNormals * sizeof(zTNodeWedgeNormal));
 
 			file.BinReadWord(numNodes);
-			nodeIndexList = zMALLOC<int32>(numNodes);
+			nodeIndexList = zMALLOC(int32, numNodes);
 			file.BinRead(nodeIndexList, numNodes * sizeof(int32));
 
 			nodeOBBList.AllocAbs(numNodes);

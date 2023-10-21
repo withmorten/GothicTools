@@ -120,14 +120,14 @@ bool32 zCModelAni::LoadMAN(zCFileBIN &file)
 		{
 			file.BinReadDWord(checksum);
 
-			nodeIndexList = zMALLOC<int32>(numNodes);
+			nodeIndexList = zMALLOC(int32, numNodes);
 			file.BinRead(nodeIndexList, sizeof(int32) * numNodes);
 
 			numSamples = numFrames * numNodes;
 
 			if (numSamples)
 			{
-				aniSampleMatrix = zMALLOC<zTMdl_AniSample>(numSamples);
+				aniSampleMatrix = zMALLOC(zTMdl_AniSample, numSamples);
 				file.BinRead(aniSampleMatrix, sizeof(zTMdl_AniSample) * numSamples);
 			}
 
