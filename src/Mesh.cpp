@@ -1,6 +1,7 @@
 #include "Mesh.h"
 
 #include "Material.h"
+#include "Texture.h"
 
 zCMesh::zCMesh()
 {
@@ -18,8 +19,11 @@ zCMesh::zCMesh()
 	hasLightmaps = FALSE;
 	usesAlphaTesting = FALSE;
 
-	lightMapsLen = 0;
-	lightMaps = NULL;
+	numTextures = 0;
+	lmTexList = NULL;
+
+	numlightMap = 0;
+	lightmapList = NULL;
 }
 
 zCMesh::~zCMesh()
@@ -29,15 +33,29 @@ zCMesh::~zCMesh()
 		zDELETE(polyArray[i]);
 	}
 
+	zDELETE_ARRAY(polyArray);
+
 	for (int32 i = 0; i < matList.numInArray; i++)
 	{
 		zDELETE(matList[i]);
 	}
 
-	zDELETE_ARRAY(polyArray);
 	zDELETE_ARRAY(vertArray);
 	zDELETE_ARRAY(featArray);
-	zFREE(lightMaps);
+
+	for (int32 i = 0; i < numTextures; i++)
+	{
+		zDELETE(lmTexList[i]);
+	}
+
+	zDELETE_ARRAY(lmTexList);
+
+	for (int32 i = 0; i < numlightMap; i++)
+	{
+		zDELETE(lightmapList[i]);
+	}
+
+	zDELETE_ARRAY(lightmapList);
 }
 
 bool32 zCMesh::SaveMSH(zCFileBIN &file)
@@ -77,8 +95,19 @@ bool32 zCMesh::SaveMSH(zCFileBIN &file)
 	if (hasLightmaps)
 	{
 		file.BinStartChunk(zFCHUNK_LIGHTMAPLIST_SHARED);
+
+		file.BinWriteInt(numTextures);
+
+		for (int32 i = 0; i < numTextures; i++)
 		{
-			file.BinWrite(lightMaps, lightMapsLen);
+			lmTexList[i]->Save(file.GetFile());
+		}
+
+		file.BinWriteInt(numlightMap);
+
+		for (int32 i = 0; i < numlightMap; i++)
+		{
+			lightmapList[i]->Save(file);
 		}
 	}
 
@@ -173,12 +202,32 @@ bool32 zCMesh::LoadMSH(zCFileBIN &file)
 		}
 		case zFCHUNK_LIGHTMAPLIST_SHARED:
 		{
+			file.BinReadInt(numTextures);
+			lmTexList = zNEW_ARRAY(zCTexture *, numTextures);
+
+			for (int32 i = 0; i < numTextures; i++)
+			{
+				zCTexture *tex = zNEW(zCTexture);
+
+				if (!tex->Load(file.GetFile())) return FALSE;
+
+				lmTexList[i] = tex;
+			}
+
+			file.BinReadInt(numlightMap);
+			lightmapList = zNEW_ARRAY(zCLightMap *, numlightMap);
+
+			for (int32 i = 0; i < numlightMap; i++)
+			{
+				zCLightMap *lightmap = zNEW(zCLightMap);
+
+				lightmap->Load(file);
+				lightmap->tex = lmTexList[i];
+
+				lightmapList[i] = lightmap;
+			}
+
 			hasLightmaps = TRUE;
-
-			lightMapsLen = len;
-			lightMaps = zMALLOC(byte, len);
-
-			file.BinRead(lightMaps, lightMapsLen);
 
 			break;
 		}

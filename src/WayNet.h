@@ -45,10 +45,10 @@ public:
 
 public:
 	int32 numWaypoints;
-	zCWaypoint **waypoints; // TODO make ptr array?
+	zCWaypoint **waypoints;
 
 	int32 numWays;
-	zCWay **ways; // TODO make ptr array?
+	zCWay **ways;
 
 public:
 	zCWayNet();

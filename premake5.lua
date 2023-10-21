@@ -61,6 +61,7 @@ project "GothicTools"
 	files { "src/ProgMesh.h" }
 	files { "src/ScanDir.h" }
 	files { "src/String.h" }
+	files { "src/Texture.h" }
 	files { "src/Visual.h" }
 	files { "src/Vob.h" }
 	files { "src/WayNet.h" }
@@ -78,6 +79,7 @@ project "GothicTools"
 	files { "src/ProgMesh.cpp" }
 	files { "src/ScanDir.cpp" }
 	files { "src/String.cpp" }
+	files { "src/Texture.cpp" }
 	files { "src/Visual.cpp" }
 	files { "src/Vob.cpp" }
 	files { "src/WayNet.cpp" }

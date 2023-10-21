@@ -5,6 +5,9 @@
 #include "3D.h"
 #include "Visual.h"
 
+class zCTexture;
+class zCLightMap;
+
 #define zFCHUNK_MESH ((uint16)0xB000)
 #define zFCHUNK_BBOX3D ((uint16)0xB010)
 #define zFCHUNK_MATLIST ((uint16)0xB020)
@@ -40,9 +43,11 @@ public:
 	zCVertex *vertArray;
 	zCVertFeature *featArray;
 
-	// TODO do this properly at some point :)
-	int32 lightMapsLen;
-	byte *lightMaps;
+	int32 numTextures;
+	zCTexture **lmTexList;
+
+	int32 numlightMap;
+	zCLightMap **lightmapList;
 
 public:
 	zCMesh();
