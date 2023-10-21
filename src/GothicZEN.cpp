@@ -60,80 +60,16 @@ int main(int argc, const char **argv)
 		}
 	}
 
-	switch (atoi(argv[ARG_VERSION_IN]))
+	if (!SetInVersions(atoi(argv[ARG_VERSION_IN])))
 	{
-	case 101:
-		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_01;
-		meshVersionIn = MESH_VERSION_GOTHIC_1_01;
-		bspVersionIn = BSP_VERSION_GOTHIC_1_01;
-		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_01;
-
-		deLOD = TRUE;
-
-		break;
-	case 104:
-	case 108:
-	case 112:
-		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_04;
-		meshVersionIn = MESH_VERSION_GOTHIC_1_04;
-		bspVersionIn = BSP_VERSION_GOTHIC_1_04;
-		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
-
-		deLOD = TRUE;
-
-		break;
-	case 130:
-	case 260:
-		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_30;
-		meshVersionIn = MESH_VERSION_GOTHIC_1_30;
-		bspVersionIn = BSP_VERSION_GOTHIC_1_30;
-		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
-
-		break;
-	default:
-		printf("Unrecognized version in, needs to be 101, 104/108/112 or 130/260\n");
-
 		return zERROR;
-
-		break;
 	}
 
 	if (argc > ARG_OPTIONAL_VERSION_OUT)
 	{
-		switch (atoi(argv[ARG_OPTIONAL_VERSION_OUT]))
+		if (!SetOutVersions(atoi(argv[ARG_OPTIONAL_VERSION_OUT])))
 		{
-		case 101:
-			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_01;
-			meshVersionOut = MESH_VERSION_GOTHIC_1_01;
-			bspVersionOut = BSP_VERSION_GOTHIC_1_01;
-			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_01;
-
-			xZenOut = FALSE;
-
-			break;
-		case 104:
-		case 108:
-		case 112:
-			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
-			meshVersionOut = MESH_VERSION_GOTHIC_1_04;
-			bspVersionOut = BSP_VERSION_GOTHIC_1_04;
-			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
-
-			break;
-		case 130:
-		case 260:
-			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
-			meshVersionOut = MESH_VERSION_GOTHIC_1_30;
-			bspVersionOut = BSP_VERSION_GOTHIC_1_30;
-			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
-
-			break;
-		default:
-			printf("Unrecognized version out, needs to be 101, 104/108/112 or 130/260\n");
-
 			return zERROR;
-
-			break;
 		}
 	}
 

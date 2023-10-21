@@ -114,3 +114,18 @@ project "GothicAnims"
 	if (os.getenv("BIN") ~= nil) then
 		postbuildcommands { '{COPYFILE} "%{cfg.buildtarget.abspath}" "' .. os.getenv("BIN") .. "/" .. '%{cfg.buildtarget.name}"' }
 	end
+
+project "GothicTest"
+	kind "ConsoleApp"
+	language "C++"
+	targetname "GothicTest"
+	targetdir "bin/%{cfg.platform}/%{cfg.buildcfg}"
+
+	dependson { "GothicTools" }
+	links { "GothicTools" }
+
+	files { "src/GothicTest.cpp" }
+
+	if (os.getenv("BIN") ~= nil) then
+		postbuildcommands { '{COPYFILE} "%{cfg.buildtarget.abspath}" "' .. os.getenv("BIN") .. "/" .. '%{cfg.buildtarget.name}"' }
+	end

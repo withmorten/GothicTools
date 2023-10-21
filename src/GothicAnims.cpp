@@ -37,92 +37,16 @@ int main(int argc, const char **argv)
 		return zOK;
 	}
 
-	switch (atoi(argv[ARG_VERSION_IN]))
+	if (!SetInVersions(atoi(argv[ARG_VERSION_IN])))
 	{
-	case 101:
-	case 104:
-	case 108:
-	case 112:
-		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_04;
-		meshVersionIn = MESH_VERSION_GOTHIC_1_04;
-		bspVersionIn = BSP_VERSION_GOTHIC_1_04;
-		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
-
-		morphMeshVersionIn = MORPHMESH_VERSION_GOTHIC_1_04;
-		progMeshVersionIn = PROGMESH_VERSION_GOTHIC_1_04;
-		meshSoftSkinVersionIn = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_04;
-		modelHierarchyVersionIn = MODELHIERARCHY_VERSION_GOTHIC_1_04;
-		modelMeshVersionIn = MODELMESH_VERSION_GOTHIC_1_04;
-		modelAnimationVersionIn = MAN_FILE_VERSION_GOTHIC_1_04;
-
-		break;
-	case 130:
-	case 260:
-		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_30;
-		meshVersionIn = MESH_VERSION_GOTHIC_1_30;
-		bspVersionIn = BSP_VERSION_GOTHIC_1_30;
-		materialVersionIn = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
-
-		morphMeshVersionIn = MORPHMESH_VERSION_GOTHIC_1_30;
-		progMeshVersionIn = PROGMESH_VERSION_GOTHIC_1_30;
-		meshSoftSkinVersionIn = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_30;
-		modelHierarchyVersionIn = MODELHIERARCHY_VERSION_GOTHIC_1_30;
-		modelMeshVersionIn = MODELMESH_VERSION_GOTHIC_1_30;
-		modelAnimationVersionIn = MAN_FILE_VERSION_GOTHIC_1_30;
-		modelScriptVersionIn = MSB_FILE_VERSION_GOTHIC_1_30;
-
-		break;
-	default:
-		printf("Unrecognized version in, needs to be 101/104/108 or 130/260\n");
-
 		return zERROR;
-
-		break;
 	}
 
 	if (argc > ARG_OPTIONAL_VERSION_OUT)
 	{
-		switch (atoi(argv[ARG_OPTIONAL_VERSION_OUT]))
+		if (!SetOutVersions(atoi(argv[ARG_OPTIONAL_VERSION_OUT])))
 		{
-		case 101:
-		case 104:
-		case 108:
-		case 112:
-			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
-			meshVersionOut = MESH_VERSION_GOTHIC_1_04;
-			bspVersionOut = BSP_VERSION_GOTHIC_1_04;
-			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_04;
-
-			morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_04;
-			progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_04;
-			meshSoftSkinVersionOut = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_04;
-			modelHierarchyVersionOut = MODELHIERARCHY_VERSION_GOTHIC_1_04;
-			modelMeshVersionOut = MODELMESH_VERSION_GOTHIC_1_04;
-			modelAnimationVersionOut = MAN_FILE_VERSION_GOTHIC_1_04;
-
-			break;
-		case 130:
-		case 260:
-			meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
-			meshVersionOut = MESH_VERSION_GOTHIC_1_30;
-			bspVersionOut = BSP_VERSION_GOTHIC_1_30;
-			materialVersionOut = MATERIAL_CLASS_VERSION_GOTHIC_1_30;
-
-			morphMeshVersionOut = MORPHMESH_VERSION_GOTHIC_1_30;
-			progMeshVersionOut = PROGMESH_VERSION_GOTHIC_1_30;
-			meshSoftSkinVersionOut = MESHSOFTSKIN_FILE_VERSION_GOTHIC_1_30;
-			modelHierarchyVersionOut = MODELHIERARCHY_VERSION_GOTHIC_1_30;
-			modelMeshVersionOut = MODELMESH_VERSION_GOTHIC_1_30;
-			modelAnimationVersionOut = MAN_FILE_VERSION_GOTHIC_1_30;
-			modelScriptVersionOut = MSB_FILE_VERSION_GOTHIC_1_30;
-
-			break;
-		default:
-			printf("Unrecognized version out, needs to be 101/104/108 or 130/260\n");
-
 			return zERROR;
-
-			break;
 		}
 	}
 

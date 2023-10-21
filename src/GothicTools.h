@@ -152,3 +152,6 @@ extern bool32 xZenOut;
 
 extern bool32 decompile;
 extern bool32 deLOD;
+
+bool32 SetInVersions(int32 version);
+bool32 SetOutVersions(int32 version);
