@@ -109,11 +109,17 @@ bool32 zCWorld::Unarchive(zCArchiver &arc)
 	UnarchiveVobTree(arc, vobTree, numVobs);
 	if (!arc.ReadChunkEnd()) return FALSE; // VobTree
 
-	arc.ReadChunkStart(chunk); // WayNet
-	wayNet = (zCWayNet *)arc.ReadObject();
-	if (!arc.ReadChunkEnd()) return FALSE; // WayNet
+	arc.ReadChunkStart(chunk); // WayNet or EndMarker
 
-	arc.ReadChunkStart(chunk); // EndMarker
+	if (chunk.name == "WayNet")
+	{
+		wayNet = (zCWayNet *)arc.ReadObject();
+
+		if (!arc.ReadChunkEnd()) return FALSE; // WayNet
+
+		arc.ReadChunkStart(chunk); // EndMarker
+	}
+
 	if (!arc.ReadChunkEnd()) return FALSE; // EndMarker
 
 	return TRUE;
@@ -155,9 +161,12 @@ void zCWorld::Archive(zCArchiver &arc)
 
 	arc.WriteChunkEnd();
 
-	arc.WriteChunkStart("WayNet");
-	arc.WriteObject(wayNet);
-	arc.WriteChunkEnd();
+	if (wayNet)
+	{
+		arc.WriteChunkStart("WayNet");
+		arc.WriteObject(wayNet);
+		arc.WriteChunkEnd();
+	}
 
 	arc.WriteChunkStart("EndMarker");
 	arc.WriteChunkEnd();

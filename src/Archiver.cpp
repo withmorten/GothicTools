@@ -564,7 +564,7 @@ zCObject *zCArchiver::CreateObject(zTChunkRecord &chunk)
 	}
 	else
 	{
-		printf("Error: %s is not implemented!\n", chunk.className.ToChar());
+		printf("Error at %d: %s is not implemented!\n", file->Pos(), chunk.className.ToChar());
 
 		return NULL;
 	}
