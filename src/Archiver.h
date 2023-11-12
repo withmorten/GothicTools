@@ -4,6 +4,7 @@
 
 class zFILE;
 class zCObject;
+class zCObjectRegistry;
 class zCOLOR;
 
 enum { zARC_VERSION = 2 };
@@ -71,6 +72,7 @@ public:
 	zSTRING date;
 	int32 objCount; // from archive
 	zCArray<zCObject *> objects; // filled as we go
+	zCObjectRegistry *registry; // owned by the world, can be NULL
 
 	uint32 nCount;
 	GESStringMapStorage *stringHashMap;

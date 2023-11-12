@@ -2,6 +2,44 @@
 
 #include "Archiver.h"
 
+zOBJECT_DEFINITION(zCWaypoint);
+zOBJECT_DEFINITION(zCWayNet);
+
+bool32 zCWaypoint::Unarchive(zCArchiver &arc)
+{
+	if (!zCObject::Unarchive(arc)) return FALSE;
+
+	arc.ReadString("wpName", wpName);
+	arc.ReadInt("waterDepth", waterDepth);
+	arc.ReadBool("underWater", underWater);
+	arc.ReadVec3("position", position);
+	arc.ReadVec3("direction", direction);
+
+	return TRUE;
+}
+
+void zCWaypoint::Archive(zCArchiver &arc)
+{
+	zCObject::Archive(arc);
+
+	arc.WriteString("wpName", wpName);
+	arc.WriteInt("waterDepth", waterDepth);
+	arc.WriteBool("underWater", underWater);
+	arc.WriteVec3("position", position);
+	arc.WriteVec3("direction", direction);
+}
+
+void zCWaypoint::Hash()
+{
+	zCObject::Hash();
+
+	hash = XXH64(wpName.ToChar(), wpName.Length(), hash);
+	hash = XXH64(&waterDepth, sizeof(waterDepth), hash);
+	hash = XXH64(&underWater, sizeof(underWater), hash);
+	hash = XXH64(&position, sizeof(position), hash);
+	hash = XXH64(&direction, sizeof(direction), hash);
+}
+
 zCWayNet::zCWayNet()
 {
 	waypoints = NULL;
@@ -26,30 +64,6 @@ zCWayNet::~zCWayNet()
 	}
 
 	zDELETE_ARRAY(ways);
-}
-
-bool32 zCWaypoint::Unarchive(zCArchiver &arc)
-{
-	if (!zCObject::Unarchive(arc)) return FALSE;
-
-	arc.ReadString("wpName", wpName);
-	arc.ReadInt("waterDepth", waterDepth);
-	arc.ReadBool("underWater", underWater);
-	arc.ReadVec3("position", position);
-	arc.ReadVec3("direction", direction);
-
-	return TRUE;
-}
-
-void zCWaypoint::Archive(zCArchiver &arc)
-{
-	zCObject::Archive(arc);
-
-	arc.WriteString("wpName", wpName);
-	arc.WriteInt("waterDepth", waterDepth);
-	arc.WriteBool("underWater", underWater);
-	arc.WriteVec3("position", position);
-	arc.WriteVec3("direction", direction);
 }
 
 bool32 zCWayNet::Unarchive(zCArchiver &arc)
@@ -114,3 +128,16 @@ void zCWayNet::Archive(zCArchiver &arc)
 	}
 }
 
+void zCWayNet::Hash()
+{
+	zCObject::Hash();
+
+	// does it even make sense to hash this ...
+
+	int32 waynetVersion = zWAYNET_VERSION;
+	hash = XXH64(&waynetVersion, sizeof(waynetVersion), hash);
+
+	hash = XXH64(&numWaypoints, sizeof(numWaypoints), hash);
+
+	hash = XXH64(&numWays, sizeof(numWays), hash);
+}

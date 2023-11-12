@@ -2,6 +2,8 @@
 
 #include "Material.h"
 
+zOBJECT_DEFINITION(zCProgMeshProto);
+
 zCProgMeshProto::zCSubMesh::zCSubMesh()
 {
 	material = NULL;

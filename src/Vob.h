@@ -95,9 +95,12 @@ enum { DEFAULT_VOB_ZBIAS = 1 };
 class zCVob : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCVob"; }
+	zOBJECT_DECLARATION(zCVob);
 
 public:
+	zCVob *parent;
+	int32 depth;
+
 	int32 numChilds;
 	zCArray<zCVob *> childs;
 
@@ -131,6 +134,7 @@ public:
 	bool32 UnarchivePacked(zCArchiver &arc);
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 enum zTCamTrj_KeyMotionType
@@ -147,7 +151,7 @@ enum zTCamTrj_KeyMotionType
 class zCCamTrj_KeyFrame : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCCamTrj_KeyFrame"; }
+	zOBJECT_DECLARATION(zCCamTrj_KeyFrame);
 
 public:
 	float time;
@@ -169,6 +173,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 enum zTSplLerpMode
@@ -182,7 +187,7 @@ enum zTSplLerpMode
 class zCCSCamera : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCCSCamera"; }
+	zOBJECT_DECLARATION(zCCSCamera);
 
 public:
 	enum zTCamTrj_FOR
@@ -228,36 +233,37 @@ public:
 
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCVobLevelCompo : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobLevelCompo"; }
+	zOBJECT_DECLARATION(zCVobLevelCompo);
 };
 
 class zCVobSpot : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobSpot"; }
+	zOBJECT_DECLARATION(zCVobSpot);
 };
 
 class zCVobStair : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobStair"; }
+	zOBJECT_DECLARATION(zCVobStair);
 };
 
 class zCVobStartpoint : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobStartpoint"; }
+	zOBJECT_DECLARATION(zCVobStartpoint);
 };
 
 class zCVobWaypoint : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobWaypoint"; }
+	zOBJECT_DECLARATION(zCVobWaypoint);
 };
 
 enum zTVobLightType
@@ -301,12 +307,13 @@ public:
 public:
 	void Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	XXH64_hash_t Hash(XXH64_hash_t hash);
 };
 
 class zCVobLight : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobLight"; }
+	zOBJECT_DECLARATION(zCVobLight);
 
 public:
 	zSTRING lightPresetInUse;
@@ -315,12 +322,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCTriggerBase : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCTriggerBase"; }
+	zOBJECT_DECLARATION(zCTriggerBase);
 
 public:
 	zSTRING triggerTarget;
@@ -328,12 +336,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCCodeMaster : public zCTriggerBase
 {
 public:
-	static const zSTRING GetClassName() { return "zCCodeMaster"; }
+	zOBJECT_DECLARATION(zCCodeMaster);
 
 public:
 	enum { MAX_SLAVES = 6 };
@@ -354,12 +363,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCMessageFilter : public zCTriggerBase
 {
 public:
-	static const zSTRING GetClassName() { return "zCMessageFilter"; }
+	zOBJECT_DECLARATION(zCMessageFilter);
 
 public:
 	enum zTMessageType
@@ -380,6 +390,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCEventMover
@@ -398,7 +409,7 @@ public:
 class zCMoverControler : public zCTriggerBase
 {
 public:
-	static const zSTRING GetClassName() { return "zCMoverControler"; }
+	zOBJECT_DECLARATION(zCMoverControler);
 
 public:
 	zCEventMover::zTEventMoverSubType moverMessage;
@@ -407,12 +418,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCTriggerWorldStart : public zCTriggerBase
 {
 public:
-	static const zSTRING GetClassName() { return "zCTriggerWorldStart"; }
+	zOBJECT_DECLARATION(zCTriggerWorldStart);
 
 public:
 	bool32 fireOnlyFirstTime;
@@ -420,12 +432,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCTriggerUntouch : public zCTriggerBase
 {
 public:
-	static const zSTRING GetClassName() { return "zCTriggerUntouch"; }
+	zOBJECT_DECLARATION(zCTriggerUntouch);
 };
 
 #pragma pack (push, 1)
@@ -450,7 +463,7 @@ struct zSTriggerFilterFlagsRawData
 class zCTrigger : public zCTriggerBase
 {
 public:
-	static const zSTRING GetClassName() { return "zCTrigger"; }
+	zOBJECT_DECLARATION(zCTrigger);
 
 public:
 	struct
@@ -479,6 +492,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 enum zTMoverBehavior
@@ -510,7 +524,7 @@ enum zTSpeedType
 class zCMover : public zCTrigger
 {
 public:
-	static const zSTRING GetClassName() { return "zCMover"; }
+	zOBJECT_DECLARATION(zCMover);
 
 public:
 	struct zTMov_Keyframe
@@ -548,12 +562,13 @@ public:
 
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCTriggerTeleport : public zCTrigger
 {
 public:
-	static const zSTRING GetClassName() { return "zCTriggerTeleport"; }
+	zOBJECT_DECLARATION(zCTriggerTeleport);
 
 public:
 	zSTRING sfxTeleport;
@@ -561,12 +576,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCTriggerList : public zCTrigger
 {
 public:
-	static const zSTRING GetClassName() { return "zCTriggerList"; }
+	zOBJECT_DECLARATION(zCTriggerList);
 
 public:
 	enum { MAX_TARGETS = 6 };
@@ -587,18 +603,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCCSTrigger : public zCTrigger
 {
 public:
-	static const zSTRING GetClassName() { return "oCCSTrigger"; }
+	zOBJECT_DECLARATION(oCCSTrigger);
 };
 
 class oCTriggerChangeLevel : public zCTrigger
 {
 public:
-	static const zSTRING GetClassName() { return "oCTriggerChangeLevel"; }
+	zOBJECT_DECLARATION(oCTriggerChangeLevel);
 
 public:
 	zSTRING levelName;
@@ -607,12 +624,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCTriggerScript : public zCTrigger
 {
 public:
-	static const zSTRING GetClassName() { return "oCTriggerScript"; }
+	zOBJECT_DECLARATION(oCTriggerScript);
 
 public:
 	zSTRING scriptFunc;
@@ -620,18 +638,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCEffect : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCEffect"; }
+	zOBJECT_DECLARATION(zCEffect);
 };
 
 class zCEarthquake : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCEarthquake"; }
+	zOBJECT_DECLARATION(zCEarthquake);
 
 public:
 	float radius;
@@ -641,18 +660,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCMusicControler : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCMusicControler"; }
+	zOBJECT_DECLARATION(zCMusicControler);
 };
 
 class zCPFXControler : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCPFXControler"; }
+	zOBJECT_DECLARATION(zCPFXControler);
 
 public:
 	zSTRING pfxName;
@@ -662,12 +682,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCTouchDamage : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCTouchDamage"; }
+	zOBJECT_DECLARATION(zCTouchDamage);
 
 public:
 	enum zTDamageCollType
@@ -699,24 +720,25 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCTouchDamage : public zCTouchDamage
 {
 public:
-	static const zSTRING GetClassName() { return "oCTouchDamage"; }
+	zOBJECT_DECLARATION(oCTouchDamage);
 };
 
 class zCTouchAnimate : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCTouchAnimate"; }
+	zOBJECT_DECLARATION(zCTouchAnimate);
 };
 
 class zCTouchAnimateSound : public zCTouchAnimate
 {
 public:
-	static const zSTRING GetClassName() { return "zCTouchAnimateSound"; }
+	zOBJECT_DECLARATION(zCTouchAnimateSound);
 
 public:
 	zSTRING sfxTouch;
@@ -724,12 +746,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCVobAnimate : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobAnimate"; }
+	zOBJECT_DECLARATION(zCVobAnimate);
 
 public:
 	bool32 startOn;
@@ -737,12 +760,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCVobLensFlare : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobLensFlare"; }
+	zOBJECT_DECLARATION(zCVobLensFlare);
 
 public:
 	zSTRING lensflareFX;
@@ -750,42 +774,43 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCVobScreenFX : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobScreenFX"; }
+	zOBJECT_DECLARATION(zCVobScreenFX);
 };
 
 class oCVisualFX : public zCEffect
 {
 public:
-	static const zSTRING GetClassName() { return "oCVisualFX"; }
+	zOBJECT_DECLARATION(oCVisualFX);
 };
 
 class oCVisFX_Lightning : public oCVisualFX
 {
 public:
-	static const zSTRING GetClassName() { return "oCVisFX_Lightning"; }
+	zOBJECT_DECLARATION(oCVisFX_Lightning);
 };
 
 class oCVisFX_MultiTarget : public oCVisualFX
 {
 public:
-	static const zSTRING GetClassName() { return "oCVisFX_MultiTarget"; }
+	zOBJECT_DECLARATION(oCVisFX_MultiTarget);
 };
 
 class zCZone : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "zCZone"; }
+	zOBJECT_DECLARATION(zCZone);
 };
 
 class zCZoneZFog : public zCZone
 {
 public:
-	static const zSTRING GetClassName() { return "zCZoneZFog"; }
+	zOBJECT_DECLARATION(zCZoneZFog);
 
 public:
 	float fogRangeCenter;
@@ -797,18 +822,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCZoneZFogDefault : public zCZoneZFog
 {
 public:
-	static const zSTRING GetClassName() { return "zCZoneZFogDefault"; }
+	zOBJECT_DECLARATION(zCZoneZFogDefault);
 };
 
 class zCZoneVobFarPlane : public zCZone
 {
 public:
-	static const zSTRING GetClassName() { return "zCZoneVobFarPlane"; }
+	zOBJECT_DECLARATION(zCZoneVobFarPlane);
 
 public:
 	float vobFarPlaneZ;
@@ -817,18 +843,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCZoneVobFarPlaneDefault : public zCZoneVobFarPlane
 {
 public:
-	static const zSTRING GetClassName() { return "zCZoneVobFarPlaneDefault"; }
+	zOBJECT_DECLARATION(zCZoneVobFarPlaneDefault);
 };
 
 class zCVobSound : public zCZone
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobSound"; }
+	zOBJECT_DECLARATION(zCVobSound);
 
 public:
 	enum zTSoundMode
@@ -860,12 +887,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCVobSoundDaytime : public zCVobSound
 {
 public:
-	static const zSTRING GetClassName() { return "zCVobSoundDaytime"; }
+	zOBJECT_DECLARATION(zCVobSoundDaytime);
 
 public:
 	float sndStartTime;
@@ -875,6 +903,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 enum
@@ -911,7 +940,7 @@ enum
 class zCZoneReverb : public zCZone
 {
 public:
-	static const zSTRING GetClassName() { return "zCZoneReverb"; }
+	zOBJECT_DECLARATION(zCZoneReverb);
 
 public:
 	int32 reverbPreset;
@@ -921,24 +950,25 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCZoneReverbDefault : public zCZoneReverb
 {
 public:
-	static const zSTRING GetClassName() { return "zCZoneReverbDefault"; }
+	zOBJECT_DECLARATION(zCZoneReverbDefault);
 };
 
 class zCZoneMusic : public zCZone
 {
 public:
-	static const zSTRING GetClassName() { return "zCZoneMusic"; }
+	zOBJECT_DECLARATION(zCZoneMusic);
 };
 
 class oCZoneMusic : public zCZoneMusic
 {
 public:
-	static const zSTRING GetClassName() { return "oCZoneMusic"; }
+	zOBJECT_DECLARATION(oCZoneMusic);
 
 public:
 	bool32 enabled;
@@ -951,24 +981,25 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCZoneMusicDefault : public oCZoneMusic
 {
 public:
-	static const zSTRING GetClassName() { return "oCZoneMusicDefault"; }
+	zOBJECT_DECLARATION(oCZoneMusicDefault);
 };
 
 class oCDummyVobGenerator : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "oCDummyVobGenerator"; }
+	zOBJECT_DECLARATION(oCDummyVobGenerator);
 };
 
 class oCObjectGenerator : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "oCObjectGenerator"; }
+	zOBJECT_DECLARATION(oCObjectGenerator);
 
 public:
 	zSTRING objectName;
@@ -977,18 +1008,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCVob : public zCVob
 {
 public:
-	static const zSTRING GetClassName() { return "oCVob"; }
+	zOBJECT_DECLARATION(oCVob);
 };
 
 class oCItem : public oCVob
 {
 public:
-	static const zSTRING GetClassName() { return "oCItem"; }
+	zOBJECT_DECLARATION(oCItem);
 
 public:
 	zSTRING itemInstance;
@@ -996,6 +1028,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 enum oTSndMaterial
@@ -1011,7 +1044,7 @@ enum oTSndMaterial
 class oCMOB : public oCVob
 {
 public:
-	static const zSTRING GetClassName() { return "oCMOB"; }
+	zOBJECT_DECLARATION(oCMOB);
 
 public:
 	zSTRING focusName;
@@ -1029,12 +1062,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCMobInter : public oCMOB
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobInter"; }
+	zOBJECT_DECLARATION(oCMobInter);
 
 public:
 	int32 state;
@@ -1049,18 +1083,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCMobBed : public oCMobInter
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobBed"; }
+	zOBJECT_DECLARATION(oCMobBed);
 };
 
 class oCMobFire : public oCMobInter
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobFire"; }
+	zOBJECT_DECLARATION(oCMobFire);
 
 public:
 	zSTRING fireSlot;
@@ -1069,12 +1104,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCMobItemSlot : public oCMobInter
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobItemSlot"; }
+	zOBJECT_DECLARATION(oCMobItemSlot);
 
 public:
 	bool32 itemRemoveable;
@@ -1082,18 +1118,19 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCMobLadder : public oCMobInter
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobLadder"; }
+	zOBJECT_DECLARATION(oCMobLadder);
 };
 
 class oCMobLockable : public oCMobInter
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobLockable"; }
+	zOBJECT_DECLARATION(oCMobLockable);
 
 public:
 	bool32 locked;
@@ -1103,12 +1140,13 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCMobContainer : public oCMobLockable
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobContainer"; }
+	zOBJECT_DECLARATION(oCMobContainer);
 
 public:
 	zSTRING contains;
@@ -1116,30 +1154,31 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class oCMobDoor : public oCMobLockable
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobDoor"; }
+	zOBJECT_DECLARATION(oCMobDoor);
 };
 
 class oCMobSwitch : public oCMobInter
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobSwitch"; }
+	zOBJECT_DECLARATION(oCMobSwitch);
 };
 
 class oCMobWheel : public oCMobInter
 {
 public:
-	static const zSTRING GetClassName() { return "oCMobWheel"; }
+	zOBJECT_DECLARATION(oCMobWheel);
 };
 
 class oCNpc : public oCVob
 {
 public:
-	static const zSTRING GetClassName() { return "oCNpc"; }
+	zOBJECT_DECLARATION(oCNpc);
 
 public:
 	zSTRING npcInstance;
@@ -1147,4 +1186,5 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };

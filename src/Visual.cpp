@@ -1,5 +1,13 @@
 #include "Visual.h"
 
+zOBJECT_DEFINITION(zCVisual);
+zOBJECT_DEFINITION(zCPolyStrip);
+zOBJECT_DEFINITION(zCDecal);
+zOBJECT_DEFINITION(zCParticleFX);
+zOBJECT_DEFINITION(zCVisualAnimate);
+zOBJECT_DEFINITION(zCModel);
+zOBJECT_DEFINITION(zCMorphMesh);
+
 bool32 zCDecal::Unarchive(zCArchiver &arc)
 {
 	if (!zCObject::Unarchive(arc)) return FALSE;
@@ -41,4 +49,19 @@ void zCDecal::Archive(zCArchiver &arc)
 		arc.WriteByte("decalAlphaWeight", decalAlphaWeight);
 		arc.WriteBool("ignoreDayLight", ignoreDayLight);
 	}
+}
+
+void zCDecal::Hash()
+{
+	zCObject::Hash();
+
+	hash = XXH64(name.ToChar(), name.Length(), hash);
+	hash = XXH64(&decalDim, sizeof(decalDim), hash);
+	hash = XXH64(&decalOffset, sizeof(decalOffset), hash);
+	hash = XXH64(&decal2Sided, sizeof(decal2Sided), hash);
+	hash = XXH64(&decalAlphaFunc, sizeof(decalAlphaFunc), hash);
+	hash = XXH64(&decalTexAniFPS, sizeof(decalTexAniFPS), hash);
+
+	hash = XXH64(&decalAlphaWeight, sizeof(decalAlphaWeight), hash);
+	hash = XXH64(&ignoreDayLight, sizeof(ignoreDayLight), hash);
 }

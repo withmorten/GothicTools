@@ -7,7 +7,7 @@
 class zCWaypoint : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCWaypoint"; }
+	zOBJECT_DECLARATION(zCWaypoint);
 
 public:
 	zSTRING wpName;
@@ -19,6 +19,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCWay
@@ -34,7 +35,7 @@ public:
 class zCWayNet : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCWayNet"; }
+	zOBJECT_DECLARATION(zCWayNet);
 
 public:
 	enum
@@ -56,4 +57,5 @@ public:
 
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };

@@ -49,7 +49,7 @@ struct zTLODParams
 class zCProgMeshProto : public zCVisual
 {
 public:
-	static const zSTRING GetClassName() { return "zCProgMeshProto"; }
+	zOBJECT_DECLARATION(zCProgMeshProto);
 
 public:
 	class zCSubMesh

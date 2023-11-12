@@ -2,6 +2,8 @@
 
 #include "ModelAni.h"
 
+zOBJECT_DEFINITION(zCMeshSoftSkin);
+
 const zSTRING sep = " \t";
 const zSTRING trenn = " \t\r";
 const zSTRING skip = " \t\r";

@@ -1,9 +1,77 @@
 #include "Vob.h"
 
+zOBJECT_DEFINITION(zCVob);
+zOBJECT_DEFINITION(zCCamTrj_KeyFrame);
+zOBJECT_DEFINITION(zCCSCamera);
+zOBJECT_DEFINITION(zCVobLevelCompo);
+zOBJECT_DEFINITION(zCVobSpot);
+zOBJECT_DEFINITION(zCVobStair);
+zOBJECT_DEFINITION(zCVobStartpoint);
+zOBJECT_DEFINITION(zCVobWaypoint);
+zOBJECT_DEFINITION(zCVobLight);
+zOBJECT_DEFINITION(zCTriggerBase);
+zOBJECT_DEFINITION(zCCodeMaster);
+zOBJECT_DEFINITION(zCMessageFilter);
+zOBJECT_DEFINITION(zCMoverControler);
+zOBJECT_DEFINITION(zCTriggerWorldStart);
+zOBJECT_DEFINITION(zCTriggerUntouch);
+zOBJECT_DEFINITION(zCTrigger);
+zOBJECT_DEFINITION(zCMover);
+zOBJECT_DEFINITION(zCTriggerTeleport);
+zOBJECT_DEFINITION(zCTriggerList);
+zOBJECT_DEFINITION(oCCSTrigger);
+zOBJECT_DEFINITION(oCTriggerChangeLevel);
+zOBJECT_DEFINITION(oCTriggerScript);
+zOBJECT_DEFINITION(zCEffect);
+zOBJECT_DEFINITION(zCEarthquake);
+zOBJECT_DEFINITION(zCMusicControler);
+zOBJECT_DEFINITION(zCPFXControler);
+zOBJECT_DEFINITION(zCTouchDamage);
+zOBJECT_DEFINITION(oCTouchDamage);
+zOBJECT_DEFINITION(zCTouchAnimate);
+zOBJECT_DEFINITION(zCTouchAnimateSound);
+zOBJECT_DEFINITION(zCVobAnimate);
+zOBJECT_DEFINITION(zCVobLensFlare);
+zOBJECT_DEFINITION(zCVobScreenFX);
+zOBJECT_DEFINITION(oCVisualFX);
+zOBJECT_DEFINITION(oCVisFX_Lightning);
+zOBJECT_DEFINITION(oCVisFX_MultiTarget);
+zOBJECT_DEFINITION(zCZone);
+zOBJECT_DEFINITION(zCZoneZFog);
+zOBJECT_DEFINITION(zCZoneZFogDefault);
+zOBJECT_DEFINITION(zCZoneVobFarPlane);
+zOBJECT_DEFINITION(zCZoneVobFarPlaneDefault);
+zOBJECT_DEFINITION(zCVobSound);
+zOBJECT_DEFINITION(zCVobSoundDaytime);
+zOBJECT_DEFINITION(zCZoneReverb);
+zOBJECT_DEFINITION(zCZoneReverbDefault);
+zOBJECT_DEFINITION(zCZoneMusic);
+zOBJECT_DEFINITION(oCZoneMusic);
+zOBJECT_DEFINITION(oCZoneMusicDefault);
+zOBJECT_DEFINITION(oCDummyVobGenerator);
+zOBJECT_DEFINITION(oCObjectGenerator);
+zOBJECT_DEFINITION(oCVob);
+zOBJECT_DEFINITION(oCItem);
+zOBJECT_DEFINITION(oCMOB);
+zOBJECT_DEFINITION(oCMobInter);
+zOBJECT_DEFINITION(oCMobBed);
+zOBJECT_DEFINITION(oCMobFire);
+zOBJECT_DEFINITION(oCMobItemSlot);
+zOBJECT_DEFINITION(oCMobLadder);
+zOBJECT_DEFINITION(oCMobLockable);
+zOBJECT_DEFINITION(oCMobContainer);
+zOBJECT_DEFINITION(oCMobDoor);
+zOBJECT_DEFINITION(oCMobSwitch);
+zOBJECT_DEFINITION(oCMobWheel);
+zOBJECT_DEFINITION(oCNpc);
+
 zCVob::zCVob()
 {
 	visual = NULL;
 	ai = NULL;
+
+	parent = NULL;
+	depth = 0;
 }
 
 zCVob::~zCVob()
@@ -235,6 +303,34 @@ void zCVob::Archive(zCArchiver &arc)
 	else arc.WriteChunk("ai");
 }
 
+void zCVob::Hash()
+{
+	zCObject::Hash();
+
+	hash = XXH64(presetName.ToChar(), presetName.Length(), hash);
+
+	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash);
+	hash = XXH64(&trafoOSToWSRot, sizeof(trafoOSToWSRot), hash);
+	hash = XXH64(&trafoOSToWSPos, sizeof(trafoOSToWSPos), hash);
+
+	hash = XXH64(vobName.ToChar(), vobName.Length(), hash);
+	hash = XXH64(visualName.ToChar(), visualName.Length(), hash);
+	hash = XXH64(&showVisual, sizeof(showVisual), hash);
+	hash = XXH64(&visualCamAlign, sizeof(visualCamAlign), hash);
+
+	hash = XXH64(&visualAniMode, sizeof(visualAniMode), hash);
+	hash = XXH64(&visualAniModeStrength, sizeof(visualAniModeStrength), hash);
+	hash = XXH64(&vobFarClipZScale, sizeof(vobFarClipZScale), hash);
+
+	hash = XXH64(&cdStatic, sizeof(cdStatic), hash);
+	hash = XXH64(&cdDyn, sizeof(cdDyn), hash);
+	hash = XXH64(&staticVob, sizeof(staticVob), hash);
+	hash = XXH64(&dynShadow, sizeof(dynShadow), hash);
+
+	hash = XXH64(&zbias, sizeof(zbias), hash);
+	hash = XXH64(&isAmbient, sizeof(isAmbient), hash);
+}
+
 bool32 zCCamTrj_KeyFrame::Unarchive(zCArchiver &arc)
 {
 	if (!zCVob::Unarchive(arc)) return FALSE;
@@ -279,6 +375,28 @@ void zCCamTrj_KeyFrame::Archive(zCArchiver &arc)
 	arc.WriteBool("timeIsFixed", timeIsFixed);
 
 	arc.WriteRaw("originalPose", &originalPose, sizeof(originalPose));
+}
+
+void zCCamTrj_KeyFrame::Hash()
+{
+	zCVob::Hash();
+
+	hash = XXH64(&time, sizeof(time), hash);
+	hash = XXH64(&angleRollDeg, sizeof(angleRollDeg), hash);
+	hash = XXH64(&camFOVScale, sizeof(camFOVScale), hash);
+
+	hash = XXH64(&motionType, sizeof(motionType), hash);
+	hash = XXH64(&motionTypeFOV, sizeof(motionTypeFOV), hash);
+	hash = XXH64(&motionTypeRoll, sizeof(motionTypeRoll), hash);
+	hash = XXH64(&motionTypeTimeScale, sizeof(motionTypeTimeScale), hash);
+
+	hash = XXH64(&tension, sizeof(tension), hash);
+	hash = XXH64(&bias, sizeof(bias), hash);
+	hash = XXH64(&continuity, sizeof(continuity), hash);
+	hash = XXH64(&timeScale, sizeof(timeScale), hash);
+	hash = XXH64(&timeIsFixed, sizeof(timeIsFixed), hash);
+
+	hash = XXH64(&originalPose, sizeof(originalPose), hash);
 }
 
 zCCSCamera::zCCSCamera()
@@ -379,6 +497,31 @@ void zCCSCamera::Archive(zCArchiver &arc)
 	}
 }
 
+void zCCSCamera::Hash()
+{
+	zCVob::Hash();
+
+	hash = XXH64(&camTrjFOR, sizeof(camTrjFOR), hash);
+	hash = XXH64(&targetTrjFOR, sizeof(targetTrjFOR), hash);
+	hash = XXH64(&loopMode, sizeof(loopMode), hash);
+	hash = XXH64(&splLerpMode, sizeof(splLerpMode), hash);
+
+	hash = XXH64(&ignoreFORVobRotCam, sizeof(ignoreFORVobRotCam), hash);
+	hash = XXH64(&ignoreFORVobRotTarget, sizeof(ignoreFORVobRotTarget), hash);
+	hash = XXH64(&adaptToSurroundings, sizeof(adaptToSurroundings), hash);
+	hash = XXH64(&easeToFirstKey, sizeof(easeToFirstKey), hash);
+	hash = XXH64(&easeFromLastKey, sizeof(easeFromLastKey), hash);
+	hash = XXH64(&totalTime, sizeof(totalTime), hash);
+
+	hash = XXH64(autoCamFocusVobName.ToChar(), autoCamFocusVobName.Length(), hash);
+	hash = XXH64(&autoCamPlayerMovable, sizeof(autoCamPlayerMovable), hash);
+	hash = XXH64(&autoCamUntriggerOnLastKey, sizeof(autoCamUntriggerOnLastKey), hash);
+	hash = XXH64(&autoCamUntriggerOnLastKeyDelay, sizeof(autoCamUntriggerOnLastKeyDelay), hash);
+
+	hash = XXH64(&numPos, sizeof(numPos), hash);
+	hash = XXH64(&numTargets, sizeof(numTargets), hash);
+}
+
 void zCVobLightData::Unarchive(zCArchiver &arc)
 {
 	arc.ReadEnum("lightType", lightType);
@@ -405,6 +548,22 @@ void zCVobLightData::Unarchive(zCArchiver &arc)
 		{
 			arc.ReadBool("canMove", canMove);
 		}
+		else
+		{
+			canMove = FALSE;
+		}
+	}
+	else
+	{
+		turnedOn = TRUE;
+
+		rangeAniFPS = 0;
+		rangeAniSmooth = TRUE;
+
+		colorAniFPS = 0;
+		colorAniSmooth = TRUE;
+
+		canMove = FALSE;
 	}
 }
 
@@ -437,6 +596,34 @@ void zCVobLightData::Archive(zCArchiver &arc)
 	}
 }
 
+XXH64_hash_t zCVobLightData::Hash(XXH64_hash_t hash)
+{
+	hash = XXH64(&lightType, sizeof(lightType), hash);
+	hash = XXH64(&range, sizeof(range), hash);
+	hash = XXH64(&color, sizeof(color), hash);
+	hash = XXH64(&spotConeAngle, sizeof(spotConeAngle), hash);
+	hash = XXH64(&lightStatic, sizeof(lightStatic), hash);
+	hash = XXH64(&lightQuality, sizeof(lightQuality), hash);
+	hash = XXH64(lensflareFX.ToChar(), lensflareFX.Length(), hash);
+
+	if (lightStatic)
+	{
+		hash = XXH64(&turnedOn, sizeof(turnedOn), hash);
+
+		hash = XXH64(rangeAniScale.ToChar(), rangeAniScale.Length(), hash);
+		hash = XXH64(&rangeAniFPS, sizeof(rangeAniFPS), hash);
+		hash = XXH64(&rangeAniSmooth, sizeof(rangeAniSmooth), hash);
+
+		hash = XXH64(colorAniList.ToChar(), colorAniList.Length(), hash);
+		hash = XXH64(&colorAniFPS, sizeof(colorAniFPS), hash);
+		hash = XXH64(&colorAniSmooth, sizeof(colorAniSmooth), hash);
+
+		hash = XXH64(&canMove, sizeof(canMove), hash);
+	}
+
+	return hash;
+}
+
 bool32 zCVobLight::Unarchive(zCArchiver &arc)
 {
 	if (!zCVob::Unarchive(arc)) return FALSE;
@@ -457,6 +644,15 @@ void zCVobLight::Archive(zCArchiver &arc)
 	lightData.Archive(arc);
 }
 
+void zCVobLight::Hash()
+{
+	zCVob::Hash();
+
+	hash = XXH64(lightPresetInUse.ToChar(), lightPresetInUse.Length(), hash);
+
+	hash = lightData.Hash(hash);
+}
+
 bool32 zCTriggerBase::Unarchive(zCArchiver &arc)
 {
 	if (!zCVob::Unarchive(arc)) return FALSE;
@@ -471,6 +667,13 @@ void zCTriggerBase::Archive(zCArchiver &arc)
 	zCVob::Archive(arc);
 
 	arc.WriteString("triggerTarget", triggerTarget);
+}
+
+void zCTriggerBase::Hash()
+{
+	zCVob::Hash();
+
+	hash = XXH64(triggerTarget.ToChar(), triggerTarget.Length(), hash);
 }
 
 bool32 zCCodeMaster::Unarchive(zCArchiver &arc)
@@ -515,6 +718,23 @@ void zCCodeMaster::Archive(zCArchiver &arc)
 	}
 }
 
+void zCCodeMaster::Hash()
+{
+	zCTriggerBase::Hash();
+
+	hash = XXH64(&flags.orderRelevant, sizeof(flags.orderRelevant), hash);
+	hash = XXH64(&flags.firstFalseIsFailure, sizeof(flags.firstFalseIsFailure), hash);
+	hash = XXH64(triggerTargetFailure.ToChar(), triggerTargetFailure.Length(), hash);
+	hash = XXH64(&flags.untriggerCancels, sizeof(flags.untriggerCancels), hash);
+
+	hash = XXH64(&numSlaves, sizeof(numSlaves), hash);
+
+	for (int32 i = 0; i < numSlaves; i++)
+	{
+		hash = XXH64(slaveVobNameList[i].ToChar(), slaveVobNameList[i].Length(), hash);
+	}
+}
+
 bool32 zCMessageFilter::Unarchive(zCArchiver &arc)
 {
 	if (!zCTriggerBase::Unarchive(arc)) return FALSE;
@@ -531,6 +751,14 @@ void zCMessageFilter::Archive(zCArchiver &arc)
 
 	arc.WriteEnum("onTrigger", onTrigger);
 	arc.WriteEnum("onUntrigger", onUntrigger);
+}
+
+void zCMessageFilter::Hash()
+{
+	zCTriggerBase::Hash();
+
+	hash = XXH64(&onTrigger, sizeof(onTrigger), hash);
+	hash = XXH64(&onUntrigger, sizeof(onUntrigger), hash);
 }
 
 bool32 zCMoverControler::Unarchive(zCArchiver &arc)
@@ -551,6 +779,14 @@ void zCMoverControler::Archive(zCArchiver &arc)
 	arc.WriteInt("gotoFixedKey", gotoFixedKey);
 }
 
+void zCMoverControler::Hash()
+{
+	zCTriggerBase::Hash();
+
+	hash = XXH64(&moverMessage, sizeof(moverMessage), hash);
+	hash = XXH64(&gotoFixedKey, sizeof(gotoFixedKey), hash);
+}
+
 bool32 zCTriggerWorldStart::Unarchive(zCArchiver &arc)
 {
 	if (!zCTriggerBase::Unarchive(arc)) return FALSE;
@@ -565,6 +801,13 @@ void zCTriggerWorldStart::Archive(zCArchiver &arc)
 	zCTriggerBase::Archive(arc);
 
 	arc.WriteBool("fireOnlyFirstTime", fireOnlyFirstTime);
+}
+
+void zCTriggerWorldStart::Hash()
+{
+	zCTriggerBase::Hash();
+
+	hash = XXH64(&fireOnlyFirstTime, sizeof(fireOnlyFirstTime), hash);
 }
 
 bool32 zCTrigger::Unarchive(zCArchiver &arc)
@@ -629,6 +872,29 @@ void zCTrigger::Archive(zCArchiver &arc)
 	arc.WriteFloat("fireDelaySec", fireDelaySec);
 }
 
+void zCTrigger::Hash()
+{
+	zCTriggerBase::Hash();
+
+	hash = XXH64(&flags.startEnabled, sizeof(flags.startEnabled), hash);
+	hash = XXH64(&flags.isEnabled, sizeof(flags.isEnabled), hash);
+	hash = XXH64(&flags.sendUntrigger, sizeof(flags.sendUntrigger), hash);
+
+	hash = XXH64(&filterFlags.reactToOnTrigger, sizeof(filterFlags.reactToOnTrigger), hash);
+	hash = XXH64(&filterFlags.reactToOnTouch, sizeof(filterFlags.reactToOnTouch), hash);
+	hash = XXH64(&filterFlags.reactToOnDamage, sizeof(filterFlags.reactToOnDamage), hash);
+	hash = XXH64(&filterFlags.respondToObject, sizeof(filterFlags.respondToObject), hash);
+	hash = XXH64(&filterFlags.respondToPC, sizeof(filterFlags.respondToPC), hash);
+	hash = XXH64(&filterFlags.respondToNPC, sizeof(filterFlags.respondToNPC), hash);
+
+	hash = XXH64(respondToVobName.ToChar(), respondToVobName.Length(), hash);
+	hash = XXH64(&numCanBeActivated, sizeof(numCanBeActivated), hash);
+	hash = XXH64(&retriggerWaitSec, sizeof(retriggerWaitSec), hash);
+	hash = XXH64(&damageThreshold, sizeof(damageThreshold), hash);
+
+	hash = XXH64(&fireDelaySec, sizeof(fireDelaySec), hash);
+}
+
 bool32 zCTriggerTeleport::Unarchive(zCArchiver &arc)
 {
 	if (!zCTrigger::Unarchive(arc)) return FALSE;
@@ -645,6 +911,13 @@ void zCTriggerTeleport::Archive(zCArchiver &arc)
 	arc.WriteString("sfxTeleport", sfxTeleport);
 }
 
+void zCTriggerTeleport::Hash()
+{
+	zCTrigger::Hash();
+
+	hash = XXH64(sfxTeleport.ToChar(), sfxTeleport.Length(), hash);
+}
+
 bool32 zCMover::Unarchive(zCArchiver &arc)
 {
 	if (!zCTrigger::Unarchive(arc)) return FALSE;
@@ -659,6 +932,10 @@ bool32 zCMover::Unarchive(zCArchiver &arc)
 	{
 		arc.ReadBool("autoRotate", autoRotate);
 	}
+	else
+	{
+		autoRotate = FALSE;
+	}
 
 	arc.ReadWord("numKeyframes", numKeyframes);
 
@@ -671,6 +948,12 @@ bool32 zCMover::Unarchive(zCArchiver &arc)
 		arc.ReadEnum("speedType", speedType);
 
 		arc.ReadRaw("keyframes", keyframes, sizeof(*keyframes) * numKeyframes);
+	}
+	else
+	{
+		moveSpeed = 0.3f;
+		posLerpType = PL_CURVE;
+		speedType = ST_SLOW_START_END;
 	}
 
 	arc.ReadString("sfxOpenStart", sfxOpenStart);
@@ -721,6 +1004,39 @@ void zCMover::Archive(zCArchiver &arc)
 	arc.WriteString("sfxUseLocked", sfxUseLocked);
 }
 
+void zCMover::Hash()
+{
+	zCTrigger::Hash();
+
+	hash = XXH64(&moverBehavior, sizeof(moverBehavior), hash);
+	hash = XXH64(&touchBlockerDamage, sizeof(touchBlockerDamage), hash);
+	hash = XXH64(&stayOpenTimeSec, sizeof(stayOpenTimeSec), hash);
+	hash = XXH64(&moverLocked, sizeof(moverLocked), hash);
+	hash = XXH64(&autoLinkEnabled, sizeof(autoLinkEnabled), hash);
+
+	hash = XXH64(&autoRotate, sizeof(autoRotate), hash);
+
+	hash = XXH64(&numKeyframes, sizeof(numKeyframes), hash);
+
+	if (numKeyframes > 0)
+	{
+		hash = XXH64(&moveSpeed, sizeof(moveSpeed), hash);
+		hash = XXH64(&posLerpType, sizeof(posLerpType), hash);
+		hash = XXH64(&speedType, sizeof(speedType), hash);
+
+		hash = XXH64(keyframes, sizeof(*keyframes) * numKeyframes, hash);
+	}
+
+	hash = XXH64(sfxOpenStart.ToChar(), sfxOpenStart.Length(), hash);
+	hash = XXH64(sfxOpenEnd.ToChar(), sfxOpenEnd.Length(), hash);
+	hash = XXH64(sfxMoving.ToChar(), sfxMoving.Length(), hash);
+	hash = XXH64(sfxCloseStart.ToChar(), sfxCloseStart.Length(), hash);
+	hash = XXH64(sfxCloseEnd.ToChar(), sfxCloseEnd.Length(), hash);
+	hash = XXH64(sfxLock.ToChar(), sfxLock.Length(), hash);
+	hash = XXH64(sfxUnlock.ToChar(), sfxUnlock.Length(), hash);
+	hash = XXH64(sfxUseLocked.ToChar(), sfxUseLocked.Length(), hash);
+}
+
 bool32 zCTriggerList::Unarchive(zCArchiver &arc)
 {
 	if (!zCTrigger::Unarchive(arc)) return FALSE;
@@ -757,6 +1073,20 @@ void zCTriggerList::Archive(zCArchiver &arc)
 	}
 }
 
+void zCTriggerList::Hash()
+{
+	zCTrigger::Hash();
+
+	hash = XXH64(&listProcess, sizeof(listProcess), hash);
+	hash = XXH64(&numTarget, sizeof(numTarget), hash);
+
+	for (int32 i = 0; i < numTarget; i++)
+	{
+		hash = XXH64(triggerTargetList[i].ToChar(), triggerTargetList[i].Length(), hash);
+		hash = XXH64(&fireDelayList[i], sizeof(fireDelayList[i]), hash);
+	}
+}
+
 bool32 oCTriggerChangeLevel::Unarchive(zCArchiver &arc)
 {
 	if (!zCTrigger::Unarchive(arc)) return FALSE;
@@ -775,6 +1105,14 @@ void oCTriggerChangeLevel::Archive(zCArchiver &arc)
 	arc.WriteString("startVobName", startVobName);
 }
 
+void oCTriggerChangeLevel::Hash()
+{
+	zCTrigger::Hash();
+
+	hash = XXH64(levelName.ToChar(), levelName.Length(), hash);
+	hash = XXH64(startVobName.ToChar(), startVobName.Length(), hash);
+}
+
 bool32 oCTriggerScript::Unarchive(zCArchiver &arc)
 {
 	if (!zCTrigger::Unarchive(arc)) return FALSE;
@@ -789,6 +1127,13 @@ void oCTriggerScript::Archive(zCArchiver &arc)
 	zCTrigger::Archive(arc);
 
 	arc.WriteString("scriptFunc", scriptFunc);
+}
+
+void oCTriggerScript::Hash()
+{
+	zCTrigger::Hash();
+
+	hash = XXH64(scriptFunc.ToChar(), scriptFunc.Length(), hash);
 }
 
 bool32 zCEarthquake::Unarchive(zCArchiver &arc)
@@ -811,6 +1156,15 @@ void zCEarthquake::Archive(zCArchiver &arc)
 	arc.WriteVec3("amplitudeCM", amplitudeCM);
 }
 
+void zCEarthquake::Hash()
+{
+	zCEffect::Hash();
+
+	hash = XXH64(&radius, sizeof(radius), hash);
+	hash = XXH64(&timeSec, sizeof(timeSec), hash);
+	hash = XXH64(&amplitudeCM, sizeof(amplitudeCM), hash);
+}
+
 bool32 zCPFXControler::Unarchive(zCArchiver &arc)
 {
 	if (!zCEffect::Unarchive(arc)) return FALSE;
@@ -829,6 +1183,15 @@ void zCPFXControler::Archive(zCArchiver &arc)
 	arc.WriteString("pfxName", pfxName);
 	arc.WriteBool("killVobWhenDone", killVobWhenDone);
 	arc.WriteBool("pfxStartOn", pfxStartOn);
+}
+
+void zCPFXControler::Hash()
+{
+	zCEffect::Hash();
+
+	hash = XXH64(pfxName.ToChar(), pfxName.Length(), hash);
+	hash = XXH64(&killVobWhenDone, sizeof(killVobWhenDone), hash);
+	hash = XXH64(&pfxStartOn, sizeof(pfxStartOn), hash);
 }
 
 bool32 zCTouchDamage::Unarchive(zCArchiver &arc)
@@ -877,6 +1240,26 @@ void zCTouchDamage::Archive(zCArchiver &arc)
 	arc.WriteEnum("damageCollType", damageCollType);
 }
 
+void zCTouchDamage::Hash()
+{
+	zCEffect::Hash();
+
+	hash = XXH64(&damage, sizeof(damage), hash);
+
+	hash = XXH64(&damageType.Barrier, sizeof(damageType.Barrier), hash);
+	hash = XXH64(&damageType.Blunt, sizeof(damageType.Blunt), hash);
+	hash = XXH64(&damageType.Edge, sizeof(damageType.Edge), hash);
+	hash = XXH64(&damageType.Fire, sizeof(damageType.Fire), hash);
+	hash = XXH64(&damageType.Fly, sizeof(damageType.Fly), hash);
+	hash = XXH64(&damageType.Magic, sizeof(damageType.Magic), hash);
+	hash = XXH64(&damageType.Point, sizeof(damageType.Point), hash);
+	hash = XXH64(&damageType.Fall, sizeof(damageType.Fall), hash);
+
+	hash = XXH64(&damageRepeatDelaySec, sizeof(damageRepeatDelaySec), hash);
+	hash = XXH64(&damageVolDownScale, sizeof(damageVolDownScale), hash);
+	hash = XXH64(&damageCollType, sizeof(damageCollType), hash);
+}
+
 bool32 zCTouchAnimateSound::Unarchive(zCArchiver &arc)
 {
 	if (!zCTouchAnimate::Unarchive(arc)) return FALSE;
@@ -891,6 +1274,13 @@ void zCTouchAnimateSound::Archive(zCArchiver &arc)
 	zCTouchAnimate::Archive(arc);
 
 	arc.WriteString("sfxTouch", sfxTouch);
+}
+
+void zCTouchAnimateSound::Hash()
+{
+	zCTouchAnimate::Hash();
+
+	hash = XXH64(sfxTouch.ToChar(), sfxTouch.Length(), hash);
 }
 
 bool32 zCVobAnimate::Unarchive(zCArchiver &arc)
@@ -909,6 +1299,13 @@ void zCVobAnimate::Archive(zCArchiver &arc)
 	arc.WriteBool("startOn", startOn);
 }
 
+void zCVobAnimate::Hash()
+{
+	zCEffect::Hash();
+
+	hash = XXH64(&startOn, sizeof(startOn), hash);
+}
+
 bool32 zCVobLensFlare::Unarchive(zCArchiver &arc)
 {
 	if (!zCEffect::Unarchive(arc)) return FALSE;
@@ -925,6 +1322,13 @@ void zCVobLensFlare::Archive(zCArchiver &arc)
 	arc.WriteString("lensflareFX", lensflareFX);
 }
 
+void zCVobLensFlare::Hash()
+{
+	zCEffect::Hash();
+
+	hash = XXH64(lensflareFX.ToChar(), lensflareFX.Length(), hash);
+}
+
 bool32 zCZoneZFog::Unarchive(zCArchiver &arc)
 {
 	if (!zCZone::Unarchive(arc)) return FALSE;
@@ -937,6 +1341,11 @@ bool32 zCZoneZFog::Unarchive(zCArchiver &arc)
 	{
 		arc.ReadBool("fadeOutSky", fadeOutSky);
 		arc.ReadBool("overrideColor", overrideColor);
+	}
+	else
+	{
+		fadeOutSky = FALSE;
+		overrideColor = FALSE;
 	}
 
 	return TRUE;
@@ -957,6 +1366,18 @@ void zCZoneZFog::Archive(zCArchiver &arc)
 	}
 }
 
+void zCZoneZFog::Hash()
+{
+	zCZone::Hash();
+
+	hash = XXH64(&fogRangeCenter, sizeof(fogRangeCenter), hash);
+	hash = XXH64(&innerRangePerc, sizeof(innerRangePerc), hash);
+	hash = XXH64(&fogColor, sizeof(fogColor), hash);
+
+	hash = XXH64(&fadeOutSky, sizeof(fadeOutSky), hash);
+	hash = XXH64(&overrideColor, sizeof(overrideColor), hash);
+}
+
 bool32 zCZoneVobFarPlane::Unarchive(zCArchiver &arc)
 {
 	if (!zCZone::Unarchive(arc)) return FALSE;
@@ -973,6 +1394,14 @@ void zCZoneVobFarPlane::Archive(zCArchiver &arc)
 
 	arc.WriteFloat("vobFarPlaneZ", vobFarPlaneZ);
 	arc.WriteFloat("innerRangePerc", innerRangePerc);
+}
+
+void zCZoneVobFarPlane::Hash()
+{
+	zCZone::Hash();
+
+	hash = XXH64(&vobFarPlaneZ, sizeof(vobFarPlaneZ), hash);
+	hash = XXH64(&innerRangePerc, sizeof(innerRangePerc), hash);
 }
 
 bool32 zCVobSound::Unarchive(zCArchiver &arc)
@@ -1011,6 +1440,23 @@ void zCVobSound::Archive(zCArchiver &arc)
 	arc.WriteString("sndName", sndName);
 }
 
+void zCVobSound::Hash()
+{
+	zCZone::Hash();
+
+	hash = XXH64(&sndVolume, sizeof(sndVolume), hash);
+	hash = XXH64(&sndMode, sizeof(sndMode), hash);
+	hash = XXH64(&sndRandDelay, sizeof(sndRandDelay), hash);
+	hash = XXH64(&sndRandDelayVar, sizeof(sndRandDelayVar), hash);
+	hash = XXH64(&sndStartOn, sizeof(sndStartOn), hash);
+	hash = XXH64(&sndAmbient3D, sizeof(sndAmbient3D), hash);
+	hash = XXH64(&sndObstruction, sizeof(sndObstruction), hash);
+	hash = XXH64(&sndConeAngle, sizeof(sndConeAngle), hash);
+	hash = XXH64(&sndVolType, sizeof(sndVolType), hash);
+	hash = XXH64(&sndRadius, sizeof(sndRadius), hash);
+	hash = XXH64(sndName.ToChar(), sndName.Length(), hash);
+}
+
 bool32 zCVobSoundDaytime::Unarchive(zCArchiver &arc)
 {
 	if (!zCVobSound::Unarchive(arc)) return FALSE;
@@ -1031,6 +1477,15 @@ void zCVobSoundDaytime::Archive(zCArchiver &arc)
 	arc.WriteString("sndName2", sndName2);
 }
 
+void zCVobSoundDaytime::Hash()
+{
+	zCVobSound::Hash();
+
+	hash = XXH64(&sndStartTime, sizeof(sndStartTime), hash);
+	hash = XXH64(&sndEndTime, sizeof(sndEndTime), hash);
+	hash = XXH64(sndName2.ToChar(), sndName2.Length(), hash);
+}
+
 bool32 zCZoneReverb::Unarchive(zCArchiver &arc)
 {
 	if (!zCZone::Unarchive(arc)) return FALSE;
@@ -1049,6 +1504,15 @@ void zCZoneReverb::Archive(zCArchiver &arc)
 	arc.WriteEnum("reverbPreset", reverbPreset);
 	arc.WriteFloat("reverbWeight", reverbWeight);
 	arc.WriteFloat("innerRangePerc", innerRangePerc);
+}
+
+void zCZoneReverb::Hash()
+{
+	zCZone::Hash();
+
+	hash = XXH64(&reverbPreset, sizeof(reverbPreset), hash);
+	hash = XXH64(&reverbWeight, sizeof(reverbWeight), hash);
+	hash = XXH64(&innerRangePerc, sizeof(innerRangePerc), hash);
 }
 
 bool32 oCZoneMusic::Unarchive(zCArchiver &arc)
@@ -1077,6 +1541,18 @@ void oCZoneMusic::Archive(zCArchiver &arc)
 	arc.WriteBool("loop", loop);
 }
 
+void oCZoneMusic::Hash()
+{
+	zCZoneMusic::Hash();
+
+	hash = XXH64(&enabled, sizeof(enabled), hash);
+	hash = XXH64(&priority, sizeof(priority), hash);
+	hash = XXH64(&ellipsoid, sizeof(ellipsoid), hash);
+	hash = XXH64(&reverbLevel, sizeof(reverbLevel), hash);
+	hash = XXH64(&volumeLevel, sizeof(volumeLevel), hash);
+	hash = XXH64(&loop, sizeof(loop), hash);
+}
+
 bool32 oCObjectGenerator::Unarchive(zCArchiver &arc)
 {
 	if (!zCVob::Unarchive(arc)) return FALSE;
@@ -1095,6 +1571,14 @@ void oCObjectGenerator::Archive(zCArchiver &arc)
 	arc.WriteFloat("objectSpeed", objectSpeed);
 }
 
+void oCObjectGenerator::Hash()
+{
+	zCVob::Hash();
+
+	hash = XXH64(objectName.ToChar(), objectName.Length(), hash);
+	hash = XXH64(&objectSpeed, sizeof(objectSpeed), hash);
+}
+
 bool32 oCItem::Unarchive(zCArchiver &arc)
 {
 	if (!oCVob::Unarchive(arc)) return FALSE;
@@ -1109,6 +1593,13 @@ void oCItem::Archive(zCArchiver &arc)
 	oCVob::Archive(arc);
 
 	arc.WriteString("itemInstance", itemInstance);
+}
+
+void oCItem::Hash()
+{
+	oCVob::Hash();
+
+	hash = XXH64(itemInstance.ToChar(), itemInstance.Length(), hash);
 }
 
 bool32 oCMOB::Unarchive(zCArchiver &arc)
@@ -1145,6 +1636,23 @@ void oCMOB::Archive(zCArchiver &arc)
 	arc.WriteString("owner", owner);
 	arc.WriteString("ownerGuild", ownerGuild);
 	arc.WriteBool("isDestroyed", isDestroyed);
+}
+
+void oCMOB::Hash()
+{
+	oCVob::Hash();
+
+	hash = XXH64(focusName.ToChar(), focusName.Length(), hash);
+	hash = XXH64(&hitpoints, sizeof(hitpoints), hash);
+	hash = XXH64(&damage, sizeof(damage), hash);
+	hash = XXH64(&moveable, sizeof(moveable), hash);
+	hash = XXH64(&takeable, sizeof(takeable), hash);
+	hash = XXH64(&focusOverride, sizeof(focusOverride), hash);
+	hash = XXH64(&soundMaterial, sizeof(soundMaterial), hash);
+	hash = XXH64(visualDestroyed.ToChar(), visualDestroyed.Length(), hash);
+	hash = XXH64(owner.ToChar(), owner.Length(), hash);
+	hash = XXH64(ownerGuild.ToChar(), ownerGuild.Length(), hash);
+	hash = XXH64(&isDestroyed, sizeof(isDestroyed), hash);
 }
 
 bool32 oCMobInter::Unarchive(zCArchiver &arc)
@@ -1190,6 +1698,21 @@ void oCMobInter::Archive(zCArchiver &arc)
 	arc.WriteBool("rewind", rewind);
 }
 
+void oCMobInter::Hash()
+{
+	oCVob::Hash();
+
+	hash = XXH64(&state, sizeof(state), hash);
+	hash = XXH64(&stateTarget, sizeof(stateTarget), hash);
+
+	hash = XXH64(&stateNum, sizeof(stateNum), hash);
+	hash = XXH64(triggerTarget.ToChar(), triggerTarget.Length(), hash);
+	hash = XXH64(useWithItem.ToChar(), useWithItem.Length(), hash);
+	hash = XXH64(conditionFunc.ToChar(), conditionFunc.Length(), hash);
+	hash = XXH64(onStateFunc.ToChar(), onStateFunc.Length(), hash);
+	hash = XXH64(&rewind, sizeof(rewind), hash);
+}
+
 bool32 oCMobFire::Unarchive(zCArchiver &arc)
 {
 	if (!oCMobInter::Unarchive(arc)) return FALSE;
@@ -1208,6 +1731,14 @@ void oCMobFire::Archive(zCArchiver &arc)
 	arc.WriteString("fireVobtreeName", fireVobtreeName);
 }
 
+void oCMobFire::Hash()
+{
+	oCMobInter::Hash();
+
+	hash = XXH64(fireSlot.ToChar(), fireSlot.Length(), hash);
+	hash = XXH64(fireVobtreeName.ToChar(), fireVobtreeName.Length(), hash);
+}
+
 bool32 oCMobItemSlot::Unarchive(zCArchiver &arc)
 {
 	if (!oCMobInter::Unarchive(arc)) return FALSE;
@@ -1222,6 +1753,13 @@ void oCMobItemSlot::Archive(zCArchiver &arc)
 	oCMobInter::Archive(arc);
 	
 	arc.WriteBool("itemRemoveable", itemRemoveable);
+}
+
+void oCMobItemSlot::Hash()
+{
+	oCMobInter::Hash();
+
+	hash = XXH64(&itemRemoveable, sizeof(itemRemoveable), hash);
 }
 
 bool32 oCMobLockable::Unarchive(zCArchiver &arc)
@@ -1244,6 +1782,15 @@ void oCMobLockable::Archive(zCArchiver &arc)
 	arc.WriteString("pickLockStr", pickLockStr);
 }
 
+void oCMobLockable::Hash()
+{
+	oCMobInter::Hash();
+
+	hash = XXH64(&locked, sizeof(locked), hash);
+	hash = XXH64(keyInstance.ToChar(), keyInstance.Length(), hash);
+	hash = XXH64(pickLockStr.ToChar(), pickLockStr.Length(), hash);
+}
+
 bool32 oCMobContainer::Unarchive(zCArchiver &arc)
 {
 	if (!oCMobLockable::Unarchive(arc)) return FALSE;
@@ -1260,6 +1807,13 @@ void oCMobContainer::Archive(zCArchiver &arc)
 	arc.WriteString("contains", contains);
 }
 
+void oCMobContainer::Hash()
+{
+	oCMobLockable::Hash();
+
+	hash = XXH64(contains.ToChar(), contains.Length(), hash);
+}
+
 bool32 oCNpc::Unarchive(zCArchiver &arc)
 {
 	if (!oCVob::Unarchive(arc)) return FALSE;
@@ -1274,4 +1828,11 @@ void oCNpc::Archive(zCArchiver &arc)
 	oCVob::Archive(arc);
 	
 	arc.WriteString("npcInstance", npcInstance);
+}
+
+void oCNpc::Hash()
+{
+	oCVob::Hash();
+
+	hash = XXH64(npcInstance.ToChar(), npcInstance.Length(), hash);
 }

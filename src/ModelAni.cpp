@@ -1,5 +1,7 @@
 #include "ModelAni.h"
 
+zOBJECT_DEFINITION(zCModelAni);
+
 void zCModelAniEvent::Load(zCFileBIN &file)
 {
 	file.BinReadEnum(aniEventType);

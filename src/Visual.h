@@ -8,19 +8,19 @@
 class zCVisual : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCVisual"; }
+	zOBJECT_DECLARATION(zCVisual);
 };
 
 class zCPolyStrip : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCPolyStrip"; }
+	zOBJECT_DECLARATION(zCPolyStrip);
 };
 
 class zCDecal : public zCVisual
 {
 public:
-	static const zSTRING GetClassName() { return "zCDecal"; }
+	zOBJECT_DECLARATION(zCDecal);
 
 public:
 	zSTRING name;
@@ -35,28 +35,29 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 
 class zCParticleFX : public zCVisual
 {
 public:
-	static const zSTRING GetClassName() { return "zCParticleFX"; }
+	zOBJECT_DECLARATION(zCParticleFX);
 };
 
 class zCVisualAnimate : public zCVisual
 {
 public:
-	static const zSTRING GetClassName() { return "zCVisualAnimate"; }
+	zOBJECT_DECLARATION(zCVisualAnimate);
 };
 
 class zCModel : public zCVisualAnimate
 {
 public:
-	static const zSTRING GetClassName() { return "zCModel"; }
+	zOBJECT_DECLARATION(zCModel);
 };
 
 class zCMorphMesh : public zCVisualAnimate
 {
 public:
-	static const zSTRING GetClassName() { return "zCMorphMesh"; }
+	zOBJECT_DECLARATION(zCMorphMesh);
 };

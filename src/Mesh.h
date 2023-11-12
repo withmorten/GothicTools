@@ -21,7 +21,7 @@ class zCLightMap;
 class zCMesh : public zCVisual
 {
 public:
-	static const zSTRING GetClassName() { return "zCMesh"; }
+	zOBJECT_DECLARATION(zCMesh);
 
 public:
 	zSTRING name;

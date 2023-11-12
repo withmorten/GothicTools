@@ -75,7 +75,7 @@ enum zTMdl_AniType
 class zCModelAni : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCModelAni"; }
+	zOBJECT_DECLARATION(zCModelAni);
 
 public:
 	zSTRING aniName;

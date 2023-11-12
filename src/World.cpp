@@ -4,6 +4,9 @@
 #include "Bsp.h"
 #include "Vob.h"
 #include "WayNet.h"
+#include "ObjectRegistry.h"
+
+zOBJECT_DEFINITION(zCWorld);
 
 zCWorld::zCWorld()
 {
@@ -11,6 +14,8 @@ zCWorld::zCWorld()
 	vobTree = NULL;
 	wayNet = NULL;
 	compiled = FALSE;
+	vobTreeDepth = 0;
+	registry = NULL;
 }
 
 zCWorld::~zCWorld()
@@ -24,6 +29,22 @@ zCWorld::~zCWorld()
 
 	zDELETE(vobTree);
 	zDELETE(wayNet);
+	zDELETE(registry);
+}
+
+bool32 zCWorld::LoadZEN(zCArchiver &arc)
+{
+	registry = zNEW(zCObjectRegistry);
+	arc.registry = registry;
+
+	bool32 result = arc.ReadObject(this) != NULL;
+
+	return result;
+}
+
+void zCWorld::SaveZEN(zCArchiver &arc)
+{
+	arc.WriteObject(this);
 }
 
 bool32 zCWorld::UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs)
@@ -42,6 +63,11 @@ bool32 zCWorld::UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs)
 
 		parent->childs.Insert(vob);
 		vobs.Insert(vob);
+
+		vob->parent = parent;
+		vob->depth = vobTreeDepth;
+
+		vobTreeDepth++;
 	}
 
 	zSTRING n = numVobs;
@@ -52,6 +78,8 @@ bool32 zCWorld::UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs)
 	for (int32 i = 0; i < vob->numChilds; i++)
 	{
 		if (!UnarchiveVobTree(arc, vob, numVobs)) return FALSE;
+
+		vobTreeDepth--;
 	}
 
 	return TRUE;
@@ -172,12 +200,9 @@ void zCWorld::Archive(zCArchiver &arc)
 	arc.WriteChunkEnd();
 }
 
-bool32 zCWorld::LoadZEN(zCArchiver &arc)
+void zCWorld::Hash()
 {
-	return arc.ReadObject(this) != NULL;
-}
+	zCObject::Hash();
 
-void zCWorld::SaveZEN(zCArchiver &arc)
-{
-	arc.WriteObject(this);
+	// not sure what to hash here ...
 }

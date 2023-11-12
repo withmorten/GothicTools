@@ -110,7 +110,7 @@ struct zTNodeWedgeNormal
 class zCMeshSoftSkin : public zCProgMeshProto
 {
 public:
-	static const zSTRING GetClassName() { return "zCMeshSoftSkin"; }
+	zOBJECT_DECLARATION(zCMeshSoftSkin);
 
 public:
 	uint32 size;

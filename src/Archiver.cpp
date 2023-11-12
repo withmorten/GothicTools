@@ -8,6 +8,7 @@
 #include "WayNet.h"
 #include "Vob.h"
 #include "World.h"
+#include "ObjectRegistry.h"
 
 zCArchiver::zCArchiver()
 {
@@ -19,6 +20,8 @@ zCArchiver::zCArchiver()
 	stringHashMap = NULL;
 	chunkDepth = 0;
 	lastChunkStart = 0;
+
+	registry = NULL;
 }
 
 zCArchiver::~zCArchiver()
@@ -218,356 +221,363 @@ void zCArchiver::WriteHeader(int32 flags)
 
 zCObject *zCArchiver::CreateObject(zTChunkRecord &chunk)
 {
+#define zNEW_OBJECT(name) \
+obj = zNEW(name); \
+if (registry) registry->Insert(name::className, obj)
+
+	zCObject *obj;
+
 	if (chunk.IsNull())
 	{
-		return zNEW(zCObject);
+		zNEW_OBJECT(zCObject);
 	}
 	else if (chunk.IsReference())
 	{
-		// TODO for now just add the ref to the obj
-		// later actually copy the data as well ...
 		zCObject *ref = objects[chunk.objectIndex];
-		zCObject *obj = CreateObject(ref->chunk);
+		obj = CreateObject(ref->chunk);
 
 		obj->ref = ref;
-
-		return obj;
+		ref->refs.Insert(obj);
 	}
-	else if (chunk.className.Contains(zCWorld::GetClassName()))
+	else if (chunk.className.Contains(zCWorld::className))
 	{
-		return zNEW(zCWorld);
+		zNEW_OBJECT(zCWorld);
 	}
-	else if (chunk.className.Contains(zCWaypoint::GetClassName()))
+	else if (chunk.className.Contains(zCWaypoint::className))
 	{
-		return zNEW(zCWaypoint);
+		zNEW_OBJECT(zCWaypoint);
 	}
-	else if (chunk.className.Contains(zCWayNet::GetClassName()))
+	else if (chunk.className.Contains(zCWayNet::className))
 	{
-		return zNEW(zCWayNet);
+		zNEW_OBJECT(zCWayNet);
 	}
-	else if (chunk.className.Contains(zCAICamera::GetClassName()))
+	else if (chunk.className.Contains(zCAICamera::className))
 	{
-		return zNEW(zCAICamera);
+		zNEW_OBJECT(zCAICamera);
 	}
-	else if (chunk.className.Contains(zCMaterial::GetClassName()))
+	else if (chunk.className.Contains(zCMaterial::className))
 	{
-		return zNEW(zCMaterial);
+		zNEW_OBJECT(zCMaterial);
 	}
-	else if (chunk.className.Contains(zCPolyStrip::GetClassName()))
+	else if (chunk.className.Contains(zCPolyStrip::className))
 	{
-		return zNEW(zCPolyStrip);
+		zNEW_OBJECT(zCPolyStrip);
 	}
-	else if (chunk.className.Contains(zCDecal::GetClassName()))
+	else if (chunk.className.Contains(zCDecal::className))
 	{
-		return zNEW(zCDecal);
+		zNEW_OBJECT(zCDecal);
 	}
-	else if (chunk.className.Contains(zCParticleFX::GetClassName()))
+	else if (chunk.className.Contains(zCParticleFX::className))
 	{
-		return zNEW(zCParticleFX);
+		zNEW_OBJECT(zCParticleFX);
 	}
-	else if (chunk.className.Contains(zCMesh::GetClassName()))
+	else if (chunk.className.Contains(zCMesh::className))
 	{
-		return zNEW(zCMesh);
+		zNEW_OBJECT(zCMesh);
 	}
-	else if (chunk.className.Contains(zCModel::GetClassName()))
+	else if (chunk.className.Contains(zCModel::className))
 	{
-		return zNEW(zCModel);
+		zNEW_OBJECT(zCModel);
 	}
-	else if (chunk.className.Contains(zCModelAni::GetClassName()))
+	else if (chunk.className.Contains(zCModelAni::className))
 	{
-		return zNEW(zCModelAni);
+		zNEW_OBJECT(zCModelAni);
 	}
-	else if (chunk.className.Contains(zCModelMeshLib::GetClassName()))
+	else if (chunk.className.Contains(zCModelMeshLib::className))
 	{
-		return zNEW(zCModelMeshLib);
+		zNEW_OBJECT(zCModelMeshLib);
 	}
-	else if (chunk.className.Contains(zCMorphMesh::GetClassName()))
+	else if (chunk.className.Contains(zCMorphMesh::className))
 	{
-		return zNEW(zCMorphMesh);
+		zNEW_OBJECT(zCMorphMesh);
 	}
-	else if (chunk.className.Contains(zCProgMeshProto::GetClassName()))
+	else if (chunk.className.Contains(zCProgMeshProto::className))
 	{
-		return zNEW(zCProgMeshProto);
+		zNEW_OBJECT(zCProgMeshProto);
 	}
-	else if (chunk.className.Contains(zCMeshSoftSkin::GetClassName()))
+	else if (chunk.className.Contains(zCMeshSoftSkin::className))
 	{
-		return zNEW(zCMeshSoftSkin);
+		zNEW_OBJECT(zCMeshSoftSkin);
 	}
-	else if (chunk.className.Contains(zCCamTrj_KeyFrame::GetClassName()))
+	else if (chunk.className.Contains(zCCamTrj_KeyFrame::className))
 	{
-		return zNEW(zCCamTrj_KeyFrame);
+		zNEW_OBJECT(zCCamTrj_KeyFrame);
 	}
-	else if (chunk.className.Contains(zCCSCamera::GetClassName()))
+	else if (chunk.className.Contains(zCCSCamera::className))
 	{
-		return zNEW(zCCSCamera);
+		zNEW_OBJECT(zCCSCamera);
 	}
-	else if (chunk.className.Contains(zCVobLevelCompo::GetClassName()))
+	else if (chunk.className.Contains(zCVobLevelCompo::className))
 	{
-		return zNEW(zCVobLevelCompo);
+		zNEW_OBJECT(zCVobLevelCompo);
 	}
-	else if (chunk.className.Contains(zCVobLight::GetClassName()))
+	else if (chunk.className.Contains(zCVobLight::className))
 	{
-		return zNEW(zCVobLight);
+		zNEW_OBJECT(zCVobLight);
 	}
-	else if (chunk.className.Contains(zCVobSpot::GetClassName()))
+	else if (chunk.className.Contains(zCVobSpot::className))
 	{
-		return zNEW(zCVobSpot);
+		zNEW_OBJECT(zCVobSpot);
 	}
-	else if (chunk.className.Contains(zCVobStair::GetClassName()))
+	else if (chunk.className.Contains(zCVobStair::className))
 	{
-		return zNEW(zCVobStair);
+		zNEW_OBJECT(zCVobStair);
 	}
-	else if (chunk.className.Contains(zCVobStartpoint::GetClassName()))
+	else if (chunk.className.Contains(zCVobStartpoint::className))
 	{
-		return zNEW(zCVobStartpoint);
+		zNEW_OBJECT(zCVobStartpoint);
 	}
-	else if (chunk.className.Contains(zCVobWaypoint::GetClassName()))
+	else if (chunk.className.Contains(zCVobWaypoint::className))
 	{
-		return zNEW(zCVobWaypoint);
+		zNEW_OBJECT(zCVobWaypoint);
 	}
-	else if (chunk.className.Contains(zCCodeMaster::GetClassName()))
+	else if (chunk.className.Contains(zCCodeMaster::className))
 	{
-		return zNEW(zCCodeMaster);
+		zNEW_OBJECT(zCCodeMaster);
 	}
-	else if (chunk.className.Contains(zCMessageFilter::GetClassName()))
+	else if (chunk.className.Contains(zCMessageFilter::className))
 	{
-		return zNEW(zCMessageFilter);
+		zNEW_OBJECT(zCMessageFilter);
 	}
-	else if (chunk.className.Contains(zCMoverControler::GetClassName()))
+	else if (chunk.className.Contains(zCMoverControler::className))
 	{
-		return zNEW(zCMoverControler);
+		zNEW_OBJECT(zCMoverControler);
 	}
-	else if (chunk.className.Contains(zCTriggerWorldStart::GetClassName()))
+	else if (chunk.className.Contains(zCTriggerWorldStart::className))
 	{
-		return zNEW(zCTriggerWorldStart);
+		zNEW_OBJECT(zCTriggerWorldStart);
 	}
-	else if (chunk.className.Contains(zCTriggerUntouch::GetClassName()))
+	else if (chunk.className.Contains(zCTriggerUntouch::className))
 	{
-		return zNEW(zCTriggerUntouch);
+		zNEW_OBJECT(zCTriggerUntouch);
 	}
-	else if (chunk.className.Contains(zCTrigger::GetClassName()))
+	else if (chunk.className.Contains(zCTrigger::className))
 	{
-		if (chunk.className.Contains(zCMover::GetClassName()))
+		if (chunk.className.Contains(zCMover::className))
 		{
-			return zNEW(zCMover);
+			zNEW_OBJECT(zCMover);
 		}
-		else if (chunk.className.Contains(zCTriggerTeleport::GetClassName()))
+		else if (chunk.className.Contains(zCTriggerTeleport::className))
 		{
-			return zNEW(zCTriggerTeleport);
+			zNEW_OBJECT(zCTriggerTeleport);
 		}
-		else if (chunk.className.Contains(zCTriggerList::GetClassName()))
+		else if (chunk.className.Contains(zCTriggerList::className))
 		{
-			return zNEW(zCTriggerList);
+			zNEW_OBJECT(zCTriggerList);
 		}
-		else if (chunk.className.Contains(oCCSTrigger::GetClassName()))
+		else if (chunk.className.Contains(oCCSTrigger::className))
 		{
-			return zNEW(oCCSTrigger);
+			zNEW_OBJECT(oCCSTrigger);
 		}
-		else if (chunk.className.Contains(oCTriggerChangeLevel::GetClassName()))
+		else if (chunk.className.Contains(oCTriggerChangeLevel::className))
 		{
-			return zNEW(oCTriggerChangeLevel);
+			zNEW_OBJECT(oCTriggerChangeLevel);
 		}
-		else if (chunk.className.Contains(oCTriggerScript::GetClassName()))
+		else if (chunk.className.Contains(oCTriggerScript::className))
 		{
-			return zNEW(oCTriggerScript);
+			zNEW_OBJECT(oCTriggerScript);
 		}
 		else
 		{
-			return zNEW(zCTrigger);
+			zNEW_OBJECT(zCTrigger);
 		}
 	}
-	else if (chunk.className.Contains(zCEarthquake::GetClassName()))
+	else if (chunk.className.Contains(zCEarthquake::className))
 	{
-		return zNEW(zCEarthquake);
+		zNEW_OBJECT(zCEarthquake);
 	}
-	else if (chunk.className.Contains(zCMusicControler::GetClassName()))
+	else if (chunk.className.Contains(zCMusicControler::className))
 	{
-		return zNEW(zCMusicControler);
+		zNEW_OBJECT(zCMusicControler);
 	}
-	else if (chunk.className.Contains(zCPFXControler::GetClassName()))
+	else if (chunk.className.Contains(zCPFXControler::className))
 	{
-		return zNEW(zCPFXControler);
+		zNEW_OBJECT(zCPFXControler);
 	}
-	else if (chunk.className.Contains(zCTouchDamage::GetClassName()))
+	else if (chunk.className.Contains(zCTouchDamage::className))
 	{
-		if (chunk.className.Contains(oCTouchDamage::GetClassName()))
+		if (chunk.className.Contains(oCTouchDamage::className))
 		{
-			return zNEW(oCTouchDamage);
+			zNEW_OBJECT(oCTouchDamage);
 		}
 		else
 		{
 			printf("Error: zCTouchDamage is not implemented like the game does it, use oCTouchDamage instead!\n");
 
-			return NULL;
+			obj = NULL;
 		}
 	}
-	else if (chunk.className.Contains(zCTouchAnimate::GetClassName()))
+	else if (chunk.className.Contains(zCTouchAnimate::className))
 	{
-		if (chunk.className.Contains(zCTouchAnimateSound::GetClassName()))
+		if (chunk.className.Contains(zCTouchAnimateSound::className))
 		{
-			return zNEW(zCTouchAnimateSound);
+			zNEW_OBJECT(zCTouchAnimateSound);
 		}
 		else
 		{
-			return zNEW(zCTouchAnimate);
+			zNEW_OBJECT(zCTouchAnimate);
 		}
 	}
-	else if (chunk.className.Contains(zCVobAnimate::GetClassName()))
+	else if (chunk.className.Contains(zCVobAnimate::className))
 	{
-		return zNEW(zCVobAnimate);
+		zNEW_OBJECT(zCVobAnimate);
 	}
-	else if (chunk.className.Contains(zCVobLensFlare::GetClassName()))
+	else if (chunk.className.Contains(zCVobLensFlare::className))
 	{
-		return zNEW(zCVobLensFlare);
+		zNEW_OBJECT(zCVobLensFlare);
 	}
-	else if (chunk.className.Contains(zCVobScreenFX::GetClassName()))
+	else if (chunk.className.Contains(zCVobScreenFX::className))
 	{
-		return zNEW(zCVobScreenFX);
+		zNEW_OBJECT(zCVobScreenFX);
 	}
-	else if (chunk.className.Contains(oCVisualFX::GetClassName()))
+	else if (chunk.className.Contains(oCVisualFX::className))
 	{
-		if (chunk.className.Contains(oCVisFX_Lightning::GetClassName()))
+		if (chunk.className.Contains(oCVisFX_Lightning::className))
 		{
-			return zNEW(oCVisFX_Lightning);
+			zNEW_OBJECT(oCVisFX_Lightning);
 		}
-		else if (chunk.className.Contains(oCVisFX_MultiTarget::GetClassName()))
+		else if (chunk.className.Contains(oCVisFX_MultiTarget::className))
 		{
-			return zNEW(oCVisFX_MultiTarget);
+			zNEW_OBJECT(oCVisFX_MultiTarget);
 		}
 		else
 		{
-			return zNEW(oCVisualFX);
+			zNEW_OBJECT(oCVisualFX);
 		}
 	}
-	else if (chunk.className.Contains(zCZoneZFog::GetClassName()))
+	else if (chunk.className.Contains(zCZoneZFog::className))
 	{
-		if (chunk.className.Contains(zCZoneZFogDefault::GetClassName()))
+		if (chunk.className.Contains(zCZoneZFogDefault::className))
 		{
-			return zNEW(zCZoneZFogDefault);
+			zNEW_OBJECT(zCZoneZFogDefault);
 		}
 		else
 		{
-			return zNEW(zCZoneZFog);
+			zNEW_OBJECT(zCZoneZFog);
 		}
 	}
-	else if (chunk.className.Contains(zCZoneVobFarPlane::GetClassName()))
+	else if (chunk.className.Contains(zCZoneVobFarPlane::className))
 	{
-		if (chunk.className.Contains(zCZoneVobFarPlaneDefault::GetClassName()))
+		if (chunk.className.Contains(zCZoneVobFarPlaneDefault::className))
 		{
-			return zNEW(zCZoneVobFarPlaneDefault);
+			zNEW_OBJECT(zCZoneVobFarPlaneDefault);
 		}
 		else
 		{
-			return zNEW(zCZoneVobFarPlane);
+			zNEW_OBJECT(zCZoneVobFarPlane);
 		}
 	}
-	else if (chunk.className.Contains(zCVobSound::GetClassName()))
+	else if (chunk.className.Contains(zCVobSound::className))
 	{
-		if (chunk.className.Contains(zCVobSoundDaytime::GetClassName()))
+		if (chunk.className.Contains(zCVobSoundDaytime::className))
 		{
-			return zNEW(zCVobSoundDaytime);
-		}
-		else
-		{
-			return zNEW(zCVobSound);
-		}
-	}
-	else if (chunk.className.Contains(oCZoneMusic::GetClassName()))
-	{
-		if (chunk.className.Contains(oCZoneMusicDefault::GetClassName()))
-		{
-			return zNEW(oCZoneMusicDefault);
+			zNEW_OBJECT(zCVobSoundDaytime);
 		}
 		else
 		{
-			return zNEW(oCZoneMusic);
+			zNEW_OBJECT(zCVobSound);
 		}
 	}
-	else if (chunk.className.Contains(zCZoneReverb::GetClassName()))
+	else if (chunk.className.Contains(oCZoneMusic::className))
 	{
-		if (chunk.className.Contains(zCZoneReverbDefault::GetClassName()))
+		if (chunk.className.Contains(oCZoneMusicDefault::className))
 		{
-			return zNEW(zCZoneReverbDefault);
+			zNEW_OBJECT(oCZoneMusicDefault);
 		}
 		else
 		{
-			return zNEW(zCZoneReverb);
+			zNEW_OBJECT(oCZoneMusic);
 		}
 	}
-	else if (chunk.className.Contains(oCDummyVobGenerator::GetClassName()))
+	else if (chunk.className.Contains(zCZoneReverb::className))
 	{
-		return zNEW(oCDummyVobGenerator);
-	}
-	else if (chunk.className.Contains(oCObjectGenerator::GetClassName()))
-	{
-		return zNEW(oCObjectGenerator);
-	}
-	else if (chunk.className.Contains(oCItem::GetClassName()))
-	{
-		return zNEW(oCItem);
-	}
-	else if (chunk.className.Contains(oCMOB::GetClassName()))
-	{
-		if (chunk.className.Contains(oCMobInter::GetClassName()))
+		if (chunk.className.Contains(zCZoneReverbDefault::className))
 		{
-			if (chunk.className.Contains(oCMobBed::GetClassName()))
+			zNEW_OBJECT(zCZoneReverbDefault);
+		}
+		else
+		{
+			zNEW_OBJECT(zCZoneReverb);
+		}
+	}
+	else if (chunk.className.Contains(oCDummyVobGenerator::className))
+	{
+		zNEW_OBJECT(oCDummyVobGenerator);
+	}
+	else if (chunk.className.Contains(oCObjectGenerator::className))
+	{
+		zNEW_OBJECT(oCObjectGenerator);
+	}
+	else if (chunk.className.Contains(oCItem::className))
+	{
+		zNEW_OBJECT(oCItem);
+	}
+	else if (chunk.className.Contains(oCMOB::className))
+	{
+		if (chunk.className.Contains(oCMobInter::className))
+		{
+			if (chunk.className.Contains(oCMobBed::className))
 			{
-				return zNEW(oCMobBed);
+				zNEW_OBJECT(oCMobBed);
 			}
-			else if (chunk.className.Contains(oCMobFire::GetClassName()))
+			else if (chunk.className.Contains(oCMobFire::className))
 			{
-				return zNEW(oCMobFire);
+				zNEW_OBJECT(oCMobFire);
 			}
-			else if (chunk.className.Contains(oCMobItemSlot::GetClassName()))
+			else if (chunk.className.Contains(oCMobItemSlot::className))
 			{
-				return zNEW(oCMobItemSlot);
+				zNEW_OBJECT(oCMobItemSlot);
 			}
-			else if (chunk.className.Contains(oCMobLadder::GetClassName()))
+			else if (chunk.className.Contains(oCMobLadder::className))
 			{
-				return zNEW(oCMobLadder);
+				zNEW_OBJECT(oCMobLadder);
 			}
-			else if (chunk.className.Contains(oCMobContainer::GetClassName()))
+			else if (chunk.className.Contains(oCMobContainer::className))
 			{
-				return zNEW(oCMobContainer);
+				zNEW_OBJECT(oCMobContainer);
 			}
-			else if (chunk.className.Contains(oCMobDoor::GetClassName()))
+			else if (chunk.className.Contains(oCMobDoor::className))
 			{
-				return zNEW(oCMobDoor);
+				zNEW_OBJECT(oCMobDoor);
 			}
-			else if (chunk.className.Contains(oCMobSwitch::GetClassName()))
+			else if (chunk.className.Contains(oCMobSwitch::className))
 			{
-				return zNEW(oCMobSwitch);
+				zNEW_OBJECT(oCMobSwitch);
 			}
-			else if (chunk.className.Contains(oCMobWheel::GetClassName()))
+			else if (chunk.className.Contains(oCMobWheel::className))
 			{
-				return zNEW(oCMobWheel);
+				zNEW_OBJECT(oCMobWheel);
 			}
 			else
 			{
-				return zNEW(oCMobInter);
+				zNEW_OBJECT(oCMobInter);
 			}
 		}
 		else
 		{
-			return zNEW(oCMOB);
+			zNEW_OBJECT(oCMOB);
 		}
 	}
-	else if (chunk.className.Contains(oCNpc::GetClassName()))
+	else if (chunk.className.Contains(oCNpc::className))
 	{
-		return zNEW(oCNpc);
+		zNEW_OBJECT(oCNpc);
 	}
-	else if (chunk.className.Contains(zCVob::GetClassName()))
+	else if (chunk.className.Contains(zCVob::className))
 	{
-		if (chunk.className != zCVob::GetClassName()) printf("%s\n", chunk.className.ToChar());
+		if (chunk.className != zCVob::className) printf("%s\n", chunk.className.ToChar());
 
-		return zNEW(zCVob);
+		zNEW_OBJECT(zCVob);
 	}
 	else
 	{
 		printf("Error at %d: %s is not implemented!\n", file->Pos(), chunk.className.ToChar());
 
-		return NULL;
+		obj = NULL;
 	}
+
+	return obj;
+
+#undef zNEW_OBJECT
 }
 
 void zCArchiver::PeekChunk(zTChunkRecord &chunk)

@@ -59,7 +59,7 @@ enum
 class zCMaterial : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCMaterial"; }
+	zOBJECT_DECLARATION(zCMaterial);
 
 public:
 	zSTRING name;
@@ -96,5 +96,6 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+	void Hash();
 };
 

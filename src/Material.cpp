@@ -1,5 +1,7 @@
 #include "Material.h"
 
+zOBJECT_DEFINITION(zCMaterial);
+
 bool32 zCMaterial::Unarchive(zCArchiver &arc)
 {
 	if (!zCObject::Unarchive(arc)) return FALSE;
@@ -137,4 +139,44 @@ void zCMaterial::Archive(zCArchiver &arc)
 	}
 
 	arc.WriteRawFloat("defaultMapping", &defaultMapping, sizeof(defaultMapping));
+}
+
+void zCMaterial::Hash()
+{
+	zCObject::Hash();
+
+	hash = XXH64(name.ToChar(), name.Length(), hash);
+	hash = XXH64(&matGroup, sizeof(matGroup), hash);
+	hash = XXH64(&color, sizeof(color), hash);
+	hash = XXH64(&smoothAngle, sizeof(smoothAngle), hash);
+
+	hash = XXH64(texture.ToChar(), texture.Length(), hash);
+	hash = XXH64(texScale.ToChar(), texScale.Length(), hash);
+	hash = XXH64(&texAniFPS, sizeof(texAniFPS), hash);
+	hash = XXH64(&texAniMapMode, sizeof(texAniMapMode), hash);
+	hash = XXH64(texAniMapDir.ToChar(), texAniMapDir.Length(), hash);
+
+	hash = XXH64(&noCollDet, sizeof(noCollDet), hash);
+	hash = XXH64(&noLightmap, sizeof(noLightmap), hash);
+	hash = XXH64(&lodDontCollapse, sizeof(lodDontCollapse), hash);
+
+	hash = XXH64(detailObject.ToChar(), detailObject.Length(), hash);
+
+	hash = XXH64(&detailObjectScale, sizeof(detailObjectScale), hash);
+
+	hash = XXH64(&forceOccluder, sizeof(forceOccluder), hash);
+	hash = XXH64(&environmentalMapping, sizeof(environmentalMapping), hash);
+	hash = XXH64(&environmentalMappingStrength, sizeof(environmentalMappingStrength), hash);
+
+	hash = XXH64(&waveMode, sizeof(waveMode), hash);
+	hash = XXH64(&waveSpeed, sizeof(waveSpeed), hash);
+
+	hash = XXH64(&waveMaxAmplitude, sizeof(waveMaxAmplitude), hash);
+	hash = XXH64(&waveGridSize, sizeof(waveGridSize), hash);
+
+	hash = XXH64(&ignoreSunLight, sizeof(ignoreSunLight), hash);
+
+	hash = XXH64(&alphaFunc, sizeof(alphaFunc), hash);
+
+	hash = XXH64(&defaultMapping, sizeof(defaultMapping), hash);
 }

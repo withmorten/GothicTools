@@ -3,6 +3,8 @@
 #include "Material.h"
 #include "Texture.h"
 
+zOBJECT_DEFINITION(zCMesh);
+
 zCMesh::zCMesh()
 {
 	numPoly = 0;
@@ -222,7 +224,7 @@ bool32 zCMesh::LoadMSH(zCFileBIN &file)
 				zCLightMap *lightmap = zNEW(zCLightMap);
 
 				lightmap->Load(file);
-				lightmap->tex = lmTexList[i];
+				lightmap->tex = lmTexList[lightmap->texIndex];
 
 				lightmapList[i] = lightmap;
 			}

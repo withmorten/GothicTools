@@ -20,6 +20,7 @@ workspace "GothicTools"
 		defines { "_DEBUG", "_CRTDBG_MAP_ALLOC" }
 		symbols "full"
 		optimize "off"
+		inlining "explicit"
 		runtime "debug"
 
 	filter { "configurations:Release" }
@@ -37,11 +38,24 @@ workspace "GothicTools"
 	filter { "platforms:x64" }
 		architecture "x64"
 
+project "xxhash"
+	kind "StaticLib"
+	language "C++"
+	targetname "xxhash"
+	targetdir "build/obj/%{cfg.platform}/%{cfg.buildcfg}/xxhash"
+
+	files { "src/xxhash/*.*" }
+
+	disablewarnings { "4028" }
+
 project "GothicTools"
 	kind "StaticLib"
 	language "C++"
 	targetname "GothicTools"
 	targetdir "build/obj/%{cfg.platform}/%{cfg.buildcfg}/GothicTools"
+
+	dependson { "xxhash" }
+	links { "xxhash" }
 
 	files { "src/GothicTools.h" }
 	files { "src/3D.h" }
@@ -58,6 +72,7 @@ project "GothicTools"
 	files { "src/ModelAni.h" }
 	files { "src/MorphMesh.h" }
 	files { "src/Object.h" }
+	files { "src/ObjectRegistry.h" }
 	files { "src/ProgMesh.h" }
 	files { "src/ScanDir.h" }
 	files { "src/String.h" }
@@ -76,6 +91,8 @@ project "GothicTools"
 	files { "src/Model.cpp" }
 	files { "src/ModelAni.cpp" }
 	files { "src/MorphMesh.cpp" }
+	files { "src/Object.cpp" }
+	files { "src/ObjectRegistry.cpp" }
 	files { "src/ProgMesh.cpp" }
 	files { "src/ScanDir.cpp" }
 	files { "src/String.cpp" }

@@ -7,11 +7,12 @@
 class zCBspTree;
 class zCVob;
 class zCWayNet;
+class zCObjectRegistry;
 
 class zCWorld : public zCObject
 {
 public:
-	static const zSTRING GetClassName() { return "zCWorld"; }
+	zOBJECT_DECLARATION(zCWorld);
 
 public:
 	zCBspTree *bspTree;
@@ -20,11 +21,17 @@ public:
 	zCVob *vobTree;
 	zCWayNet *wayNet;
 
+	int32 vobTreeDepth; // for testing if traversal was done correctly TODO remove?
 	zCArray<zCVob *> vobs; // for easy access that doesn't require recursion
+
+	zCObjectRegistry *registry;
 
 public:
 	zCWorld();
 	~zCWorld();
+
+	bool32 LoadZEN(zCArchiver &arc);
+	void SaveZEN(zCArchiver &arc);
 
 	bool32 UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs);
 	bool32 Unarchive(zCArchiver &arc);
@@ -32,6 +39,5 @@ public:
 	void ArchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs);
 	void Archive(zCArchiver &arc);
 
-	bool32 LoadZEN(zCArchiver &arc);
-	void SaveZEN(zCArchiver &arc);
+	void Hash();
 };
