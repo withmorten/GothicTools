@@ -18,7 +18,7 @@ zCProgMeshProto::zCSubMesh::~zCSubMesh()
 bool32 zCProgMeshProto::LoadMatList(zCFileBIN &file)
 {
 	zCArchiver arc;
-	arc.SetFile(file.GetFile());
+	arc.file = file.file;
 
 	if (!arc.ReadHeader()) return FALSE;
 
@@ -134,9 +134,9 @@ fileEnd:;
 void zCProgMeshProto::SaveMatList(zCFileBIN &file)
 {
 	zCArchiver arc;
-	arc.SetMode(zARC_MODE_BINARY);
-	arc.SetObjCount(meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : numSubMeshes);
-	arc.SetFile(file.GetFile());
+	arc.mode = zARC_MODE_BINARY;
+	arc.objCount = meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : numSubMeshes;
+	arc.file = file.file;
 
 	arc.WriteHeader(zARC_FLAG_WRITE_BRIEF_HEADER);
 

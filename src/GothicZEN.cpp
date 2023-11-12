@@ -100,7 +100,7 @@ int main(int argc, const char **argv)
 		if (argc > ARG_OPTIONAL_VERSION_OUT)
 		{
 			arc.OpenFile(argv[ARG_OPTIONAL_FILE_OUT], TRUE);
-			arc.SetMode(zARC_MODE_ASCII);
+			arc.mode = zARC_MODE_ASCII;
 			arc.WriteHeader();
 
 			world->SaveZEN(arc);

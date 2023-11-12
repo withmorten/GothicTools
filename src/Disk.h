@@ -58,8 +58,6 @@ public:
 
 	void Init();
 
-	zFILE *GetFile() { return file; }
-
 	bool32 BinEof() { return nextStart >= file->Size(); }
 	int32 BinSize() { return file->Size(); }
 	int32 BinPos() { return file->Pos(); }

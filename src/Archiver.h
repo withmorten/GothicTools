@@ -83,13 +83,8 @@ public:
 	zCArchiver();
 	~zCArchiver();
 
-	void SetObjCount(int32 oC) { objCount = oC; }
-	void SetMode(zTArchiveMode m) { mode = m; }
-
 	void OpenFile(const zSTRING &fileName, bool32 write = FALSE);
 	void CloseFile();
-	void SetFile(zFILE *inFile) { file = inFile; }
-	zFILE *GetFile() { return file; }
 
 	bool32 ReadHeader();
 	void WriteHeader(int32 flags = 0);

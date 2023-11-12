@@ -99,7 +99,7 @@ bool32 zCWorld::Unarchive(zCArchiver &arc)
 		{
 			compiled = FALSE;
 
-			zCFileBIN file(arc.GetFile());
+			zCFileBIN file(arc.file);
 
 			uint32 version;
 			uint32 chunkLen;
@@ -117,7 +117,7 @@ bool32 zCWorld::Unarchive(zCArchiver &arc)
 
 			bspTree = zNEW(zCBspTree);
 
-			if (!bspTree->LoadBIN(zCFileBIN(arc.GetFile())))
+			if (!bspTree->LoadBIN(zCFileBIN(arc.file)))
 			{
 				printf("BspTree could not be loaded\n");
 
@@ -178,7 +178,7 @@ void zCWorld::Archive(zCArchiver &arc)
 	if (compiled)
 	{
 		arc.WriteChunkStart("MeshAndBsp");
-		bspTree->SaveBIN(zCFileBIN(arc.GetFile()));
+		bspTree->SaveBIN(zCFileBIN(arc.file));
 		arc.WriteChunkEnd();
 	}
 

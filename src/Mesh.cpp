@@ -102,7 +102,7 @@ bool32 zCMesh::SaveMSH(zCFileBIN &file)
 
 		for (int32 i = 0; i < numTextures; i++)
 		{
-			lmTexList[i]->Save(file.GetFile());
+			lmTexList[i]->Save(file.file);
 		}
 
 		file.BinWriteInt(numlightMap);
@@ -211,7 +211,7 @@ bool32 zCMesh::LoadMSH(zCFileBIN &file)
 			{
 				zCTexture *tex = zNEW(zCTexture);
 
-				if (!tex->Load(file.GetFile())) return FALSE;
+				if (!tex->Load(file.file)) return FALSE;
 
 				lmTexList[i] = tex;
 			}
@@ -303,9 +303,9 @@ fileEnd:;
 void zCMesh::SaveMatList(zCFileBIN &file)
 {
 	zCArchiver arc;
-	arc.SetMode(zARC_MODE_BINARY);
-	arc.SetObjCount(meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : matList.numInArray);
-	arc.SetFile(file.GetFile());
+	arc.mode = zARC_MODE_BINARY;
+	arc.objCount = meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : matList.numInArray;
+	arc.file = file.file;
 
 	arc.WriteHeader(zARC_FLAG_WRITE_BRIEF_HEADER);
 
@@ -331,7 +331,7 @@ void zCMesh::SaveMatList(zCFileBIN &file)
 bool32 zCMesh::LoadMatList(zCFileBIN &file)
 {
 	zCArchiver arc;
-	arc.SetFile(file.GetFile());
+	arc.file = file.file;
 
 	if (!arc.ReadHeader()) return FALSE;
 
