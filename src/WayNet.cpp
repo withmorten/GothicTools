@@ -40,6 +40,102 @@ void zCWaypoint::Hash()
 	hash = XXH64(&direction, sizeof(direction), hash);
 }
 
+bool32 zCWaypoint::IsEqual(zCObject *obj)
+{
+	if (!zCObject::IsEqual(obj)) return FALSE;
+
+	zCWaypoint *wp = (zCWaypoint *)obj;
+
+#if 1
+	if (chunk.objectIndex == 16855 && wp->chunk.objectIndex == 16924
+		|| chunk.objectIndex == 16856 && wp->chunk.objectIndex == 16925
+		|| chunk.objectIndex == 16857 && wp->chunk.objectIndex == 16926
+		|| chunk.objectIndex == 16858 && wp->chunk.objectIndex == 16927
+		|| chunk.objectIndex == 16862 && wp->chunk.objectIndex == 16931
+		|| chunk.objectIndex == 16863 && wp->chunk.objectIndex == 16932
+		|| chunk.objectIndex == 16864 && wp->chunk.objectIndex == 16933
+		|| chunk.objectIndex == 16865 && wp->chunk.objectIndex == 16934
+		|| chunk.objectIndex == 16866 && wp->chunk.objectIndex == 16935
+		)
+	{
+		//EpsilonTest(wp);
+	}
+#endif
+
+	if (wpName != wp->wpName) return FALSE;
+	if (waterDepth != wp->waterDepth) return FALSE;
+	if (underWater != wp->underWater) return FALSE;
+#if 0
+	if (position != wp->position) return FALSE;
+#endif
+	if (direction != wp->direction) return FALSE;
+
+#if 1
+	if (position != wp->position)
+	{
+		zVEC3 diff = position - wp->position;
+		//float epsilon = 0.001f;
+		float epsilon = 0.01f;
+
+		if (fabs(diff[VX]) >= epsilon || fabs(diff[VY]) >= epsilon || fabs(diff[VZ]) >= epsilon) return FALSE;
+	}
+#endif
+
+	return TRUE;
+}
+
+void zCWaypoint::EpsilonTest(zCWaypoint *wp)
+{
+	zVEC3 diff_position = position - wp->position;
+	zVEC3 diff_direction = direction - wp->direction;
+
+	printf("diff_position:\n");
+	printf("%f, %f, %f\n", fabs(diff_position[VX]), fabs(diff_position[VY]), fabs(diff_position[VZ]));
+	//printf("diff_direction:\n");
+	//printf("%f, %f, %f\n", fabs(diff_direction[VX]), fabs(diff_direction[VY]), fabs(diff_direction[VZ]));
+	printf("\n");
+}
+
+bool32 zCWay::IsHashEqual(zCWay *way)
+{
+	zCWaypoint *left1 = left->IsReference() ? (zCWaypoint *)left->ref : left;
+	zCWaypoint *left2 = way->left->IsReference() ? (zCWaypoint *)way->left->ref : way->left;
+
+	if (!left1->IsHashEqual(left2)) return FALSE;
+
+	zCWaypoint *right1 = right->IsReference() ? (zCWaypoint *)right->ref : right;
+	zCWaypoint *right2 = way->right->IsReference() ? (zCWaypoint *)way->right->ref : way->right;
+
+	if (!right1->IsHashEqual(right2)) return FALSE;
+
+	return TRUE;
+}
+
+bool32 zCWay::IsEqual(zCWay *way)
+{
+	zCWaypoint *left1 = left->IsReference() ? (zCWaypoint *)left->ref : left;
+	zCWaypoint *left2 = way->left->IsReference() ? (zCWaypoint *)way->left->ref : way->left;
+
+	zCWaypoint *right1 = right->IsReference() ? (zCWaypoint *)right->ref : right;
+	zCWaypoint *right2 = way->right->IsReference() ? (zCWaypoint *)way->right->ref : way->right;
+
+	if (wayIndex == 114 && way->wayIndex == 120
+		|| wayIndex == 115 && way->wayIndex == 121
+		|| wayIndex == 116 && way->wayIndex == 122
+		|| wayIndex == 462 && way->wayIndex == 468
+		|| wayIndex == 463 && way->wayIndex == 469
+	)
+	{
+		//left1->EpsilonTest(left2);
+		//right1->EpsilonTest(right2);
+	}
+
+	if (!left1->IsEqual(left2)) return FALSE;
+	if (!right1->IsEqual(right2)) return FALSE;
+
+	return TRUE;
+}
+
 zCWayNet::zCWayNet()
 {
 	waypoints = NULL;
@@ -100,7 +196,7 @@ bool32 zCWayNet::Unarchive(zCArchiver &arc)
 
 		if (!left || !right) return FALSE;
 
-		ways[i] = zNEW(zCWay)(left, right);
+		ways[i] = zNEW(zCWay)(left, right, i);
 	}
 
 	return TRUE;
@@ -126,18 +222,4 @@ void zCWayNet::Archive(zCArchiver &arc)
 		arc.WriteObject(ways[i]->left);
 		arc.WriteObject(ways[i]->right);
 	}
-}
-
-void zCWayNet::Hash()
-{
-	zCObject::Hash();
-
-	// does it even make sense to hash this ...
-
-	int32 waynetVersion = zWAYNET_VERSION;
-	hash = XXH64(&waynetVersion, sizeof(waynetVersion), hash);
-
-	hash = XXH64(&numWaypoints, sizeof(numWaypoints), hash);
-
-	hash = XXH64(&numWays, sizeof(numWays), hash);
 }

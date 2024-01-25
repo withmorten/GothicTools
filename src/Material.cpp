@@ -103,14 +103,14 @@ void zCMaterial::Archive(zCArchiver &arc)
 	zCObject::Archive(arc);
 
 	arc.WriteString("name", name);
-	arc.WriteEnum("matGroup", matGroup);
+	arc.WriteEnum("matGroup", "UNDEF;METAL;STONE;WOOD;EARTH;WATER;SNOW", matGroup);
 	arc.WriteColor("color", color);
 	arc.WriteFloat("smoothAngle", smoothAngle);
 
 	arc.WriteString("texture", texture);
 	arc.WriteString("texScale", texScale);
 	arc.WriteFloat("texAniFPS", texAniFPS);
-	arc.WriteEnum("texAniMapMode", texAniMapMode);
+	arc.WriteEnum("texAniMapMode", "NONE;LINEAR", texAniMapMode);
 	arc.WriteString("texAniMapDir", texAniMapDir);
 
 	arc.WriteBool("noCollDet", noCollDet);
@@ -127,15 +127,15 @@ void zCMaterial::Archive(zCArchiver &arc)
 		arc.WriteBool("environmentalMapping", environmentalMapping);
 		arc.WriteFloat("environmentalMappingStrength", environmentalMappingStrength);
 
-		arc.WriteEnum("waveMode", waveMode);
-		arc.WriteEnum("waveSpeed", waveSpeed);
+		arc.WriteEnum("waveMode", "NONE;AMBIENT_GROUND;GROUND;AMBIENT_WALL;WALL;ENV;AMBIENT_WIND;WIND", waveMode);
+		arc.WriteEnum("waveSpeed", "NONE;SLOW;NORMAL;FAST", waveSpeed);
 
 		arc.WriteFloat("waveMaxAmplitude", waveMaxAmplitude);
 		arc.WriteFloat("waveGridSize", waveGridSize);
 
 		arc.WriteBool("ignoreSunLight", ignoreSunLight);
 
-		arc.WriteEnum("alphaFunc", alphaFunc);
+		arc.WriteEnum("alphaFunc", "MAT_DEFAULT;NONE;BLEND;ADD;SUB;MUL;MUL2", alphaFunc);
 	}
 
 	arc.WriteRawFloat("defaultMapping", &defaultMapping, sizeof(defaultMapping));

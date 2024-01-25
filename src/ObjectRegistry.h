@@ -3,12 +3,39 @@
 #include "GothicTools.h"
 
 #include "Object.h"
-//#include "Vob.h"
-//#include "Visual.h"
-//#include "Model.h"
-//#include "ModelAni.h"
-//#include "MorphMesh.h"
-//#include "ProgMesh.h"
+
+class zCObjectMatches
+{
+public:
+	class zCObjectMatch
+	{
+	public:
+		int32 object1;
+		int32 object2;
+		zSTRING reason;
+	};
+
+	class zCWayMatch
+	{
+	public:
+		int32 way1;
+		int32 way2;
+		zSTRING reason;
+	};
+
+public:
+	zCArray<zCObjectMatch> objectMatches;
+	zCArray<zCWayMatch> wayMatches;
+
+public:
+	void Load(const char *fileName);
+
+	bool32 IsInObjectMatches1(int32 object1);
+	bool32 IsInObjectMatches2(int32 object2);
+
+	bool32 IsInWayMatches1(int32 way1);
+	bool32 IsInWayMatches2(int32 way2);
+};
 
 class zCObjectList
 {
@@ -20,7 +47,6 @@ public:
 	zCObjectList(const zSTRING &s) { className = s; }
 };
 
-// TODO does this need to be sorted by name?
 class zCObjectRegistry
 {
 public:

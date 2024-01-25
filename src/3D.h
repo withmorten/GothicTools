@@ -15,6 +15,30 @@ struct zTBBox3D
 public:
 	void SaveBIN(zCFileBIN &file) { file.BinWrite(this, sizeof(zTBBox3D)); }
 	void LoadBIN(zCFileBIN &file) { file.BinRead(this, sizeof(zTBBox3D)); }
+
+	float GetMinExtent() const
+	{
+		float min = FLT_MAX;
+
+		for (int32 i = 0; i < 3; i++)
+		{
+			float dim = maxs[i] - mins[i];
+
+			if (dim < min) min = dim;
+		}
+
+		return min / 2;
+	}
+
+	friend bool32 operator ==(const zTBBox3D &bbox1, const zTBBox3D &bbox2)
+	{
+		if (bbox1.mins != bbox2.mins) return FALSE;
+		if (bbox1.maxs != bbox2.maxs) return FALSE;
+
+		return TRUE;
+	}
+
+	friend bool32 operator !=(const zTBBox3D &bbox1, const zTBBox3D &bbox2) { return !(bbox1 == bbox2); }
 };
 
 class zCOBBox3D

@@ -1,5 +1,7 @@
 #include "GothicTools.h"
 
+uint32 gothicVersionIn = 0xFFFFFFFF;
+
 uint32 meshAndBspVersionIn = 0xFFFFFFFF;
 uint16 meshVersionIn = 0xFFFF;
 uint16 bspVersionIn = 0xFFFF;
@@ -12,6 +14,8 @@ uint32 modelHierarchyVersionIn = 0xFFFFFFFF;
 uint32 modelMeshVersionIn = 0xFFFFFFFF;
 uint16 modelAnimationVersionIn = 0xFFFF;
 uint32 modelScriptVersionIn = 0xFFFFFFFF;
+
+uint32 gothicVersionOut = 0xFFFFFFFF;
 
 uint32 meshAndBspVersionOut = 0xFFFFFFFF;
 uint16 meshVersionOut = 0xFFFF;
@@ -36,7 +40,7 @@ bool32 SetInVersions(int32 version)
 {
 	switch (version)
 	{
-	case 101:
+	case GOTHIC_VERSION_101:
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_01;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_01;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_01;
@@ -53,9 +57,9 @@ bool32 SetInVersions(int32 version)
 
 		break;
 
-	case 104:
-	case 108:
-	case 112:
+	case GOTHIC_VERSION_104:
+	case GOTHIC_VERSION_108:
+	case GOTHIC_VERSION_112:
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_04;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_04;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_04;
@@ -72,8 +76,8 @@ bool32 SetInVersions(int32 version)
 
 		break;
 
-	case 130:
-	case 260:
+	case GOTHIC_VERSION_130:
+	case GOTHIC_VERSION_260:
 		meshAndBspVersionIn = BSPMESH_VERSION_GOTHIC_1_30;
 		meshVersionIn = MESH_VERSION_GOTHIC_1_30;
 		bspVersionIn = BSP_VERSION_GOTHIC_1_30;
@@ -95,6 +99,8 @@ bool32 SetInVersions(int32 version)
 		return FALSE;
 	}
 
+	gothicVersionIn = version;
+
 	return TRUE;
 }
 
@@ -102,7 +108,7 @@ bool32 SetOutVersions(int32 version)
 {
 	switch (version)
 	{
-	case 101:
+	case GOTHIC_VERSION_101:
 		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_01;
 		meshVersionOut = MESH_VERSION_GOTHIC_1_01;
 		bspVersionOut = BSP_VERSION_GOTHIC_1_01;
@@ -119,9 +125,11 @@ bool32 SetOutVersions(int32 version)
 
 		break;
 
-	case 104:
-	case 108:
-	case 112:
+	case GOTHIC_VERSION_104:
+		xZenOut = FALSE;
+
+	case GOTHIC_VERSION_108:
+	case GOTHIC_VERSION_112:
 		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_04;
 		meshVersionOut = MESH_VERSION_GOTHIC_1_04;
 		bspVersionOut = BSP_VERSION_GOTHIC_1_04;
@@ -136,8 +144,8 @@ bool32 SetOutVersions(int32 version)
 
 		break;
 
-	case 130:
-	case 260:
+	case GOTHIC_VERSION_130:
+	case GOTHIC_VERSION_260:
 		meshAndBspVersionOut = BSPMESH_VERSION_GOTHIC_1_30;
 		meshVersionOut = MESH_VERSION_GOTHIC_1_30;
 		bspVersionOut = BSP_VERSION_GOTHIC_1_30;
@@ -158,6 +166,8 @@ bool32 SetOutVersions(int32 version)
 
 		return FALSE;
 	}
+
+	gothicVersionOut = version;
 
 	return TRUE;
 }

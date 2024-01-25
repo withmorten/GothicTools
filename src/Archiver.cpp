@@ -106,7 +106,7 @@ bool32 zCArchiver::ReadHeader()
 		file->ReadLine(s); // user
 		user = ParseHeaderLineArg(s);
 
-		if (user == "XZEN" && meshAndBspVersionIn != BSPMESH_VERSION_GOTHIC_1_01) xZenIn = TRUE;
+		if (user == "XZEN" && gothicVersionIn == GOTHIC_VERSION_108) xZenIn = TRUE;
 
 		file->ReadLine(s); // END
 	}
@@ -177,10 +177,10 @@ void zCArchiver::WriteHeader(int32 flags)
 	file->WriteLine("ZenGin Archive");
 	file->WriteLine("ver 1");
 	file->WriteLine("zCArchiverGeneric");
-	file->WriteLine(mode == zARC_MODE_ASCII ? "ASCII" : "BINARY");
+	file->WriteLine(mode == zARC_MODE_BINARY ? "BINARY" : "ASCII");
 	file->WriteLine("saveGame 0");
 
-	if (!(flags & zARC_FLAG_WRITE_BRIEF_HEADER))
+	if (!(flags & zARC_FLAG_WRITE_BRIEF_HEADER) && (!user.IsEmpty() && !date.IsEmpty()))
 	{
 		file->WriteLine("date " + date);
 
@@ -580,17 +580,7 @@ if (registry) registry->Insert(name::className, obj)
 #undef zNEW_OBJECT
 }
 
-void zCArchiver::PeekChunk(zTChunkRecord &chunk)
-{
-	int32 savePos = file->Pos();
-
-	ReadChunkStart(chunk);
-	PopChunk();
-
-	file->Seek(savePos);
-}
-
-void ParseChunkStartLine(zTChunkRecord &chunk, zSTRING &s)
+bool32 ParseChunkStartLine(zTChunkRecord &chunk, zSTRING &s)
 {
 	size_t p1 = s.find("[");
 	size_t p2 = s.find(" ", p1 + 1);
@@ -598,10 +588,14 @@ void ParseChunkStartLine(zTChunkRecord &chunk, zSTRING &s)
 	size_t p4 = s.find(" ", p3 + 1);
 	size_t p5 = s.find("]");
 
+	if (p1 == string::npos || p2 == string::npos || p3 == string::npos || p4 == string::npos || p5 == string::npos) return FALSE;
+
 	chunk.name = s.substr(p1 + 1, p2 - p1 - 1);
 	chunk.className = s.substr(p2 + 1, p3 - p2 - 1);
 	chunk.classVersion = zSTRING(s.substr(p3 + 1, p4 - p3 - 1)).ToInt();
 	chunk.objectIndex = zSTRING(s.substr(p4 + 1, p5 - p4 - 1)).ToInt();
+
+	return TRUE;
 }
 
 bool32 zCArchiver::ReadChunkStart(zTChunkRecord &chunk)
@@ -621,7 +615,7 @@ bool32 zCArchiver::ReadChunkStart(zTChunkRecord &chunk)
 		zSTRING s;
 		file->ReadLine(s, TRUE);
 
-		ParseChunkStartLine(chunk, s);
+		if (!ParseChunkStartLine(chunk, s)) return FALSE;
 	}
 	else if (mode == zARC_MODE_BINARY_SAFE)
 	{
@@ -629,7 +623,7 @@ bool32 zCArchiver::ReadChunkStart(zTChunkRecord &chunk)
 
 		ReadBinSafeValue(zARC2_ID_STRING, &s);
 
-		ParseChunkStartLine(chunk, s);
+		if (!ParseChunkStartLine(chunk, s)) return FALSE;
 	}
 
 	PushChunk();
@@ -648,9 +642,13 @@ bool32 zCArchiver::ReadChunkEnd()
 	else if (mode == zARC_MODE_ASCII)
 	{
 		zSTRING s;
-		file->ReadLine(s, TRUE);
+		file->ReadLine(s);
 
-		if (s != "[]") return FALSE;
+		zSTRING e;
+		for (int32 i = 0; i < chunkDepth; i++) e += "\t";
+		e += "[]";
+
+		if (s != e) return FALSE;
 	}
 	else if (mode == zARC_MODE_BINARY_SAFE)
 	{
@@ -663,10 +661,34 @@ bool32 zCArchiver::ReadChunkEnd()
 	return TRUE;
 }
 
+bool32 zCArchiver::PeekChunkStart(zTChunkRecord &chunk)
+{
+	int32 savePos = file->Pos();
+
+	bool32 result = ReadChunkStart(chunk);
+	PopChunk();
+
+	file->Seek(savePos);
+
+	return result;
+}
+
+bool32 zCArchiver::PeekChunkEnd()
+{
+	int32 savePos = file->Pos();
+
+	bool32 result = ReadChunkEnd();
+	PushChunk();
+
+	file->Seek(savePos);
+
+	return result;
+}
+
 zCObject *zCArchiver::ReadObject(const char *chunkName, zCObject *useThis)
 {
 	zTChunkRecord chunk;
-	PeekChunk(chunk);
+	PeekChunkStart(chunk);
 
 	if (chunk.name != chunkName) return NULL;
 
@@ -705,6 +727,10 @@ zCObject *zCArchiver::ReadObject(zCObject *useThis)
 
 bool32 zCArchiver::ReadASCIIValue(const char *entryName, const char *typeName, zSTRING &value)
 {
+	// TODO it seems like this will have to become a loop through all entries in chunk until we have found the right one
+	// since MDK surface.zen has values it shouldn't have and is thus unparsable :(
+	// but i think we can still just use the current file pos - since order is predictable still, and we will never get need a skipped value ...
+	// need to handle skipping remaining values though :(
 	int32 savePos = file->Pos();
 
 	zSTRING l;
@@ -719,9 +745,17 @@ bool32 zCArchiver::ReadASCIIValue(const char *entryName, const char *typeName, z
 
 	if (n != entryName || t != typeName)
 	{
+		// if not found, just recurse and try again, oCMobInter from MDK SURFACE.ZEN has state and stateTarget despite being 108
+		// TOOD need to check against chunkend here ...
+
+		if (!PeekChunkEnd() && ReadASCIIValue(entryName, typeName, value))
+		{
+			return TRUE;
+		}
+
 		file->Seek(savePos);
 
-		printf("ReadASCIIValue failed at %d, expected entry %s of type %s, but got %s of type %s\n", savePos, entryName, typeName, n.ToChar(), t.ToChar());
+		//printf("ReadASCIIValue failed at %d, expected entry '%s' of type '%s', but got '%s' of type '%s'\n", savePos, entryName, typeName, n.ToChar(), t.ToChar());
 
 		return FALSE;
 	}
@@ -736,7 +770,7 @@ bool32 zCArchiver::ReadBinSafeValue(const char *entryName, zTArchiveTypeID entry
 
 	if (s != entryName)
 	{
-		printf("ReadBinSafeValue failed at %d, expected entry %s\n", file->Pos(), entryName);
+		printf("ReadBinSafeValue failed at %d, expected entry '%s'\n", file->Pos(), entryName);
 
 		return FALSE;
 	}
@@ -751,7 +785,7 @@ bool32 zCArchiver::ReadBinSafeValue(zTArchiveTypeID entryType, void *buffer)
 
 	if (entryType != archiveTypeID)
 	{
-		printf("ReadBinSafeValue failed at %d, expected type %d, but got type %d\n", file->Pos(), entryType, archiveTypeID);
+		printf("ReadBinSafeValue failed at %d, expected type '%d', but got type '%d'\n", file->Pos(), entryType, archiveTypeID);
 
 		return FALSE;
 	}
@@ -1145,7 +1179,7 @@ void zCArchiver::WriteChunkStart(zTChunkRecord &chunk)
 		file->Write(chunk.name);
 		file->Write(chunk.className);
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		zSTRING s = "[" + chunk.name + " " + chunk.className + " " + zSTRING(chunk.classVersion) + " " + zSTRING(chunk.objectIndex) + "]";
 
@@ -1169,7 +1203,7 @@ void zCArchiver::WriteChunkEnd()
 
 		file->Seek(savePos);
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		file->WriteLineIndented(chunkDepth, "[]");
 	}
@@ -1185,9 +1219,21 @@ void zCArchiver::WriteObject(zCObject *object)
 {
 	WriteChunkStart(object->chunk);
 
-	if (!object->IsNull() && !object->IsReference())
+	if (mode != zARC_MODE_ASCII_DIFF)
 	{
-		object->Archive(*this);
+		if (!object->IsNull() && !object->IsReference())
+		{
+			object->Archive(*this);
+		}
+	}
+	else
+	{
+		if (!object->IsNull())
+		{
+			object = object->IsReference() ? object->ref : object;
+
+			object->Archive(*this);
+		}
 	}
 
 	WriteChunkEnd();
@@ -1209,7 +1255,7 @@ void zCArchiver::WriteInt(const char *entryName, int32 value)
 	{
 		file->Write(&value, sizeof(value));
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		WriteASCIILine(entryName, "int", zSTRING(value));
 	}
@@ -1225,6 +1271,10 @@ void zCArchiver::WriteByte(const char *entryName, byte value)
 	{
 		WriteASCIILine(entryName, "int", zSTRING(value));
 	}
+	else if (mode == zARC_MODE_ASCII_DIFF)
+	{
+		WriteASCIILine(entryName, "byte", zSTRING(value));
+	}
 }
 
 void zCArchiver::WriteWord(const char *entryName, uint16 value)
@@ -1237,6 +1287,10 @@ void zCArchiver::WriteWord(const char *entryName, uint16 value)
 	{
 		WriteASCIILine(entryName, "int", zSTRING(value));
 	}
+	else if (mode == zARC_MODE_ASCII_DIFF)
+	{
+		WriteASCIILine(entryName, "word", zSTRING(value));
+	}
 }
 
 void zCArchiver::WriteFloat(const char *entryName, float value)
@@ -1245,7 +1299,7 @@ void zCArchiver::WriteFloat(const char *entryName, float value)
 	{
 		file->Write(&value, sizeof(value));
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		WriteASCIILine(entryName, "float", zSTRING(value));
 	}
@@ -1262,6 +1316,10 @@ void zCArchiver::WriteBool(const char *entryName, bool32 value)
 	{
 		WriteASCIILine(entryName, "bool", zSTRING(value));
 	}
+	else if (mode == zARC_MODE_ASCII_DIFF)
+	{
+		WriteASCIILine(entryName, "bool", value ? zSTRING("TRUE") : zSTRING("FALSE"));
+	}
 }
 
 void zCArchiver::WriteString(const char *entryName, zSTRING &value)
@@ -1270,7 +1328,7 @@ void zCArchiver::WriteString(const char *entryName, zSTRING &value)
 	{
 		file->Write(value);
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		WriteASCIILine(entryName, "string", value);
 	}
@@ -1282,7 +1340,7 @@ void zCArchiver::WriteVec3(const char *entryName, zVEC3 &value)
 	{
 		file->Write(&value, sizeof(value));
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		WriteASCIILine(entryName, "vec3", zSTRING(value[VX]) + " " + zSTRING(value[VY]) + " " + zSTRING(value[VZ]));
 	}
@@ -1294,13 +1352,13 @@ void zCArchiver::WriteColor(const char *entryName, zCOLOR &value)
 	{
 		file->Write(&value, sizeof(value));
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		WriteASCIILine(entryName, "color", zSTRING(value.r) + " " + zSTRING(value.g) + " " + zSTRING(value.b) + " " + zSTRING(value.alpha));
 	}
 }
 
-void zCArchiver::WriteEnum(const char *entryName, int32 value)
+void zCArchiver::WriteEnum(const char *entryName, const char *enumChoices, int32 value)
 {
 	if (mode == zARC_MODE_BINARY)
 	{
@@ -1311,9 +1369,15 @@ void zCArchiver::WriteEnum(const char *entryName, int32 value)
 	{
 		WriteASCIILine(entryName, "enum", zSTRING(value));
 	}
+	else if (mode == zARC_MODE_ASCII_DIFF)
+	{
+		zSTRING e = enumChoices;
+
+		WriteASCIILine(entryName, "enum", e.PickWord(value + 1, ";", ";") + ":" + zSTRING(value));
+	}
 }
 
-void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size)
+void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size, bool32 rawFloat)
 {
 	if (mode == zARC_MODE_BINARY)
 	{
@@ -1321,6 +1385,7 @@ void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size)
 	}
 	else if (mode == zARC_MODE_ASCII)
 	{
+raw:;
 		zSTRING value;
 		byte *sourceBuffer = (byte *)buffer;
 
@@ -1334,6 +1399,17 @@ void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size)
 
 		WriteASCIILine(entryName, "raw", value);
 	}
+	else if (mode == zARC_MODE_ASCII_DIFF)
+	{
+		if (rawFloat)
+		{
+			WriteRawFloat(entryName, buffer, size);
+		}
+		else
+		{
+			goto raw;
+		}
+	}
 }
 
 void zCArchiver::WriteRawFloat(const char *entryName, void *buffer, uint32 size)
@@ -1342,7 +1418,7 @@ void zCArchiver::WriteRawFloat(const char *entryName, void *buffer, uint32 size)
 	{
 		file->Write(buffer, size);
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		zSTRING value;
 		uint32 numFloats = size / sizeof(float);

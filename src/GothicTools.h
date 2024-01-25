@@ -17,6 +17,7 @@
 #include <math.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <intrin.h>
 
 typedef int8_t int8;
 typedef uint8_t uint8;
@@ -44,6 +45,13 @@ typedef int32 bool32;
 
 #define zOK 0
 #define zERROR 1
+
+#define GOTHIC_VERSION_101 101 // 1.01d, 1.01e
+#define GOTHIC_VERSION_104 104 // 1.04d
+#define GOTHIC_VERSION_108 108 // 1.06j - 1.08k
+#define GOTHIC_VERSION_112 112 // 1.12f
+#define GOTHIC_VERSION_130 130 // 1.30
+#define GOTHIC_VERSION_260 260 // 2.6
 
 #define TEXTURE_FILE_VERSION_GOTHIC_1_01 ((uint16)0x0000)
 #define TEXTURE_FILE_VERSION_GOTHIC_1_04 TEXTURE_FILE_VERSION_GOTHIC_1_01
@@ -121,6 +129,8 @@ typedef int32 bool32;
 #include "Algebra.h"
 #include "Disk.h"
 
+extern uint32 gothicVersionIn;
+
 extern uint32 meshAndBspVersionIn;
 extern uint16 meshVersionIn;
 extern uint16 bspVersionIn;
@@ -133,6 +143,8 @@ extern uint32 modelHierarchyVersionIn;
 extern uint32 modelMeshVersionIn;
 extern uint16 modelAnimationVersionIn;
 extern uint32 modelScriptVersionIn;
+
+extern uint32 gothicVersionOut;
 
 extern uint32 meshAndBspVersionOut;
 extern uint16 meshVersionOut;

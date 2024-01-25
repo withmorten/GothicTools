@@ -8,7 +8,7 @@
 
 #define zOBJECT_DECLARATION(name) \
 static const zSTRING className; \
-virtual const zSTRING &GetClassName() { return name::className; }
+virtual const zSTRING &GetClassName() { return name::className; } \
 
 #define zOBJECT_DEFINITION(name) \
 const zSTRING name::className = # name
@@ -24,18 +24,20 @@ public:
 	zCArray<zCObject *> refs; // these objects reference me
 
 	XXH64_hash_t hash; // for easy equality check
+	bool32 found; // for checking if this object was previously found ...
 
 public:
-	zCObject() { ref = NULL; hash = 0; }
+	zCObject() { ref = NULL; hash = 0; found = FALSE; }
 	virtual ~zCObject() { };
 
 	virtual bool32 Unarchive(zCArchiver &arc) { return TRUE; }
 	virtual void Archive(zCArchiver &arc) { }
-	virtual void Hash() { }
+	virtual void Hash();
+	virtual bool32 IsEqual(zCObject *obj); // if hash equal has failed - also has special logic for some classes
 
 	bool32 IsNull() { return chunk.IsNull(); }
 	bool32 IsReference() { return chunk.IsReference(); }
-	bool32 IsEqual(zCObject *obj);
+	bool32 IsHashEqual(zCObject *obj);
 };
 
 class zCAIBase : public zCObject

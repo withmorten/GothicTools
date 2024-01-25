@@ -15,6 +15,7 @@ enum
 	ARG_VERSION_IN,
 	ARG_OPTIONAL_FOLDER_OUT, // not really optional
 	ARG_OPTIONAL_VERSION_OUT, // not really optional
+	ARG_NUM,
 };
 
 int main(int argc, const char **argv)
@@ -69,7 +70,7 @@ int main(int argc, const char **argv)
 				// If gothic 2, check if msb exists, if not, parse mds and write msb
 				// also check if mds is newer than msb, only THEN write
 
-				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_30)
+				if (gothicVersionOut >= GOTHIC_VERSION_130)
 				{
 					zSTRING msbName = file_in.file->filename + ".MSB";
 					msbName.Upper();
@@ -124,7 +125,28 @@ int main(int argc, const char **argv)
 				// TODO: Check line 196 in G2 Humans_1hST1.mds ... comment at the end of the line, does it get ignored by game or not? yes it does!
 				// also problematic: fireplace_ground, fireplace_high
 
-				if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_04)
+				if (gothicVersionOut >= GOTHIC_VERSION_130)
+				{
+					zCModelPrototype *msb = zNEW(zCModelPrototype);
+
+					if (msb->LoadModelScriptMSB(file_in))
+					{
+						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
+
+						msb->SaveModelScriptMSB(file_out);
+
+						printf("Saved %s\n", file_out.file->basename.ToChar());
+					}
+					else
+					{
+						printf("%s could not be loaded\n", file_in.file->basename.ToChar());
+
+						return zERROR;
+					}
+
+					zDELETE(msb);
+				}
+				else if (gothicVersionOut >= GOTHIC_VERSION_104)
 				{
 					zSTRING mdsName = file_in.file->filename + ".MDS";
 					mdsName.Upper();
@@ -172,27 +194,6 @@ int main(int argc, const char **argv)
 							return zERROR;
 						}
 					}
-				}
-				else if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_30)
-				{
-					zCModelPrototype *msb = zNEW(zCModelPrototype);
-
-					if (msb->LoadModelScriptMSB(file_in))
-					{
-						zCFileBIN file_out(argv[ARG_OPTIONAL_FOLDER_OUT] + zSTRING("/_compiled/") + file_in.file->filename + "." + file_in.file->extension, TRUE);
-
-						msb->SaveModelScriptMSB(file_out);
-
-						printf("Saved %s\n", file_out.file->basename.ToChar());
-					}
-					else
-					{
-						printf("%s could not be loaded\n", file_in.file->basename.ToChar());
-
-						return zERROR;
-					}
-
-					zDELETE(msb);
 				}
 			}
 			else if (extension == "MMB")

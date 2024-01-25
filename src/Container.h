@@ -66,10 +66,22 @@ public:
 		AllocDelta(size - numAlloc);
 	}
 
+	bool32 IsEmpty() const { return !numInArray; }
+
 	const T &operator[](const int32 nr) const { return array[nr]; }
 	T &operator[](const int32 nr) { return array[nr]; }
 
-	zCArray<T> &operator=(const zCArray<T> &array2)
+	friend bool32 operator ==(const zCArray<T> &array1, const zCArray<T> &array2)
+	{
+		if (array1.numInArray != array2.numInArray) return FALSE;
+		if (memcmp(array1.array, array2.array, sizeof(T) * array1.numInArray)) return FALSE;
+
+		return TRUE;
+	}
+
+	friend bool32 operator !=(const zCArray<T> &array1, const zCArray<T> &array2) { return !(array1 == array2); }
+
+	zCArray<T> &operator =(const zCArray<T> &array2)
 	{
 		EmptyList();
 		AllocAbs(array2.numInArray);

@@ -135,7 +135,7 @@ void zCProgMeshProto::SaveMatList(zCFileBIN &file)
 {
 	zCArchiver arc;
 	arc.mode = zARC_MODE_BINARY;
-	arc.objCount = meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : numSubMeshes;
+	arc.objCount = gothicVersionOut <= GOTHIC_VERSION_101 ? 0 : numSubMeshes;
 	arc.file = file.file;
 
 	arc.WriteHeader(zARC_FLAG_WRITE_BRIEF_HEADER);

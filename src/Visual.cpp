@@ -19,7 +19,7 @@ bool32 zCDecal::Unarchive(zCArchiver &arc)
 	arc.ReadEnum("decalAlphaFunc", decalAlphaFunc);
 	arc.ReadFloat("decalTexAniFPS", decalTexAniFPS);
 
-	if (meshAndBspVersionIn == BSPMESH_VERSION_GOTHIC_1_30)
+	if (gothicVersionIn >= GOTHIC_VERSION_130)
 	{
 		arc.ReadByte("decalAlphaWeight", decalAlphaWeight);
 		arc.ReadBool("ignoreDayLight", ignoreDayLight);
@@ -41,10 +41,10 @@ void zCDecal::Archive(zCArchiver &arc)
 	arc.WriteRawFloat("decalDim", &decalDim, sizeof(decalDim));
 	arc.WriteRawFloat("decalOffset", &decalOffset, sizeof(decalOffset));
 	arc.WriteBool("decal2Sided", decal2Sided);
-	arc.WriteEnum("decalAlphaFunc", decalAlphaFunc);
+	arc.WriteEnum("decalAlphaFunc", "MAT_DEFAULT;NONE;BLEND;ADD;SUB;MUL;MUL2", decalAlphaFunc);
 	arc.WriteFloat("decalTexAniFPS", decalTexAniFPS);
 
-	if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_30)
+	if (gothicVersionOut >= GOTHIC_VERSION_130)
 	{
 		arc.WriteByte("decalAlphaWeight", decalAlphaWeight);
 		arc.WriteBool("ignoreDayLight", ignoreDayLight);

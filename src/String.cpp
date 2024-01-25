@@ -127,7 +127,7 @@ const char *zSTRING::PickWordPos(size_t num, const zSTRING &trenn, const zSTRING
 	return NULL;
 }
 
-zSTRING zSTRING::PickWorld_Old(size_t num, const zSTRING &trenn)
+zSTRING zSTRING::PickWord_Old(size_t num, const zSTRING &trenn)
 {
 	return PickWord(num, trenn, " ");
 }

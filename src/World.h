@@ -38,6 +38,4 @@ public:
 
 	void ArchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs);
 	void Archive(zCArchiver &arc);
-
-	void Hash();
 };

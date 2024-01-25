@@ -13,6 +13,7 @@ enum
 	ARG_OPTIONAL_0,
 	ARG_OPTIONAL_1,
 	ARG_OPTIONAL_2,
+	ARG_NUM,
 };
 
 int main(int argc, const char **argv)

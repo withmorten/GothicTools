@@ -46,6 +46,7 @@ public:
 	char GetLastChar();
 
 	void Clear() { erase(); }
+	bool32 IsEmpty() const { return empty(); }
 
 	size_t Length() const { return size(); }
 	char *ToChar() const { return (char *)c_str(); }
@@ -60,7 +61,7 @@ public:
 
 	zSTRING PickWord(size_t num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 	const char *PickWordPos(size_t num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
-	zSTRING PickWorld_Old(size_t num, const zSTRING &trenn);
+	zSTRING PickWord_Old(size_t num, const zSTRING &trenn);
 
 	zSTRING PickWordCutMarks(size_t num, const zSTRING &trenn, const zSTRING &skip = zSTR_SKIP) const;
 

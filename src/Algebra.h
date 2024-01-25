@@ -78,8 +78,10 @@ public:
 
 	float &operator [](const int32 i) { return n[i]; }
 	float operator [](const int32 i) const { return n[i]; }
+	friend bool32 operator ==(const zVEC2 &a, const zVEC2 &b) { return (a[VX] == b[VX]) && (a[VY] == b[VY]); }
+	friend bool32 operator !=(const zVEC2 &a, const zVEC2 &b) { return !(a == b); }
 
-	void SetByDescription(zSTRING &desc) { n[VX] = desc.PickWorld_Old(1, zSTR_EMPTY).ToFloat(); n[VY] = desc.PickWorld_Old(2, zSTR_EMPTY).ToFloat(); }
+	void SetByDescription(zSTRING &desc) { n[VX] = desc.PickWord_Old(1, zSTR_EMPTY).ToFloat(); n[VY] = desc.PickWord_Old(2, zSTR_EMPTY).ToFloat(); }
 	zSTRING GetDescription() const { zSTRING s; zSTRING s1(n[0], MAX_FRAC); zSTRING s2(" "); zSTRING s3(n[1], MAX_FRAC); s += s1 + s2 + s3; return s; }
 };
 
@@ -97,6 +99,7 @@ public:
 	float operator [](const int32 i) const { return n[i]; }
 	friend bool32 operator ==(const zVEC3 &a, const zVEC3 &b) { return (a[VX] == b[VX]) && (a[VY] == b[VY]) && (a[VZ] == b[VZ]); }
 	friend bool32 operator !=(const zVEC3 &a, const zVEC3 &b) { return !(a == b); }
+	friend zVEC3 operator -(const zVEC3 &a, const zVEC3 &b) { return zVEC3(a.n[VX] - b.n[VX], a.n[VY] - b.n[VY], a.n[VZ] - b.n[VZ]); }
 };
 
 class zVEC4
@@ -111,6 +114,8 @@ public:
 
 	float &operator [](const int32 i) { return n[i]; }
 	float operator [](const int32 i) const { return n[i]; }
+	friend bool32 operator ==(const zVEC4 &a, const zVEC4 &b) { return (a[VX] == b[VX]) && (a[VY] == b[VY]) && (a[VZ] == b[VZ]) && (a[VW] == b[VW]); }
+	friend bool32 operator !=(const zVEC4 &a, const zVEC4 &b) { return !(a == b); }
 };
 
 typedef zVEC2 zPOINT2;
@@ -124,11 +129,15 @@ public:
 
 public:
 	zMAT3() { /* v[0] = zVEC3(); v[1] = zVEC3(); v[2] = zVEC3(); */ }
-	zMAT3(const float f) { v[0] = zVEC3(f); v[1] = zVEC3(f); v[2] = zVEC3(f); v[3] = zVEC3(f); }
-	zMAT3(const zVEC3 &v0, const zVEC3 &v1, const zVEC3 &v2, const zVEC3 &v3) { v[0] = v0; v[1] = v1; v[2] = v2; v[3] = v3; }
+	zMAT3(const float f) { v[0] = zVEC3(f); v[1] = zVEC3(f); v[2] = zVEC3(f); }
+	zMAT3(const zVEC3 &v0, const zVEC3 &v1, const zVEC3 &v2) { v[0] = v0; v[1] = v1; v[2] = v2; }
 
 	zVEC3 &operator [](const int32 i) { return v[i]; }
 	zVEC3 operator [](const int32 i) const { return v[i]; }
+
+	friend bool32 operator ==(const zMAT3 &a, const zMAT3 &b) { return a.v[0] == b.v[0] && a.v[1] == b.v[1] && a.v[2] == b.v[2]; }
+	friend bool32 operator !=(const zMAT3 &a, const zMAT3 &b) { return !(a == b); }
+	friend zMAT3 operator -(const zMAT3 &a, const zMAT3 &b) { return zMAT3(a.v[0] - b.v[0], a.v[1] - b.v[1], a.v[2] - b.v[2]); }
 };
 
 class zMAT4
@@ -143,6 +152,13 @@ public:
 
 	zVEC4 &operator [](const int32 i) { return v[i]; }
 	zVEC4 operator [](const int32 i) const { return v[i]; }
+
+	friend bool32 operator ==(const zMAT4 &a, const zMAT4 &b)
+	{
+		return a.v[0] == b.v[0] && a.v[1] == b.v[1] && a.v[2] == b.v[2] && a.v[3] == b.v[3];
+	}
+
+	friend bool32 operator!=(const zMAT4 &b, const zMAT4 &a) { return !(b == a); }
 };
 
 typedef zMAT3 zMATRIX3;

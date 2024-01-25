@@ -6,6 +6,8 @@
 #include "3D.h"
 #include "Material.h"
 
+const float VOB_IGNORE_MIN_EXTEND = 10.0f;
+
 #pragma pack (push, 1)
 struct zSVobArcRawDataG1
 {
@@ -135,6 +137,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 enum zTCamTrj_KeyMotionType
@@ -174,6 +177,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 enum zTSplLerpMode
@@ -234,6 +238,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCVobLevelCompo : public zCVob
@@ -294,20 +299,21 @@ public:
 
 	bool32 turnedOn;
 
-	zSTRING rangeAniScale;
+	zCArray<float> rangeAniScale;
 	float rangeAniFPS;
 	bool32 rangeAniSmooth;
 
-	zSTRING colorAniList;
+	zCArray<zCOLOR> colorAniList;
 	float colorAniFPS;
 	bool32 colorAniSmooth;
 
 	bool32 canMove;
 
 public:
-	void Unarchive(zCArchiver &arc);
+	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	XXH64_hash_t Hash(XXH64_hash_t hash);
+	bool32 IsEqual(zCVobLightData &lightData);
 };
 
 class zCVobLight : public zCVob
@@ -323,6 +329,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCTriggerBase : public zCVob
@@ -337,6 +344,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCCodeMaster : public zCTriggerBase
@@ -364,6 +372,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCMessageFilter : public zCTriggerBase
@@ -391,6 +400,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCEventMover
@@ -419,6 +429,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCTriggerWorldStart : public zCTriggerBase
@@ -433,6 +444,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCTriggerUntouch : public zCTriggerBase
@@ -493,6 +505,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 enum zTMoverBehavior
@@ -563,6 +576,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCTriggerTeleport : public zCTrigger
@@ -577,6 +591,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCTriggerList : public zCTrigger
@@ -604,6 +619,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCCSTrigger : public zCTrigger
@@ -625,6 +641,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCTriggerScript : public zCTrigger
@@ -639,6 +656,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCEffect : public zCVob
@@ -661,6 +679,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCMusicControler : public zCEffect
@@ -683,6 +702,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCTouchDamage : public zCEffect
@@ -721,6 +741,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCTouchDamage : public zCTouchDamage
@@ -747,6 +768,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCVobAnimate : public zCEffect
@@ -761,6 +783,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCVobLensFlare : public zCEffect
@@ -775,6 +798,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCVobScreenFX : public zCEffect
@@ -805,6 +829,10 @@ class zCZone : public zCVob
 {
 public:
 	zOBJECT_DECLARATION(zCZone);
+
+public:
+	// TODO instead of IsEqual, for this type include the hash of bbox3DWS
+	bool32 IsEqual(zCObject *obj); // required for bbox3DWS
 };
 
 class zCZoneZFog : public zCZone
@@ -823,6 +851,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCZoneZFogDefault : public zCZoneZFog
@@ -844,6 +873,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCZoneVobFarPlaneDefault : public zCZoneVobFarPlane
@@ -888,6 +918,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCVobSoundDaytime : public zCVobSound
@@ -904,6 +935,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 enum
@@ -951,6 +983,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class zCZoneReverbDefault : public zCZoneReverb
@@ -982,6 +1015,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCZoneMusicDefault : public oCZoneMusic
@@ -1009,6 +1043,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCVob : public zCVob
@@ -1029,6 +1064,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 enum oTSndMaterial
@@ -1063,6 +1099,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCMobInter : public oCMOB
@@ -1084,6 +1121,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCMobBed : public oCMobInter
@@ -1105,6 +1143,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCMobItemSlot : public oCMobInter
@@ -1119,6 +1158,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCMobLadder : public oCMobInter
@@ -1141,6 +1181,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCMobContainer : public oCMobLockable
@@ -1155,6 +1196,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };
 
 class oCMobDoor : public oCMobLockable
@@ -1187,4 +1229,5 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
+	bool32 IsEqual(zCObject *obj);
 };

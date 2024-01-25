@@ -98,4 +98,3 @@ public:
 	void Archive(zCArchiver &arc);
 	void Hash();
 };
-

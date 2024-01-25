@@ -11,10 +11,11 @@ enum { zARC_VERSION = 2 };
 
 enum zTArchiveMode
 {
-	zARC_MODE_BINARY,
-	zARC_MODE_ASCII,
+	zARC_MODE_BINARY, // read / write
+	zARC_MODE_ASCII, // read / write
 	zARC_MODE_ASCII_PROPS, // not supported
-	zARC_MODE_BINARY_SAFE,
+	zARC_MODE_BINARY_SAFE, // read
+	zARC_MODE_ASCII_DIFF, // write, slightly more human readable output, doesn't exist originally
 };
 
 enum zTArchiveFlags
@@ -94,9 +95,11 @@ public:
 	void PushChunk() { chunkDepth++; }
 	void PopChunk() { chunkDepth--; }
 
-	void PeekChunk(zTChunkRecord &chunk);
 	bool32 ReadChunkStart(zTChunkRecord &chunk);
 	bool32 ReadChunkEnd();
+	bool32 PeekChunkStart(zTChunkRecord &chunk);
+	bool32 PeekChunkEnd();
+
 	zCObject *ReadObject(zCObject *useThis = NULL);
 	zCObject *ReadObject(const char *chunkName, zCObject *useThis = NULL);
 
@@ -133,8 +136,8 @@ public:
 	void WriteString(const char *entryName, zSTRING &value);
 	void WriteVec3(const char *entryName, zVEC3 &value);
 	void WriteColor(const char *entryName, zCOLOR &value);
-	template<typename E> void WriteEnum(const char *entryName, E value) { WriteEnum(entryName, (int32)value); }
-	void WriteEnum(const char *entryName, int32 value);
-	void WriteRaw(const char *entryName, void *buffer, uint32 size);
+	template<typename E> void WriteEnum(const char *entryName, const char *enumChoices, E value) { WriteEnum(entryName, enumChoices, (int32)value); }
+	void WriteEnum(const char *entryName, const char *enumChoices, int32 value);
+	void WriteRaw(const char *entryName, void *buffer, uint32 size, bool32 rawFloat = FALSE);
 	void WriteRawFloat(const char *entryName, void *buffer, uint32 size);
 };

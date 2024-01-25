@@ -99,6 +99,7 @@ project "GothicTools"
 	files { "src/Texture.cpp" }
 	files { "src/Visual.cpp" }
 	files { "src/Vob.cpp" }
+	files { "src/VobDiff.cpp" }
 	files { "src/WayNet.cpp" }
 	files { "src/World.cpp" }
 
@@ -132,16 +133,16 @@ project "GothicAnims"
 		postbuildcommands { '{COPYFILE} "%{cfg.buildtarget.abspath}" "' .. os.getenv("BIN") .. "/" .. '%{cfg.buildtarget.name}"' }
 	end
 
-project "GothicTest"
+project "GothicDiff"
 	kind "ConsoleApp"
 	language "C++"
-	targetname "GothicTest"
+	targetname "GothicDiff"
 	targetdir "bin/%{cfg.platform}/%{cfg.buildcfg}"
 
 	dependson { "GothicTools" }
 	links { "GothicTools" }
 
-	files { "src/GothicTest.cpp" }
+	files { "src/GothicDiff.cpp" }
 
 	if (os.getenv("BIN") ~= nil) then
 		postbuildcommands { '{COPYFILE} "%{cfg.buildtarget.abspath}" "' .. os.getenv("BIN") .. "/" .. '%{cfg.buildtarget.name}"' }

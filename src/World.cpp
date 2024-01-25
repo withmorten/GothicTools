@@ -199,10 +199,3 @@ void zCWorld::Archive(zCArchiver &arc)
 	arc.WriteChunkStart("EndMarker");
 	arc.WriteChunkEnd();
 }
-
-void zCWorld::Hash()
-{
-	zCObject::Hash();
-
-	// not sure what to hash here ...
-}

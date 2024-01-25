@@ -62,16 +62,16 @@ zCMesh::~zCMesh()
 
 bool32 zCMesh::SaveMSH(zCFileBIN &file)
 {
-	if (meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 && numVert > 65535)
+	if (gothicVersionOut <= GOTHIC_VERSION_104 && numVert > 65535)
 	{
-		printf("Mesh version 101 only supports 65535 vertices, %d given\n", numVert);
+		printf("Gothic version 101/104 only supports 65535 vertices, %d given\n", numVert);
 
 		return FALSE;
 	}
 
-	if ((meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_04 && numVert > 65535) && !xZenOut)
+	if ((gothicVersionOut == GOTHIC_VERSION_108 && numVert > 65535) && !xZenOut)
 	{
-		printf("Mesh version 108 only supports 65535 vertices, %d given, try appending \"xzen\" to the command\n", numVert);
+		printf("Gothic version 108 only supports 65535 vertices, %d given, try appending \"xzen\" to the command\n", numVert);
 
 		return FALSE;
 	}
@@ -304,7 +304,7 @@ void zCMesh::SaveMatList(zCFileBIN &file)
 {
 	zCArchiver arc;
 	arc.mode = zARC_MODE_BINARY;
-	arc.objCount = meshAndBspVersionOut == BSPMESH_VERSION_GOTHIC_1_01 ? 0 : matList.numInArray;
+	arc.objCount = gothicVersionOut <= GOTHIC_VERSION_101 ? 0 : matList.numInArray;
 	arc.file = file.file;
 
 	arc.WriteHeader(zARC_FLAG_WRITE_BRIEF_HEADER);
