@@ -199,3 +199,16 @@ void zCWorld::Archive(zCArchiver &arc)
 	arc.WriteChunkStart("EndMarker");
 	arc.WriteChunkEnd();
 }
+
+zCVob *zCWorld::GetVob(int32 objectIndex)
+{
+	for (int32 i = 0; i < vobs.numInArray; i++)
+	{
+		if (vobs[i]->chunk.objectIndex == objectIndex)
+		{
+			return vobs[i];
+		}
+	}
+
+	return NULL;
+}

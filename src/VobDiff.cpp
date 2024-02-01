@@ -109,6 +109,18 @@ bool32 zCVob::IsEqual(zCObject *obj)
 		//float epsilon = 0.001f;
 		float epsilon = 0.01f;
 
+		// TODO unify these epsilons
+#ifdef SPECIAL_FLAKY_VOB_EPSILON
+		if (visualName == "FIRE_SMOKE.pfx" && vob->visualName == "FIRE_SMOKE.pfx")
+		{
+			epsilon = 1.0f;
+		}
+		else if (presetName == "FIREE" && vob->presetName == "FIREE")
+		{
+			epsilon = 0.1f;
+		}
+#endif
+
 		if (fabs(diff[0][VX]) >= epsilon || fabs(diff[0][VY]) >= epsilon || fabs(diff[0][VZ]) >= epsilon
 			&& fabs(diff[1][VX]) >= epsilon || fabs(diff[1][VY]) >= epsilon || fabs(diff[1][VZ]) >= epsilon
 			&& fabs(diff[2][VX]) >= epsilon || fabs(diff[2][VY]) >= epsilon || fabs(diff[2][VZ]) >= epsilon)
@@ -123,6 +135,18 @@ bool32 zCVob::IsEqual(zCObject *obj)
 	{
 		zPOINT3 diff = trafoOSToWSPos - vob->trafoOSToWSPos;
 		float epsilon = 0.01f;
+
+		// TODO unify these epsilons
+#ifdef SPECIAL_FLAKY_VOB_EPSILON
+		if (visualName == "FIRE_SMOKE.pfx" && vob->visualName == "FIRE_SMOKE.pfx")
+		{
+			epsilon = 1.0f;
+		}
+		else if (presetName == "FIREE" && vob->presetName == "FIREE")
+		{
+			epsilon = 0.1f;
+		}
+#endif
 
 		if (fabs(diff[VX]) >= epsilon || fabs(diff[VY]) >= epsilon || fabs(diff[VZ]) >= epsilon) return FALSE;
 	}

@@ -21,8 +21,6 @@ public:
 	void Archive(zCArchiver &arc);
 	void Hash();
 	bool32 IsEqual(zCObject *obj);
-
-	void EpsilonTest(zCWaypoint *wp);
 };
 
 class zCWay

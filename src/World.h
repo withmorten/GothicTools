@@ -38,4 +38,6 @@ public:
 
 	void ArchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs);
 	void Archive(zCArchiver &arc);
+
+	zCVob *GetVob(int32 objectIndex);
 };
