@@ -6,9 +6,9 @@ bool32 zCMaterial::Unarchive(zCArchiver &arc)
 {
 	if (!zCObject::Unarchive(arc)) return FALSE;
 
-	if (chunk.classVersion != materialVersionIn
-		&& ((materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_30 && chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD1)
-		&& (materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_30 && chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD2)))
+	if (classVersion != materialVersionIn
+		&& ((materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_30 && classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD1)
+		&& (materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_30 && classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD2)))
 	{
 		printf("Wrong Material version\n");
 
@@ -33,7 +33,7 @@ bool32 zCMaterial::Unarchive(zCArchiver &arc)
 	arc.ReadString("detailObject", detailObject);
 
 	if (materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_01 || materialVersionIn == MATERIAL_CLASS_VERSION_GOTHIC_1_04
-		|| chunk.classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD1 || chunk.classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD2)
+		|| classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD1 || classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD2)
 	{
 		alphaFunc = color.alpha == 0xFF ? zRND_ALPHA_FUNC_NONE : zRND_ALPHA_FUNC_BLEND;
 
@@ -54,7 +54,7 @@ bool32 zCMaterial::Unarchive(zCArchiver &arc)
 		arc.ReadEnum("waveMode", waveMode);
 		arc.ReadEnum("waveSpeed", waveSpeed);
 
-		if (chunk.classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD1)
+		if (classVersion == MATERIAL_CLASS_VERSION_GOTHIC_OLD1)
 		{
 			uint16 w;
 
@@ -72,7 +72,7 @@ bool32 zCMaterial::Unarchive(zCArchiver &arc)
 
 		arc.ReadBool("ignoreSunLight", ignoreSunLight);
 
-		if (chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD1 && chunk.classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD2)
+		if (classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD1 && classVersion != MATERIAL_CLASS_VERSION_GOTHIC_OLD2)
 		{
 			arc.ReadEnum("alphaFunc", alphaFunc);
 		}

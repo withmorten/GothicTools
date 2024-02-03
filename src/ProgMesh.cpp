@@ -144,7 +144,7 @@ void zCProgMeshProto::SaveMatList(zCFileBIN &file)
 	{
 		zCMaterial *mat = subMeshList[i].material;
 
-		mat->chunk.classVersion = materialVersionOut;
+		//mat->chunk.classVersion = materialVersionOut;
 
 		arc.WriteString("", mat->name);
 

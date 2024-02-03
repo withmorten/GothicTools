@@ -30,7 +30,9 @@ public:
 	zSTRING(char ch) : string(1, ch) { }
 
 	zSTRING(const int32 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%d", xWert); assign(buffer); }
-	zSTRING(const uint32 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%u", xWert); assign(buffer); }
+	zSTRING(const int64 xWert) { char buffer[50]; snprintf(buffer, sizeof(buffer), "%lld", xWert); assign(buffer); }
+	zSTRING(const uint32 xWert) { char buffer[100]; snprintf(buffer, sizeof(buffer), "%u", xWert); assign(buffer); }
+	zSTRING(const uint64 xWert) { char buffer[100]; snprintf(buffer, sizeof(buffer), "%llu", xWert); assign(buffer); }
 	zSTRING(const float xWert, int32 digits = 20);
 
 	zSTRING(const zSTRING &xStr1, const char *pstring) : string(xStr1) { append(pstring); };

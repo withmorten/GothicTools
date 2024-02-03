@@ -223,23 +223,14 @@ zCObject *zCArchiver::CreateObject(zTChunkRecord &chunk)
 {
 #define zNEW_OBJECT(name) \
 obj = zNEW(name); \
+obj->classVersion = chunk.classVersion; \
+obj->objectIndex = chunk.objectIndex; \
+obj->arc_className = chunk.className; \
 if (registry) registry->Insert(name::className, obj)
 
 	zCObject *obj;
 
-	if (chunk.IsNull())
-	{
-		zNEW_OBJECT(zCObject);
-	}
-	else if (chunk.IsReference())
-	{
-		zCObject *ref = objects[chunk.objectIndex];
-		obj = CreateObject(ref->chunk);
-
-		obj->ref = ref;
-		ref->refs.Insert(obj);
-	}
-	else if (chunk.className.Contains(zCWorld::className))
+	if (chunk.className.Contains(zCWorld::className))
 	{
 		zNEW_OBJECT(zCWorld);
 	}
@@ -697,19 +688,39 @@ zCObject *zCArchiver::ReadObject(const char *chunkName, zCObject *useThis)
 
 zCObject *zCArchiver::ReadObject(zCObject *useThis)
 {
-	zCObject *object = useThis;
+	zCObject *object = NULL;
 
 	zTChunkRecord chunk;
 	ReadChunkStart(chunk);
 
-	if (!object) object = CreateObject(chunk);
-
-	if (!object) return NULL;
-
-	object->chunk = chunk;
-
-	if (!object->IsNull() && !object->IsReference())
+	if (chunk.objectIndex == 46 && chunk.classVersion == 12289)
 	{
+		__nop();
+	}
+
+	if (chunk.IsNull())
+	{
+		object = NULL;
+	}
+	else if (chunk.IsReference())
+	{
+		object = objects[chunk.objectIndex];
+	}
+	else
+	{
+		if (useThis)
+		{
+			object = useThis;
+
+			object->classVersion = chunk.classVersion;
+			object->objectIndex = chunk.objectIndex;
+			object->arc_className = chunk.className;
+		}
+		else
+		{
+			object = CreateObject(chunk);
+		}
+
 		objects.Insert(object);
 
 		if (!object->Unarchive(*this)) return NULL;
@@ -1217,20 +1228,47 @@ void zCArchiver::WriteChunk(const char *chunkName)
 
 void zCArchiver::WriteObject(zCObject *object)
 {
-	WriteChunkStart(object->chunk);
+	WriteObject("", object);
+}
 
-	if (mode != zARC_MODE_ASCII_DIFF)
+void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
+{
+	if (!object)
 	{
-		if (!object->IsNull() && !object->IsReference())
-		{
-			object->Archive(*this);
-		}
+		WriteChunkStart(chunkName);
 	}
 	else
 	{
-		if (!object->IsNull())
+		int32 objectIndex = writeObjectList.Search(object);
+
+		if (object->objectIndex == 46 && object->classVersion == 12289)
 		{
-			object = object->IsReference() ? object->ref : object;
+			__nop();
+		}
+
+		if (objectIndex != -1)
+		{
+			zTChunkRecord chunk;
+
+			chunk.classVersion = 0;
+			chunk.objectIndex = objectIndex;
+			chunk.name = *chunkName ? chunkName : "%";
+			chunk.className = "§";
+
+			WriteChunkStart(chunk);
+		}
+		else
+		{
+			zTChunkRecord chunk;
+
+			chunk.classVersion = object->classVersion;
+			chunk.objectIndex = object->objectIndex;
+			chunk.name = *chunkName ? chunkName : "%";
+			chunk.className = object->arc_className;
+
+			writeObjectList.Insert(object);
+
+			WriteChunkStart(chunk);
 
 			object->Archive(*this);
 		}

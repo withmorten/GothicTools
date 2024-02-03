@@ -19,15 +19,19 @@ public:
 	zOBJECT_DECLARATION(zCObject);
 
 public:
-	zTChunkRecord chunk;
-	zCObject *ref; // i am a reference to this object
-	zCArray<zCObject *> refs; // these objects reference me
+	//zTChunkRecord chunk; // TODO remove these once references and null pointers are properly handled
+	//zCObject *ref; // TODO remove this i am a reference to this object
+	//zCArray<zCObject *> refs; // TOOD remove this these objects reference me
+
+	uint16 classVersion; // TODO initialize this with proper value
+	int32 objectIndex; // only for reading and diffing, not for writing // TODO initialize this with proper value
+	zSTRING arc_className;
 
 	XXH64_hash_t hash; // for easy equality check
 	bool32 found; // for checking if this object was previously found ...
 
 public:
-	zCObject() { ref = NULL; hash = 0; found = FALSE; }
+	zCObject() { hash = 0; found = FALSE; }
 	virtual ~zCObject() { };
 
 	virtual bool32 Unarchive(zCArchiver &arc) { return TRUE; }
@@ -35,8 +39,8 @@ public:
 	virtual void Hash();
 	virtual bool32 IsEqual(zCObject *obj); // if hash equal has failed - also has special logic for some classes
 
-	bool32 IsNull() { return chunk.IsNull(); }
-	bool32 IsReference() { return chunk.IsReference(); }
+	//bool32 IsNull() { return chunk.IsNull(); }
+	//bool32 IsReference() { return chunk.IsReference(); }
 	bool32 IsHashEqual(zCObject *obj);
 };
 

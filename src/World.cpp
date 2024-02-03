@@ -64,6 +64,15 @@ bool32 zCWorld::UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs)
 		parent->childs.Insert(vob);
 		vobs.Insert(vob);
 
+#if 0
+		for (int32 i = 0; i < vobs.numInArray; i++)
+		{
+			printf("%d,", vobs[i]->chunk.objectIndex);
+		}
+
+		printf("\n\n");
+#endif
+
 		vob->parent = parent;
 		vob->depth = vobTreeDepth;
 
@@ -131,7 +140,6 @@ bool32 zCWorld::Unarchive(zCArchiver &arc)
 	}
 
 	vobTree = zNEW(zCVob);
-	vobTree->chunk = chunk;
 
 	int32 numVobs = 0;
 	UnarchiveVobTree(arc, vobTree, numVobs);
@@ -182,7 +190,7 @@ void zCWorld::Archive(zCArchiver &arc)
 		arc.WriteChunkEnd();
 	}
 
-	arc.WriteChunkStart(vobTree->chunk);
+	arc.WriteChunkStart("VobTree");
 
 	int32 numVobs = 0;
 	ArchiveVobTree(arc, vobTree, numVobs);
@@ -202,13 +210,23 @@ void zCWorld::Archive(zCArchiver &arc)
 
 zCVob *zCWorld::GetVob(int32 objectIndex)
 {
+#if 0
 	for (int32 i = 0; i < vobs.numInArray; i++)
 	{
+#if 0
+		printf("%d,", vobs[i]->chunk.objectIndex);
+#endif
+
 		if (vobs[i]->chunk.objectIndex == objectIndex)
 		{
 			return vobs[i];
 		}
 	}
 
+#if 0
+	printf("\n\n");
+#endif
+
+#endif
 	return NULL;
 }

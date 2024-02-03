@@ -76,8 +76,8 @@ zCVob::zCVob()
 
 zCVob::~zCVob()
 {
-	zDELETE(visual);
-	zDELETE(ai);
+	//zDELETE(visual);
+	//zDELETE(ai);
 }
 
 bool32 zCVob::UnarchiveVerbose(zCArchiver &arc)
@@ -304,11 +304,14 @@ void zCVob::Archive(zCArchiver &arc)
 		arc.WriteBool("isAmbient", isAmbient);
 	}
 
-	if (visual) arc.WriteObject(visual);
-	else arc.WriteChunk("visual");
+	//if (visual) arc.WriteObject(visual);
+	//else arc.WriteChunk("visual");
+	//
+	//if (ai) arc.WriteObject(ai);
+	//else arc.WriteChunk("ai");
 
-	if (ai) arc.WriteObject(ai);
-	else arc.WriteChunk("ai");
+	arc.WriteObject("visual", visual);
+	arc.WriteObject("ai", ai);
 }
 
 bool32 zCCamTrj_KeyFrame::Unarchive(zCArchiver &arc)
@@ -367,14 +370,14 @@ zCCSCamera::~zCCSCamera()
 {
 	for (int32 i = 0; i < numPos; i++)
 	{
-		zDELETE(posKeys[i]);
+		//zDELETE(posKeys[i]); // TODO the vobtree owns these, imo ...
 	}
 
 	zDELETE_ARRAY(posKeys);
 
 	for (int32 i = 0; i < numTargets; i++)
 	{
-		zDELETE(targetKeys[i]);
+		//zDELETE(targetKeys[i]); // TODO the vobtree owns these, imo ...
 	}
 
 	zDELETE_ARRAY(targetKeys);

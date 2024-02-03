@@ -1,5 +1,7 @@
 #include "GothicTools.h"
 
+#include "time.h"
+
 #include "Archiver.h"
 #include "World.h"
 #include "WayNet.h"
@@ -23,8 +25,8 @@ enum
 int main(int argc, const char **argv)
 {
 #ifdef _CRTDBG_MAP_ALLOC
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 #endif
 
 	if (argc < ARG_OPTIONAL_MATCHES_FILE)
@@ -73,9 +75,15 @@ int main(int argc, const char **argv)
 
 	arc1_diff.mode = zARC_MODE_ASCII_DIFF;
 	arc2_diff.mode = zARC_MODE_ASCII_DIFF;
-	
+
+#if 0
+	time_t timestamp = time(0);
+	arc1_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_1]) + "." + zSTRING(timestamp) + ".DIFF", TRUE);
+	arc2_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_2]) + "." + zSTRING(timestamp) + ".DIFF", TRUE);
+#else
 	arc1_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_1]) + ".DIFF", TRUE);
 	arc2_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_2]) + ".DIFF", TRUE);
+#endif
 
 	// version2 wins, if higher
 	// because there is no logic for discarding higher version values for comparison.
@@ -116,9 +124,37 @@ int main(int argc, const char **argv)
 	}
 #endif
 
+	// TODO two more issues:
+	// references. in general. need to deal with them properly. idk what that means yet.
+
+	// an idea would be to copy the data of the ref'd object into the reference. then the hashing and equality etc would work again ...
+	// and it would still be clear from IsReference() (can we not check ref != NULL?) and ref->chunk.className what the actual class is ...
+	// does that mean each class needs a make reference function? :/
+
+	// waynet has logic for getting the original object out. but checking the single waypoints does not.
+	// neither does the vob diffing logic.
+
+	// also references get treated different in Debug than in Release. WHY?????????
+
+#if 0
+	zCVob *foo1 = (zCVob *)world1->GetVob(59, TRUE);
+	foo1->Hash();
+
+	zCVob *foo2 = (zCVob *)world1->GetVob(60, TRUE);
+	foo2->Hash();
+
+	printf("");
+#endif
+
+//#define SPECIAL_VOB_DEBUG
 #ifdef SPECIAL_VOB_DEBUG
 	zCVob *foo1 = (zCVob *)world1->GetVob(59);
-	zCVob *foo2 = (zCVob *)world1->GetVob(55);
+	zCVob *foo2 = (zCVob *)world2->GetVob(55);
+
+	//zSTRING n1 = foo1->chunk.className;
+	//zSTRING n2 = foo2->chunk.className;
+
+	//printf("%s, %s\n", n1.ToChar(), n2.ToChar());
 #endif
 	
 	// VobTree
@@ -178,11 +214,6 @@ int main(int argc, const char **argv)
 		// ^ this is handled now, 104 doesn't set it to TRUE, but 108 does ...
 		// now why is not TRUE in original WORLD.ZEN? what kind of ancient version did they write the world with?
 		// most likely a Spacer version around 1.04/1.05 .. probably 1.05, since that removes stateTarget/stateNum
-
-		// TODO so FIRE_SMOKE.pfx vobs are actually super flaky ...
-		// even when selecting them in the Spacer their pos will differ on different selections :(
-		// interestingly, how do these things stay in proper position???
-		// and what about lights in their vobtree? unfortunately i don't visualise this at all in the vob diffing ...
 
 		// TODO gothic 1 which focusNames were ok and which were not? I think named ones were supposed to be bad ...
 
