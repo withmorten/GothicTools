@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "GothicTools.h"
 
 class zFILE;
@@ -75,7 +77,7 @@ public:
 	zCArray<zCObject *> objects; // filled as we go
 	zCObjectRegistry *registry; // owned by the world, can be NULL
 
-	zCArray<zCObject *> writeObjectList; // temporary, replace with hashmap
+	std::unordered_map<zCObject *, int32> writeObjectList;
 
 	uint32 nCount;
 	GESStringMapStorage *stringHashMap;
@@ -126,6 +128,10 @@ public:
 	void WriteChunkStart(zTChunkRecord &chunk);
 	void WriteChunkEnd();
 	void WriteChunk(const char *chunkName);
+
+	int32 GetWriteObjectListNum();
+	void AddToWriteObjectList(zCObject *object);
+	int32 SearchWriteObjectList(zCObject *object);
 
 	void WriteObject(zCObject *object);
 	void WriteObject(const char *chunkName, zCObject *object);

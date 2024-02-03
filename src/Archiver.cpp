@@ -693,11 +693,6 @@ zCObject *zCArchiver::ReadObject(zCObject *useThis)
 	zTChunkRecord chunk;
 	ReadChunkStart(chunk);
 
-	if (chunk.objectIndex == 46 && chunk.classVersion == 12289)
-	{
-		__nop();
-	}
-
 	if (chunk.IsNull())
 	{
 		object = NULL;
@@ -1226,6 +1221,23 @@ void zCArchiver::WriteChunk(const char *chunkName)
 	WriteChunkEnd();
 }
 
+int32 zCArchiver::GetWriteObjectListNum()
+{
+	return (int32)writeObjectList.size();
+}
+
+void zCArchiver::AddToWriteObjectList(zCObject *object)
+{
+	writeObjectList[object] = (int32)writeObjectList.size();
+}
+
+int32 zCArchiver::SearchWriteObjectList(zCObject *object)
+{
+	auto it = writeObjectList.find(object);
+
+	return it != writeObjectList.end() ? it->second : -1;
+}
+
 void zCArchiver::WriteObject(zCObject *object)
 {
 	WriteObject("", object);
@@ -1239,12 +1251,7 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 	}
 	else
 	{
-		int32 objectIndex = writeObjectList.Search(object);
-
-		if (object->objectIndex == 46 && object->classVersion == 12289)
-		{
-			__nop();
-		}
+		int32 objectIndex = SearchWriteObjectList(object);
 
 		if (objectIndex != -1)
 		{
@@ -1262,11 +1269,11 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 			zTChunkRecord chunk;
 
 			chunk.classVersion = object->classVersion;
-			chunk.objectIndex = object->objectIndex;
+			chunk.objectIndex = GetWriteObjectListNum();
 			chunk.name = *chunkName ? chunkName : "%";
 			chunk.className = object->arc_className;
 
-			writeObjectList.Insert(object);
+			AddToWriteObjectList(object);
 
 			WriteChunkStart(chunk);
 
