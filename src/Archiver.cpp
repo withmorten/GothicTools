@@ -225,7 +225,7 @@ zCObject *zCArchiver::CreateObject(zTChunkRecord &chunk)
 obj = zNEW(name); \
 obj->classVersion = chunk.classVersion; \
 obj->objectIndex = chunk.objectIndex; \
-obj->arc_className = chunk.className; \
+obj->classHierarchy = chunk.className; \
 if (registry) registry->Insert(name::className, obj)
 
 	zCObject *obj;
@@ -709,7 +709,7 @@ zCObject *zCArchiver::ReadObject(zCObject *useThis)
 
 			object->classVersion = chunk.classVersion;
 			object->objectIndex = chunk.objectIndex;
-			object->arc_className = chunk.className;
+			object->classHierarchy = chunk.className;
 		}
 		else
 		{
@@ -1159,14 +1159,14 @@ void zCArchiver::ReadRawFloat(const char *entryName, void *buffer, uint32 size)
 	}
 }
 
-void zCArchiver::WriteChunkStart(const char *chunkName)
+void zCArchiver::WriteChunkStart(const char *chunkName, const char *className, int32 objectIndex, uint16 classVersion)
 {
 	zTChunkRecord chunk;
 
-	chunk.classVersion = 0;
-	chunk.objectIndex = 0;
-	chunk.name = chunkName;
-	chunk.className = zARC_CHUNK_CLASS_NAME_NULL;
+	chunk.classVersion = classVersion;
+	chunk.objectIndex = objectIndex;
+	chunk.name = *chunkName ? chunkName : zARC_CHUNK_NAME_NAMELESS;
+	chunk.className = className;
 
 	WriteChunkStart(chunk);
 }
@@ -1215,12 +1215,6 @@ void zCArchiver::WriteChunkEnd()
 	}
 }
 
-void zCArchiver::WriteChunk(const char *chunkName)
-{
-	WriteChunkStart(chunkName);
-	WriteChunkEnd();
-}
-
 int32 zCArchiver::GetWriteObjectListNum()
 {
 	return (int32)writeObjectList.size();
@@ -1247,7 +1241,7 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 {
 	if (!object)
 	{
-		WriteChunkStart(chunkName);
+		WriteChunkStart(chunkName, zARC_CHUNK_CLASS_NAME_NULL);
 	}
 	else
 	{
@@ -1255,27 +1249,13 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 
 		if (objectIndex != -1)
 		{
-			zTChunkRecord chunk;
-
-			chunk.classVersion = 0;
-			chunk.objectIndex = objectIndex;
-			chunk.name = *chunkName ? chunkName : zARC_CHUNK_NAME_NAMELESS;
-			chunk.className = zARC_CHUNK_CLASS_NAME_REF;
-
-			WriteChunkStart(chunk);
+			WriteChunkStart(chunkName, zARC_CHUNK_CLASS_NAME_REF, objectIndex);
 		}
 		else
 		{
-			zTChunkRecord chunk;
-
-			chunk.classVersion = object->classVersion;
-			chunk.objectIndex = GetWriteObjectListNum();
-			chunk.name = *chunkName ? chunkName : zARC_CHUNK_NAME_NAMELESS;
-			chunk.className = object->arc_className;
+			WriteChunkStart(chunkName, object->classHierarchy.ToChar(), GetWriteObjectListNum(), object->classVersion);
 
 			AddToWriteObjectList(object);
-
-			WriteChunkStart(chunk);
 
 			object->Archive(*this);
 		}

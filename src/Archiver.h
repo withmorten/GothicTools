@@ -128,10 +128,9 @@ public:
 	void ReadRaw(const char *entryName, void *buffer, uint32 size);
 	void ReadRawFloat(const char *entryName, void *buffer, uint32 size);
 
-	void WriteChunkStart(const char *chunkName);
+	void WriteChunkStart(const char *chunkName, const char *className = zARC_CHUNK_CLASS_NAME_NULL, int32 objectIndex = 0, uint16 classVersion = 0);
 	void WriteChunkStart(zTChunkRecord &chunk);
 	void WriteChunkEnd();
-	void WriteChunk(const char *chunkName);
 
 	int32 GetWriteObjectListNum();
 	void AddToWriteObjectList(zCObject *object);

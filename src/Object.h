@@ -21,7 +21,7 @@ public:
 public:
 	uint16 classVersion;
 	int32 objectIndex; // only for reading and diffing, not for writing
-	zSTRING arc_className; // TODO rename this ...
+	zSTRING classHierarchy;
 
 	XXH64_hash_t hash; // for easy equality check
 	bool32 found; // for checking if this object was previously found ...
