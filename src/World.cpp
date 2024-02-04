@@ -221,23 +221,13 @@ void zCWorld::Archive(zCArchiver &arc)
 
 zCVob *zCWorld::GetVob(int32 objectIndex)
 {
-#if 0
 	for (int32 i = 0; i < vobs.numInArray; i++)
 	{
-#if 0
-		printf("%d,", vobs[i]->chunk.objectIndex);
-#endif
-
-		if (vobs[i]->chunk.objectIndex == objectIndex)
+		if (vobs[i]->objectIndex == objectIndex)
 		{
 			return vobs[i];
 		}
 	}
 
-#if 0
-	printf("\n\n");
-#endif
-
-#endif
 	return NULL;
 }

@@ -1253,7 +1253,9 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 		}
 		else
 		{
-			WriteChunkStart(chunkName, object->classHierarchy.ToChar(), GetWriteObjectListNum(), object->classVersion);
+			objectIndex = mode != zARC_MODE_ASCII_DIFF ? GetWriteObjectListNum() : object->objectIndex;
+
+			WriteChunkStart(chunkName, object->classHierarchy.ToChar(), objectIndex, object->classVersion);
 
 			AddToWriteObjectList(object);
 
@@ -1457,4 +1459,3 @@ void zCArchiver::WriteRawFloat(const char *entryName, void *buffer, uint32 size)
 		WriteASCIILine(entryName, "rawFloat", value);
 	}
 }
-

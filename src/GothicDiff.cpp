@@ -25,8 +25,8 @@ enum
 int main(int argc, const char **argv)
 {
 #ifdef _CRTDBG_MAP_ALLOC
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 #endif
 
 	if (argc < ARG_OPTIONAL_MATCHES_FILE)
@@ -124,18 +124,6 @@ int main(int argc, const char **argv)
 	}
 #endif
 
-	// TODO two more issues:
-	// references. in general. need to deal with them properly. idk what that means yet.
-
-	// an idea would be to copy the data of the ref'd object into the reference. then the hashing and equality etc would work again ...
-	// and it would still be clear from IsReference() (can we not check ref != NULL?) and ref->chunk.className what the actual class is ...
-	// does that mean each class needs a make reference function? :/
-
-	// waynet has logic for getting the original object out. but checking the single waypoints does not.
-	// neither does the vob diffing logic.
-
-	// also references get treated different in Debug than in Release. WHY?????????
-
 #if 0
 	zCVob *foo1 = (zCVob *)world1->GetVob(59, TRUE);
 	foo1->Hash();
@@ -222,7 +210,7 @@ int main(int argc, const char **argv)
 		{
 			zCVob *vob1 = world1->vobs[i];
 
-			if (!vob1->found && !matches.IsInObjectMatches1(vob1->chunk.objectIndex))
+			if (!vob1->found && !matches.IsInObjectMatches1(vob1->objectIndex))
 			{
 				arc1_diff.WriteObject(vob1);
 
@@ -234,7 +222,7 @@ int main(int argc, const char **argv)
 		{
 			zCVob *vob2 = world2->vobs[j];
 
-			if (!vob2->found && !matches.IsInObjectMatches2(vob2->chunk.objectIndex))
+			if (!vob2->found && !matches.IsInObjectMatches2(vob2->objectIndex))
 			{
 				arc2_diff.WriteObject(vob2);
 
@@ -293,7 +281,7 @@ int main(int argc, const char **argv)
 			{
 				zCWaypoint *wp1 = world1->wayNet->waypoints[i];
 
-				if (!wp1->found && !matches.IsInObjectMatches1(wp1->chunk.objectIndex))
+				if (!wp1->found && !matches.IsInObjectMatches1(wp1->objectIndex))
 				{
 					arc1_diff.WriteObject(wp1);
 
@@ -305,7 +293,7 @@ int main(int argc, const char **argv)
 			{
 				zCWaypoint *wp2 = world2->wayNet->waypoints[j];
 
-				if (!wp2->found && !matches.IsInObjectMatches2(wp2->chunk.objectIndex))
+				if (!wp2->found && !matches.IsInObjectMatches2(wp2->objectIndex))
 				{
 					arc2_diff.WriteObject(wp2);
 
