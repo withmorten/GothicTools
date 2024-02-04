@@ -1,6 +1,6 @@
 #include "GothicTools.h"
 
-#include "time.h"
+#include <time.h>
 
 #include "Archiver.h"
 #include "World.h"
@@ -375,30 +375,6 @@ int main(int argc, const char **argv)
 			printf("WayNet Ways not found: %d, %d\n", not_found1, not_found2);
 		}
 	}
-
-#if 0
-	auto &levels1 = world1->registry->GetList<zCVobLevelCompo>();
-	auto &levels2 = world2->registry->GetList<zCVobLevelCompo>();
-
-	for (int32 i = 0; i < levels1.numInArray; i++)
-	{
-		for (int32 j = 0; j < levels2.numInArray; j++)
-		{
-			if (levels1[i]->IsHashEqual(levels2[j]))
-			{
-				levels1[i]->found = TRUE;
-				levels2[j]->found = TRUE;
-
-				break;
-			}
-		}
-
-		if (!levels1[i]->found)
-		{
-			printf("%s\n", levels1[i]->visualName.ToChar());
-		}
-	}
-#endif
 
 	zDELETE(world1);
 	zDELETE(world2);

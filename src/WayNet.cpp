@@ -49,6 +49,7 @@ bool32 zCWaypoint::IsEqual(zCObject *obj)
 	if (wpName != wp->wpName) return FALSE;
 	if (waterDepth != wp->waterDepth) return FALSE;
 	if (underWater != wp->underWater) return FALSE;
+	// if (position != wp->position) return FALSE;
 	if (direction != wp->direction) return FALSE;
 
 	if (position != wp->position)
