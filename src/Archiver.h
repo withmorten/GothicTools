@@ -49,6 +49,10 @@ struct GESStringMapStorage
 	char *MapValue;
 };
 
+#define zARC_CHUNK_NAME_NAMELESS "%"
+#define zARC_CHUNK_CLASS_NAME_NULL "%"
+#define zARC_CHUNK_CLASS_NAME_REF "§"
+
 struct zTChunkRecord
 {
 	uint16 classVersion;
@@ -56,8 +60,8 @@ struct zTChunkRecord
 	zSTRING name;
 	zSTRING className;
 
-	bool32 IsNull() { return className[0] == '%'; }
-	bool32 IsReference() { return className[0] == '§'; }
+	bool32 IsNull() { return className == zARC_CHUNK_CLASS_NAME_NULL; }
+	bool32 IsReference() { return className == zARC_CHUNK_CLASS_NAME_REF; }
 };
 
 class zCArchiver

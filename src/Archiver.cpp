@@ -1166,7 +1166,7 @@ void zCArchiver::WriteChunkStart(const char *chunkName)
 	chunk.classVersion = 0;
 	chunk.objectIndex = 0;
 	chunk.name = chunkName;
-	chunk.className = "%";
+	chunk.className = zARC_CHUNK_CLASS_NAME_NULL;
 
 	WriteChunkStart(chunk);
 }
@@ -1259,8 +1259,8 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 
 			chunk.classVersion = 0;
 			chunk.objectIndex = objectIndex;
-			chunk.name = *chunkName ? chunkName : "%";
-			chunk.className = "§";
+			chunk.name = *chunkName ? chunkName : zARC_CHUNK_NAME_NAMELESS;
+			chunk.className = zARC_CHUNK_CLASS_NAME_REF;
 
 			WriteChunkStart(chunk);
 		}
@@ -1270,7 +1270,7 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 
 			chunk.classVersion = object->classVersion;
 			chunk.objectIndex = GetWriteObjectListNum();
-			chunk.name = *chunkName ? chunkName : "%";
+			chunk.name = *chunkName ? chunkName : zARC_CHUNK_NAME_NAMELESS;
 			chunk.className = object->arc_className;
 
 			AddToWriteObjectList(object);

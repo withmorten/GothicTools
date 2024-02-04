@@ -64,37 +64,16 @@ bool32 zCWaypoint::IsEqual(zCObject *obj)
 
 bool32 zCWay::IsHashEqual(zCWay *way)
 {
-	//zCWaypoint *left1 = left->IsReference() ? (zCWaypoint *)left->ref : left;
-	//zCWaypoint *left2 = way->left->IsReference() ? (zCWaypoint *)way->left->ref : way->left;
-	zCWaypoint *left1 = left;
-	zCWaypoint *left2 = way->left;
-
-	if (!left1->IsHashEqual(left2)) return FALSE;
-
-	//zCWaypoint *right1 = right->IsReference() ? (zCWaypoint *)right->ref : right;
-	//zCWaypoint *right2 = way->right->IsReference() ? (zCWaypoint *)way->right->ref : way->right;
-	zCWaypoint *right1 = right;
-	zCWaypoint *right2 = way->right;
-
-	if (!right1->IsHashEqual(right2)) return FALSE;
+	if (!left->IsHashEqual(way->left)) return FALSE;
+	if (!right->IsHashEqual(way->right)) return FALSE;
 
 	return TRUE;
 }
 
 bool32 zCWay::IsEqual(zCWay *way)
 {
-	//zCWaypoint *left1 = left->IsReference() ? (zCWaypoint *)left->ref : left;
-	//zCWaypoint *left2 = way->left->IsReference() ? (zCWaypoint *)way->left->ref : way->left;
-	zCWaypoint *left1 = left;
-	zCWaypoint *left2 = way->left;
-
-	//zCWaypoint *right1 = right->IsReference() ? (zCWaypoint *)right->ref : right;
-	//zCWaypoint *right2 = way->right->IsReference() ? (zCWaypoint *)way->right->ref : way->right;
-	zCWaypoint *right1 = right;
-	zCWaypoint *right2 = way->right;
-
-	if (!left1->IsEqual(left2)) return FALSE;
-	if (!right1->IsEqual(right2)) return FALSE;
+	if (!left->IsEqual(way->left)) return FALSE;
+	if (!right->IsEqual(way->right)) return FALSE;
 
 	return TRUE;
 }
@@ -107,18 +86,10 @@ zCWayNet::zCWayNet()
 
 zCWayNet::~zCWayNet()
 {
-	for (int32 i = 0; i < numWaypoints; i++)
-	{
-		//zDELETE(waypoints[i]);
-	}
-
 	zDELETE_ARRAY(waypoints);
 
 	for (int32 i = 0; i < numWays; i++)
 	{
-		//zDELETE(ways[i]->left);
-		//zDELETE(ways[i]->right);
-
 		zDELETE(ways[i]);
 	}
 

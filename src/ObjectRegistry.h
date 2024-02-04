@@ -64,4 +64,17 @@ public:
 	{
 		return (zCArray<O *> &)GetList(O::className);
 	}
+
+	// doesn't actually delete the list, just empties it :)
+	template<typename O> void DeleteList()
+	{
+		auto &list = GetList<O>();
+
+		for (int32 i = 0; i < list.numInArray; i++)
+		{
+			zDELETE(list[i]);
+		}
+
+		list.EmptyList();
+	}
 };

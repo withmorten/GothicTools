@@ -3,6 +3,9 @@
 #include "Archiver.h"
 #include "Bsp.h"
 #include "Vob.h"
+#include "Visual.h"
+#include "Mesh.h"
+#include "ProgMesh.h"
 #include "WayNet.h"
 #include "ObjectRegistry.h"
 
@@ -29,6 +32,23 @@ zCWorld::~zCWorld()
 
 	zDELETE(vobTree);
 	zDELETE(wayNet);
+
+	// now that we have references, this is the easy way out to cleanup non vobs ...
+	// waypoints
+	registry->DeleteList<zCWaypoint>();
+
+	// visuals
+	registry->DeleteList<zCPolyStrip>();
+	registry->DeleteList<zCDecal>();
+	registry->DeleteList<zCParticleFX>();
+	registry->DeleteList<zCMesh>();
+	registry->DeleteList<zCModel>();
+	registry->DeleteList<zCMorphMesh>();
+	registry->DeleteList<zCProgMeshProto>();
+
+	// ais
+	registry->DeleteList<zCAICamera>();
+
 	zDELETE(registry);
 }
 
@@ -63,15 +83,6 @@ bool32 zCWorld::UnarchiveVobTree(zCArchiver &arc, zCVob *parent, int32 &numVobs)
 
 		parent->childs.Insert(vob);
 		vobs.Insert(vob);
-
-#if 0
-		for (int32 i = 0; i < vobs.numInArray; i++)
-		{
-			printf("%d,", vobs[i]->chunk.objectIndex);
-		}
-
-		printf("\n\n");
-#endif
 
 		vob->parent = parent;
 		vob->depth = vobTreeDepth;

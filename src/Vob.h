@@ -101,7 +101,7 @@ public:
 
 public:
 	zCVob *parent;
-	int32 depth;
+	int32 depth; // TODO remove?
 
 	int32 numChilds;
 	zCArray<zCVob *> childs;
