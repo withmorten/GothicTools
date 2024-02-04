@@ -574,12 +574,19 @@ if (registry) registry->Insert(name::className, obj)
 bool32 ParseChunkStartLine(zTChunkRecord &chunk, zSTRING &s)
 {
 	size_t p1 = s.find("[");
-	size_t p2 = s.find(" ", p1 + 1);
-	size_t p3 = s.find(" ", p2 + 1);
-	size_t p4 = s.find(" ", p3 + 1);
-	size_t p5 = s.find("]");
+	if (p1 == string::npos) return FALSE;
 
-	if (p1 == string::npos || p2 == string::npos || p3 == string::npos || p4 == string::npos || p5 == string::npos) return FALSE;
+	size_t p2 = s.find(" ", p1 + 1);
+	if (p2 == string::npos) return FALSE;
+
+	size_t p3 = s.find(" ", p2 + 1);
+	if (p3 == string::npos) return FALSE;
+
+	size_t p4 = s.find(" ", p3 + 1);
+	if (p4 == string::npos) return FALSE;
+
+	size_t p5 = s.find("]");
+	if (p5 == string::npos) return FALSE;
 
 	chunk.name = s.substr(p1 + 1, p2 - p1 - 1);
 	chunk.className = s.substr(p2 + 1, p3 - p2 - 1);
@@ -742,12 +749,14 @@ bool32 zCArchiver::ReadASCIIValue(const char *entryName, const char *typeName, z
 	zSTRING l;
 	file->ReadLine(l, TRUE);
 
-	size_t eq = l.find('=');
-	size_t sc = l.find(':');
+	size_t equ = l.find('=');
+	size_t col = l.find(':');
 
-	zSTRING n = l.substr(0, eq);
-	zSTRING t = l.substr(eq + 1, sc - eq - 1);
-	value = l.substr(sc + 1);
+	if (equ == string::npos || col == string::npos) return FALSE;
+
+	zSTRING n = l.substr(0, equ);
+	zSTRING t = l.substr(equ + 1, col - equ - 1);
+	value = l.substr(col + 1);
 
 	if (n != entryName || t != typeName)
 	{
