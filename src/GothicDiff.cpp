@@ -18,8 +18,6 @@ enum
 	ARG_NUM,
 };
 
-// #define SPECIAL_VOB_DEBUG
-
 int main(int argc, const char **argv)
 {
 #ifdef _CRTDBG_MAP_ALLOC
@@ -90,6 +88,15 @@ int main(int argc, const char **argv)
 		printf("loaded %d matches\n", matches.objectMatches.numInArray + matches.wayMatches.numInArray);
 	}
 
+	// TODO ShowVisual seems to be set to TRUE after loading some visuals?
+	// zCVobLensFlare::Unarchive sets it to TRUE after Unarchive
+	// ^ this is handled now, 104 doesn't set it to TRUE, but 108 does ...
+	// now why is not TRUE in original WORLD.ZEN? what kind of ancient version did they write the world with?
+	// most likely a Spacer version around 1.04/1.05 .. probably 1.05, since that removes stateTarget/stateNum
+	// the increased float "accuracy" is also because for zSTRING(float) %.9f was used instead of %.9g
+
+	// TODO gothic 1 which focusNames were ok and which were not? I think named ones were supposed to be bad ...
+
 	// VobTree
 	{
 		// first check is for hash equality (fast)
@@ -127,14 +134,6 @@ int main(int argc, const char **argv)
 				}
 			}
 		}
-
-		// TODO ShowVisual seems to be set to TRUE after loading some visuals?
-		// zCVobLensFlare::Unarchive sets it to TRUE after Unarchive
-		// ^ this is handled now, 104 doesn't set it to TRUE, but 108 does ...
-		// now why is not TRUE in original WORLD.ZEN? what kind of ancient version did they write the world with?
-		// most likely a Spacer version around 1.04/1.05 .. probably 1.05, since that removes stateTarget/stateNum
-
-		// TODO gothic 1 which focusNames were ok and which were not? I think named ones were supposed to be bad ...
 
 		// now write the not found objects to the diff archive, if they weren't in the loaded matches file ...
 		for (int32 i = 0; i < world1->vobs.numInArray; i++)

@@ -5,7 +5,7 @@ zSTRING::zSTRING(const float xWert, int32 digits)
 	if (digits > 9 || digits < 0) digits = 9;
 
 	char format[] = "%.9g";
-	format[2] = (char)digits + 48;
+	format[2] = (char)digits + '0';
 
 	char buffer[100];
 	sprintf(buffer, format, xWert);

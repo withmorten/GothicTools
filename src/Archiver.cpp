@@ -740,6 +740,13 @@ zCObject *zCArchiver::ReadObject(zCObject *useThis)
 
 bool32 zCArchiver::ReadASCIIValue(const char *entryName, const char *typeName, zSTRING &value)
 {
+	// TODO these comments are outdated ???
+	// partially ... MDK SURFACE.ZEN can now be read, but remaining values at the end of an object don't get skipped -_-
+
+	// in Gothic, zCArchiverGeneric::ReadChunkEnd calls zCArchiverGeneric::SkipChunk which just searches for the chunk end, but only for non BINARY
+	// BINARAY know the chunk size and chunk begin and seeks to the end???
+	// even in BIN_SAFE mode, which is kinda shocking
+
 	// TODO it seems like this will have to become a loop through all entries in chunk until we have found the right one
 	// since MDK surface.zen has values it shouldn't have and is thus unparsable :(
 	// but i think we can still just use the current file pos - since order is predictable still, and we will never get need a skipped value ...
