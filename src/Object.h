@@ -1,6 +1,6 @@
 #pragma once
 
-#include "xxhash/xxhash.h"
+#include <xxhash/xxhash.h>
 
 #include "GothicTools.h"
 

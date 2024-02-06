@@ -34,51 +34,11 @@ bool32 zCVob::IsEqual(zCObject *obj)
 
 	zCVob *vob = (zCVob *)obj;
 
-#if 0
-#if 0
-	if (chunk.objectIndex == 2087 && vob->chunk.objectIndex == 2092
-		|| chunk.objectIndex == 2088 && vob->chunk.objectIndex == 2093
-		|| chunk.objectIndex == 2090 && vob->chunk.objectIndex == 2095
-		|| chunk.objectIndex == 2091 && vob->chunk.objectIndex == 2096
-		|| chunk.objectIndex == 2483 && vob->chunk.objectIndex == 2488
-		|| chunk.objectIndex == 2564 && vob->chunk.objectIndex == 2569
-		|| chunk.objectIndex == 2578 && vob->chunk.objectIndex == 2583
-		|| chunk.objectIndex == 2586 && vob->chunk.objectIndex == 2591
-		|| chunk.objectIndex == 2595 && vob->chunk.objectIndex == 2600
-		|| chunk.objectIndex == 2600 && vob->chunk.objectIndex == 2605
-		|| chunk.objectIndex == 6290 && vob->chunk.objectIndex == 6295
-		|| chunk.objectIndex == 6299 && vob->chunk.objectIndex == 6304
-		)
-#else
-	if (chunk.objectIndex == 21 && vob->chunk.objectIndex == 1369
-		|| chunk.objectIndex == 46 && vob->chunk.objectIndex == 1347
-		|| chunk.objectIndex == 65 && vob->chunk.objectIndex == 1327
-	)
-#endif
-	{
-		zMAT3 diff_trafoOSToWSRot = trafoOSToWSRot - vob->trafoOSToWSRot;
-		zPOINT3 diff_trafoOSToWSPos = trafoOSToWSPos - vob->trafoOSToWSPos;
-
-#if 1
-		printf("diff_trafoOSToWSRot:\n");
-		printf("%f, %f, %f\n", fabs(diff_trafoOSToWSRot[0][VX]), fabs(diff_trafoOSToWSRot[0][VY]), fabs(diff_trafoOSToWSRot[0][VZ]));
-		printf("%f, %f, %f\n", fabs(diff_trafoOSToWSRot[1][VX]), fabs(diff_trafoOSToWSRot[1][VY]), fabs(diff_trafoOSToWSRot[1][VZ]));
-		printf("%f, %f, %f\n", fabs(diff_trafoOSToWSRot[2][VX]), fabs(diff_trafoOSToWSRot[2][VY]), fabs(diff_trafoOSToWSRot[2][VZ]));
-//#else
-		printf("diff_trafoOSToWSPos:\n");
-		printf("%f, %f, %f\n", fabs(diff_trafoOSToWSPos[VX]), fabs(diff_trafoOSToWSPos[VY]), fabs(diff_trafoOSToWSPos[VZ]));
-#endif
-		printf("\n");
-	}
-#endif
-
 	if (presetName != vob->presetName) return FALSE;
 
 	// if (bbox3DWS != vob->bbox3DWS) return FALSE; // this value varies way too much on i.e. animated objects
-#if 0
-	if (trafoOSToWSRot != vob->trafoOSToWSRot) return FALSE;
-	if (trafoOSToWSPos != vob->trafoOSToWSPos) return FALSE;
-#endif
+	// if (trafoOSToWSRot != vob->trafoOSToWSRot) return FALSE;
+	// if (trafoOSToWSPos != vob->trafoOSToWSPos) return FALSE;
 
 	if (vobName != vob->vobName) return FALSE;
 	if (visualName != vob->visualName) return FALSE;
@@ -98,18 +58,10 @@ bool32 zCVob::IsEqual(zCObject *obj)
 	if (zbias != vob->zbias) return FALSE;
 	if (isAmbient != vob->isAmbient) return FALSE;
 
-	// seems to work ... but test more for other worlds ...
-	// on FREEMINE.ZEN it actually catches maybe too little for rotation? FREEMINE.ZEN has voblights that have 0.01 diff but are visually the same :<
-#if 1
-#if 1
-	if (trafoOSToWSRot != vob->trafoOSToWSRot)
+	if (trafoOSToWSRot != vob->trafoOSToWSRot || trafoOSToWSPos != vob->trafoOSToWSPos)
 	{
-		zMAT3 diff = trafoOSToWSRot - vob->trafoOSToWSRot;
-		//float epsilon = 0.0001f;
-		//float epsilon = 0.001f;
 		float epsilon = 0.01f;
 
-		// TODO unify these epsilons
 #ifdef SPECIAL_FLAKY_VOB_EPSILON
 		if (visualName == "FIRE_SMOKE.pfx" && vob->visualName == "FIRE_SMOKE.pfx")
 		{
@@ -119,39 +71,34 @@ bool32 zCVob::IsEqual(zCObject *obj)
 		{
 			epsilon = 0.1f;
 		}
+		else if (presetName == "FIRE400" && vob->presetName == "FIRE400")
+		{
+			epsilon = 0.1f;
+		}
 #endif
 
-		if (fabs(diff[0][VX]) >= epsilon || fabs(diff[0][VY]) >= epsilon || fabs(diff[0][VZ]) >= epsilon
+		if (trafoOSToWSRot != vob->trafoOSToWSRot)
+		{
+			zMAT3 diff = trafoOSToWSRot - vob->trafoOSToWSRot;
+
+			if (fabs(diff[0][VX]) >= epsilon || fabs(diff[0][VY]) >= epsilon || fabs(diff[0][VZ]) >= epsilon
 			&& fabs(diff[1][VX]) >= epsilon || fabs(diff[1][VY]) >= epsilon || fabs(diff[1][VZ]) >= epsilon
 			&& fabs(diff[2][VX]) >= epsilon || fabs(diff[2][VY]) >= epsilon || fabs(diff[2][VZ]) >= epsilon)
+			{
+				return FALSE;
+			}
+		}
+
+		if (trafoOSToWSPos != vob->trafoOSToWSPos)
 		{
-			return FALSE;
+			zPOINT3 diff = trafoOSToWSPos - vob->trafoOSToWSPos;
+
+			if (fabs(diff[VX]) >= epsilon || fabs(diff[VY]) >= epsilon || fabs(diff[VZ]) >= epsilon)
+			{
+				return FALSE;
+			}
 		}
 	}
-#endif
-
-#if 1
-	if (trafoOSToWSPos != vob->trafoOSToWSPos)
-	{
-		zPOINT3 diff = trafoOSToWSPos - vob->trafoOSToWSPos;
-		float epsilon = 0.01f;
-
-		// TODO unify these epsilons
-#ifdef SPECIAL_FLAKY_VOB_EPSILON
-		if (visualName == "FIRE_SMOKE.pfx" && vob->visualName == "FIRE_SMOKE.pfx")
-		{
-			epsilon = 1.0f;
-		}
-		else if (presetName == "FIREE" && vob->presetName == "FIREE")
-		{
-			epsilon = 0.1f;
-		}
-#endif
-
-		if (fabs(diff[VX]) >= epsilon || fabs(diff[VY]) >= epsilon || fabs(diff[VZ]) >= epsilon) return FALSE;
-	}
-#endif
-#endif
 
 	return TRUE;
 }
@@ -225,8 +172,8 @@ void zCCSCamera::Hash()
 	hash = XXH64(&autoCamUntriggerOnLastKey, sizeof(autoCamUntriggerOnLastKey), hash);
 	hash = XXH64(&autoCamUntriggerOnLastKeyDelay, sizeof(autoCamUntriggerOnLastKeyDelay), hash);
 
-	hash = XXH64(&numPos, sizeof(numPos), hash);
-	hash = XXH64(&numTargets, sizeof(numTargets), hash);
+	hash = XXH64(&posKeys.numInArray, sizeof(posKeys.numInArray), hash);
+	hash = XXH64(&targetKeys.numInArray, sizeof(targetKeys.numInArray), hash);
 }
 
 bool32 zCCSCamera::IsEqual(zCObject *obj)
@@ -252,8 +199,8 @@ bool32 zCCSCamera::IsEqual(zCObject *obj)
 	if (autoCamUntriggerOnLastKey != vob->autoCamUntriggerOnLastKey) return FALSE;
 	if (autoCamUntriggerOnLastKeyDelay != vob->autoCamUntriggerOnLastKeyDelay) return FALSE;
 
-	if (numPos != vob->numPos) return FALSE;
-	if (numTargets != vob->numTargets) return FALSE;
+	if (posKeys.numInArray != vob->posKeys.numInArray) return FALSE;
+	if (targetKeys.numInArray != vob->targetKeys.numInArray) return FALSE;
 
 	return TRUE;
 }
@@ -820,15 +767,11 @@ bool32 zCVobLensFlare::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-bool32 zCZone::IsEqual(zCObject *obj)
+void zCZone::Hash()
 {
-	if (!zCVob::IsEqual(obj)) return FALSE;
+	zCVob::Hash();
 
-	zCZone *vob = (zCZone *)obj;
-
-	if (bbox3DWS != vob->bbox3DWS) return FALSE;
-
-	return TRUE;
+	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash);
 }
 
 void zCZoneZFog::Hash()

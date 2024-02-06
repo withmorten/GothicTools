@@ -1,7 +1,5 @@
 #include "GothicTools.h"
 
-#include <time.h>
-
 #include "Archiver.h"
 #include "World.h"
 #include "WayNet.h"
@@ -76,14 +74,8 @@ int main(int argc, const char **argv)
 	arc1_diff.mode = zARC_MODE_ASCII_DIFF;
 	arc2_diff.mode = zARC_MODE_ASCII_DIFF;
 
-#if 0
-	time_t timestamp = time(0);
-	arc1_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_1]) + "." + zSTRING(timestamp) + ".DIFF", TRUE);
-	arc2_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_2]) + "." + zSTRING(timestamp) + ".DIFF", TRUE);
-#else
 	arc1_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_1]) + ".DIFF", TRUE);
 	arc2_diff.OpenFile(zSTRING(argv[ARG_FILE_IN_2]) + ".DIFF", TRUE);
-#endif
 
 	// version2 wins, if higher
 	// because there is no logic for discarding higher version values for comparison.
@@ -98,53 +90,6 @@ int main(int argc, const char **argv)
 		printf("loaded %d matches\n", matches.objectMatches.numInArray + matches.wayMatches.numInArray);
 	}
 
-#if 0
-	for (int32 i = 0; i < matches.objectMatches.numInArray; i++)
-	{
-		zCVob *vob1 = world1->GetVob(matches.objectMatches[i].object1);
-		zCVob *vob2 = world2->GetVob(matches.objectMatches[i].object2);
-
-		//if (vob1 && vob1->visualName == "FIRE_SMOKE.pfx" && vob2 && vob2->visualName == "FIRE_SMOKE.pfx")
-		if (vob1 && vob1->presetName == "FIREE" && vob2 && vob2->presetName == "FIREE")
-		{
-			zMAT3 diff_trafoOSToWSRot = vob1->trafoOSToWSRot - vob2->trafoOSToWSRot;
-			zPOINT3 diff_trafoOSToWSPos = vob1->trafoOSToWSPos - vob2->trafoOSToWSPos;
-
-#if 0
-			printf("diff_trafoOSToWSRot: %d\n", vob1->chunk.objectIndex);
-			printf("%f, %f, %f\n", fabs(diff_trafoOSToWSRot[0][VX]), fabs(diff_trafoOSToWSRot[0][VY]), fabs(diff_trafoOSToWSRot[0][VZ]));
-			printf("%f, %f, %f\n", fabs(diff_trafoOSToWSRot[1][VX]), fabs(diff_trafoOSToWSRot[1][VY]), fabs(diff_trafoOSToWSRot[1][VZ]));
-			printf("%f, %f, %f\n", fabs(diff_trafoOSToWSRot[2][VX]), fabs(diff_trafoOSToWSRot[2][VY]), fabs(diff_trafoOSToWSRot[2][VZ]));
-#else
-			printf("diff_trafoOSToWSPos: %d\n", vob1->chunk.objectIndex);
-			printf("%f, %f, %f\n", fabs(diff_trafoOSToWSPos[VX]), fabs(diff_trafoOSToWSPos[VY]), fabs(diff_trafoOSToWSPos[VZ]));
-#endif
-			printf("\n");
-		}
-	}
-#endif
-
-#if 0
-	zCVob *foo1 = (zCVob *)world1->GetVob(59, TRUE);
-	foo1->Hash();
-
-	zCVob *foo2 = (zCVob *)world1->GetVob(60, TRUE);
-	foo2->Hash();
-
-	printf("");
-#endif
-
-//#define SPECIAL_VOB_DEBUG
-#ifdef SPECIAL_VOB_DEBUG
-	zCVob *foo1 = (zCVob *)world1->GetVob(59);
-	zCVob *foo2 = (zCVob *)world2->GetVob(55);
-
-	//zSTRING n1 = foo1->chunk.className;
-	//zSTRING n2 = foo2->chunk.className;
-
-	//printf("%s, %s\n", n1.ToChar(), n2.ToChar());
-#endif
-	
 	// VobTree
 	{
 		// first check is for hash equality (fast)
@@ -168,23 +113,9 @@ int main(int argc, const char **argv)
 
 			if (!vob1->found)
 			{
-#ifdef SPECIAL_VOB_DEBUG
-			if (vob1 == foo1)
-			{
-				__nop();
-			}
-#endif
-
 				for (int32 j = 0; j < world2->vobs.numInArray; j++)
 				{
 					zCVob *vob2 = world2->vobs[j];
-
-#ifdef SPECIAL_VOB_DEBUG
-					if (vob1 == foo1 && vob2 == foo2)
-					{
-						__nop();
-					}
-#endif
 
 					if (!vob2->found && vob1->IsEqual(vob2))
 					{

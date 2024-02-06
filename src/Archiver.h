@@ -81,7 +81,7 @@ public:
 	zCArray<zCObject *> objects; // filled as we go
 	zCObjectRegistry *registry; // owned by the world, can be NULL
 
-	std::unordered_map<zCObject *, int32> writeObjectList;
+	std::unordered_map<zCObject *, int32> writeObjectList; // for detecting references
 
 	uint32 nCount;
 	GESStringMapStorage *stringHashMap;
@@ -151,6 +151,6 @@ public:
 	void WriteColor(const char *entryName, zCOLOR &value);
 	template<typename E> void WriteEnum(const char *entryName, const char *enumChoices, E value) { WriteEnum(entryName, enumChoices, (int32)value); }
 	void WriteEnum(const char *entryName, const char *enumChoices, int32 value);
-	void WriteRaw(const char *entryName, void *buffer, uint32 size, bool32 rawFloat = FALSE);
+	void WriteRaw(const char *entryName, void *buffer, uint32 size);
 	void WriteRawFloat(const char *entryName, void *buffer, uint32 size);
 };

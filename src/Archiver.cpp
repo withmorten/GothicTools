@@ -1413,7 +1413,7 @@ void zCArchiver::WriteEnum(const char *entryName, const char *enumChoices, int32
 	}
 }
 
-void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size, bool32 rawFloat)
+void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size)
 {
 	if (mode == zARC_MODE_BINARY)
 	{
@@ -1421,7 +1421,6 @@ void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size, bool
 	}
 	else if (mode == zARC_MODE_ASCII)
 	{
-raw:;
 		zSTRING value;
 		byte *sourceBuffer = (byte *)buffer;
 
@@ -1434,17 +1433,6 @@ raw:;
 		}
 
 		WriteASCIILine(entryName, "raw", value);
-	}
-	else if (mode == zARC_MODE_ASCII_DIFF)
-	{
-		if (rawFloat)
-		{
-			WriteRawFloat(entryName, buffer, size);
-		}
-		else
-		{
-			goto raw;
-		}
 	}
 }
 

@@ -276,7 +276,16 @@ void zCVob::Archive(zCArchiver &arc)
 	arc.WriteString("presetName", presetName);
 
 	arc.WriteRawFloat("bbox3DWS", &bbox3DWS, sizeof(bbox3DWS));
-	arc.WriteRaw("trafoOSToWSRot", &trafoOSToWSRot, sizeof(trafoOSToWSRot), TRUE);
+
+	if (arc.mode != zARC_MODE_ASCII_DIFF)
+	{
+		arc.WriteRaw("trafoOSToWSRot", &trafoOSToWSRot, sizeof(trafoOSToWSRot));
+	}
+	else
+	{
+		arc.WriteRawFloat("trafoOSToWSRot", &trafoOSToWSRot, sizeof(trafoOSToWSRot));
+	}
+
 	arc.WriteVec3("trafoOSToWSPos", trafoOSToWSPos);
 
 	arc.WriteString("vobName", vobName);
@@ -349,19 +358,14 @@ void zCCamTrj_KeyFrame::Archive(zCArchiver &arc)
 	arc.WriteFloat("timeScale", timeScale);
 	arc.WriteBool("timeIsFixed", timeIsFixed);
 
-	arc.WriteRaw("originalPose", &originalPose, sizeof(originalPose), TRUE);
-}
-
-zCCSCamera::zCCSCamera()
-{
-	posKeys = NULL;
-	targetKeys = NULL;
-}
-
-zCCSCamera::~zCCSCamera()
-{
-	zDELETE_ARRAY(posKeys);
-	zDELETE_ARRAY(targetKeys);
+	if (arc.mode != zARC_MODE_ASCII_DIFF)
+	{
+		arc.WriteRaw("originalPose", &originalPose, sizeof(originalPose));
+	}
+	else
+	{
+		arc.WriteRawFloat("originalPose", &originalPose, sizeof(originalPose));
+	}
 }
 
 bool32 zCCSCamera::Unarchive(zCArchiver &arc)
@@ -385,20 +389,20 @@ bool32 zCCSCamera::Unarchive(zCArchiver &arc)
 	arc.ReadBool("autoCamUntriggerOnLastKey", autoCamUntriggerOnLastKey);
 	arc.ReadFloat("autoCamUntriggerOnLastKeyDelay", autoCamUntriggerOnLastKeyDelay);
 
+	int32 numPos;
 	arc.ReadInt("numPos", numPos);
-	posKeys = zNEW_ARRAY(zCCamTrj_KeyFrame *, numPos);
 
+	int32 numTargets;
 	arc.ReadInt("numTargets", numTargets);
-	targetKeys = zNEW_ARRAY(zCCamTrj_KeyFrame *, numTargets);
 
 	for (int32 i = 0; i < numPos; i++)
 	{
-		posKeys[i] = (zCCamTrj_KeyFrame *)arc.ReadObject();
+		posKeys.Insert((zCCamTrj_KeyFrame *)arc.ReadObject());
 	}
 
 	for (int32 i = 0; i < numTargets; i++)
 	{
-		targetKeys[i] = (zCCamTrj_KeyFrame *)arc.ReadObject();
+		targetKeys.Insert((zCCamTrj_KeyFrame *)arc.ReadObject());
 	}
 
 	return TRUE;
@@ -425,15 +429,15 @@ void zCCSCamera::Archive(zCArchiver &arc)
 	arc.WriteBool("autoCamUntriggerOnLastKey", autoCamUntriggerOnLastKey);
 	arc.WriteFloat("autoCamUntriggerOnLastKeyDelay", autoCamUntriggerOnLastKeyDelay);
 
-	arc.WriteInt("numPos", numPos);
-	arc.WriteInt("numTargets", numTargets);
+	arc.WriteInt("numPos", posKeys.numInArray);
+	arc.WriteInt("numTargets", targetKeys.numInArray);
 
-	for (int32 i = 0; i < numPos; i++)
+	for (int32 i = 0; i < posKeys.numInArray; i++)
 	{
 		arc.WriteObject(posKeys[i]);
 	}
 
-	for (int32 i = 0; i < numTargets; i++)
+	for (int32 i = 0; i < targetKeys.numInArray; i++)
 	{
 		arc.WriteObject(targetKeys[i]);
 	}
@@ -744,24 +748,40 @@ void zCTrigger::Archive(zCArchiver &arc)
 {
 	zCTriggerBase::Archive(arc);
 
-	zSTriggerFlagsRawData flagsRaw = { 0x00 };
+	if (arc.mode != zARC_MODE_ASCII_DIFF)
+	{
+		zSTriggerFlagsRawData flagsRaw = { 0x00 };
 
-	flagsRaw.startEnabled = flags.startEnabled;
-	flagsRaw.isEnabled = flags.isEnabled;
-	flagsRaw.sendUntrigger = flags.sendUntrigger;
+		flagsRaw.startEnabled = flags.startEnabled;
+		flagsRaw.isEnabled = flags.isEnabled;
+		flagsRaw.sendUntrigger = flags.sendUntrigger;
 
-	arc.WriteRaw("flags", &flagsRaw, sizeof(flagsRaw));
+		arc.WriteRaw("flags", &flagsRaw, sizeof(flagsRaw));
 
-	zSTriggerFilterFlagsRawData filterFlagsRaw = { 0x00 };
+		zSTriggerFilterFlagsRawData filterFlagsRaw = { 0x00 };
 
-	filterFlagsRaw.reactToOnTrigger = filterFlags.reactToOnTrigger;
-	filterFlagsRaw.reactToOnTouch = filterFlags.reactToOnTouch;
-	filterFlagsRaw.reactToOnDamage = filterFlags.reactToOnDamage;
-	filterFlagsRaw.respondToObject = filterFlags.respondToObject;
-	filterFlagsRaw.respondToPC = filterFlags.respondToPC;
-	filterFlagsRaw.respondToNPC = filterFlags.respondToNPC;
+		filterFlagsRaw.reactToOnTrigger = filterFlags.reactToOnTrigger;
+		filterFlagsRaw.reactToOnTouch = filterFlags.reactToOnTouch;
+		filterFlagsRaw.reactToOnDamage = filterFlags.reactToOnDamage;
+		filterFlagsRaw.respondToObject = filterFlags.respondToObject;
+		filterFlagsRaw.respondToPC = filterFlags.respondToPC;
+		filterFlagsRaw.respondToNPC = filterFlags.respondToNPC;
 
-	arc.WriteRaw("filterFlags", &filterFlagsRaw, sizeof(filterFlagsRaw));
+		arc.WriteRaw("filterFlags", &filterFlagsRaw, sizeof(filterFlagsRaw));
+	}
+	else
+	{
+		arc.WriteBool("startEnabled", flags.startEnabled);
+		arc.WriteBool("isEnabled", flags.isEnabled);
+		arc.WriteBool("sendUntrigger", flags.sendUntrigger);
+
+		arc.WriteBool("reactToOnTrigger", filterFlags.reactToOnTrigger);
+		arc.WriteBool("reactToOnTouch", filterFlags.reactToOnTouch);
+		arc.WriteBool("reactToOnDamage", filterFlags.reactToOnDamage);
+		arc.WriteBool("respondToObject", filterFlags.respondToObject);
+		arc.WriteBool("respondToPC", filterFlags.respondToPC);
+		arc.WriteBool("respondToNPC", filterFlags.respondToNPC);
+	}
 
 	arc.WriteString("respondToVobName", respondToVobName);
 	arc.WriteInt("numCanBeActivated", numCanBeActivated);
@@ -860,7 +880,14 @@ void zCMover::Archive(zCArchiver &arc)
 		arc.WriteEnum("posLerpType", "LINEAR;CURVE", posLerpType);
 		arc.WriteEnum("speedType", "CONST;SLOW_START_END;SLOW_START;SLOW_END;SEG_SLOW_START_END;SEG_SLOW_START;SEG_SLOW_END", speedType);
 
-		arc.WriteRaw("keyframes", keyframes, sizeof(*keyframes) * numKeyframes, TRUE);
+		if (arc.mode != zARC_MODE_ASCII_DIFF)
+		{
+			arc.WriteRaw("keyframes", keyframes, sizeof(*keyframes) * numKeyframes);
+		}
+		else
+		{
+			arc.WriteRawFloat("keyframes", keyframes, sizeof(*keyframes) * numKeyframes);
+		}
 	}
 
 	arc.WriteString("sfxOpenStart", sfxOpenStart);

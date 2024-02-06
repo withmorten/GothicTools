@@ -225,16 +225,10 @@ public:
 	bool32 autoCamUntriggerOnLastKey;
 	float autoCamUntriggerOnLastKeyDelay;
 
-	int32 numPos;
-	zCCamTrj_KeyFrame **posKeys;
-
-	int32 numTargets;
-	zCCamTrj_KeyFrame **targetKeys;
+	zCArray<zCCamTrj_KeyFrame *> posKeys;
+	zCArray<zCCamTrj_KeyFrame *> targetKeys;
 
 public:
-	zCCSCamera();
-	~zCCSCamera();
-
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void Hash();
@@ -831,8 +825,7 @@ public:
 	zOBJECT_DECLARATION(zCZone);
 
 public:
-	// TODO instead of IsEqual, for this type include the hash of bbox3DWS
-	bool32 IsEqual(zCObject *obj); // required for bbox3DWS
+	void Hash(); // required for bbox3DWS
 };
 
 class zCZoneZFog : public zCZone

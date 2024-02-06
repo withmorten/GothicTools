@@ -10,6 +10,8 @@ workspace "GothicTools"
 	toolset ("v141_xp")
 	floatingpoint "Fast"
 
+	includedirs { "lib" }
+
 	defines { "WIN32", "WIN32_LEAN_AND_MEAN", "_CRT_SECURE_NO_WARNINGS", "_CRT_NONSTDC_NO_DEPRECATE", "_CRT_NONSTDC_NO_WARNINGS" }
 
 	staticruntime "on"
@@ -44,7 +46,7 @@ project "xxhash"
 	targetname "xxhash"
 	targetdir "build/obj/%{cfg.platform}/%{cfg.buildcfg}/xxhash"
 
-	files { "src/xxhash/*.*" }
+	files { "lib/xxhash/*.*" }
 
 	disablewarnings { "4028" }
 
