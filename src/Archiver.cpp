@@ -18,8 +18,6 @@ zCArchiver::zCArchiver()
 	objCount = 0;
 	nCount = 0;
 	stringHashMap = NULL;
-	chunkDepth = 0;
-	lastChunkStart = 0;
 
 	registry = NULL;
 }
@@ -596,13 +594,36 @@ bool32 ParseChunkStartLine(zTChunkRecord &chunk, zSTRING &s)
 	return TRUE;
 }
 
+void zCArchiver::PushChunk(zTChunkRecord &chunk)
+{
+	chunkStack.InsertEnd(chunk);
+}
+
+zTChunkRecord zCArchiver::PopChunk()
+{
+	zTChunkRecord chunk = chunkStack[chunkStack.numInArray - 1];
+
+	chunkStack.RemoveOrderIndex(chunkStack.numInArray - 1);
+
+	return chunk;
+}
+
+zTChunkRecord zCArchiver::PeekChunk()
+{
+	return chunkStack[chunkStack.numInArray - 1];
+}
+
+int32 zCArchiver::ChunkDepth()
+{
+	return chunkStack.numInArray;
+}
+
 bool32 zCArchiver::ReadChunkStart(zTChunkRecord &chunk)
 {
 	if (mode == zARC_MODE_BINARY)
 	{
-		uint32 size;
-		file->Read(&size, sizeof(size));
-
+		chunk.startPos = file->Pos();
+		file->Read(&chunk.size, sizeof(chunk.size));
 		file->Read(&chunk.classVersion, sizeof(chunk.classVersion));
 		file->Read(&chunk.objectIndex, sizeof(chunk.objectIndex));
 		file->Read(chunk.name);
@@ -624,18 +645,18 @@ bool32 zCArchiver::ReadChunkStart(zTChunkRecord &chunk)
 		if (!ParseChunkStartLine(chunk, s)) return FALSE;
 	}
 
-	PushChunk();
+	PushChunk(chunk);
 
 	return TRUE;
 }
 
 bool32 zCArchiver::ReadChunkEnd()
 {
-	PopChunk();
+	zTChunkRecord chunk = PopChunk();
 
 	if (mode == zARC_MODE_BINARY)
 	{
-		// do nothing
+		file->Seek(chunk.startPos + chunk.size);
 	}
 	else if (mode == zARC_MODE_ASCII)
 	{
@@ -643,7 +664,7 @@ bool32 zCArchiver::ReadChunkEnd()
 		file->ReadLine(s);
 
 		zSTRING e;
-		for (int32 i = 0; i < chunkDepth; i++) e += "\t";
+		for (int32 i = 0; i < ChunkDepth(); i++) e += "\t";
 		e += "[]";
 
 		if (s != e) return FALSE;
@@ -675,8 +696,9 @@ bool32 zCArchiver::PeekChunkEnd()
 {
 	int32 savePos = file->Pos();
 
+	zTChunkRecord chunk = PeekChunk();
 	bool32 result = ReadChunkEnd();
-	PushChunk();
+	PushChunk(chunk);
 
 	file->Seek(savePos);
 
@@ -744,7 +766,7 @@ bool32 zCArchiver::ReadASCIIValue(const char *entryName, const char *typeName, z
 	// partially ... MDK SURFACE.ZEN can now be read, but remaining values at the end of an object don't get skipped -_-
 
 	// in Gothic, zCArchiverGeneric::ReadChunkEnd calls zCArchiverGeneric::SkipChunk which just searches for the chunk end, but only for non BINARY
-	// BINARAY know the chunk size and chunk begin and seeks to the end???
+	// BINARY knows the chunk size and chunk begin and seeks to the end???
 	// even in BIN_SAFE mode, which is kinda shocking
 
 	// TODO it seems like this will have to become a loop through all entries in chunk until we have found the right one
@@ -1191,11 +1213,8 @@ void zCArchiver::WriteChunkStart(zTChunkRecord &chunk)
 {
 	if (mode == zARC_MODE_BINARY)
 	{
-		lastChunkStart = file->Pos();
-
-		uint32 size = 0;
-		file->Write(&size, sizeof(size));
-
+		chunk.startPos = file->Pos();
+		file->Write(&chunk.size, sizeof(chunk.size));
 		file->Write(&chunk.classVersion, sizeof(chunk.classVersion));
 		file->Write(&chunk.objectIndex, sizeof(chunk.objectIndex));
 		file->Write(chunk.name);
@@ -1205,29 +1224,29 @@ void zCArchiver::WriteChunkStart(zTChunkRecord &chunk)
 	{
 		zSTRING s = "[" + chunk.name + " " + chunk.className + " " + zSTRING(chunk.classVersion) + " " + zSTRING(chunk.objectIndex) + "]";
 
-		file->WriteLineIndented(chunkDepth, s);
+		file->WriteLineIndented(ChunkDepth(), s);
 	}
 
-	PushChunk();
+	PushChunk(chunk);
 }
 
 void zCArchiver::WriteChunkEnd()
 {
-	PopChunk();
+	zTChunkRecord chunk = PopChunk();
 
 	if (mode == zARC_MODE_BINARY)
 	{
 		int32 savePos = file->Pos();
-		file->Seek(lastChunkStart);
+		file->Seek(chunk.startPos);
 
-		uint32 size = savePos - lastChunkStart;
+		uint32 size = savePos - chunk.startPos;
 		file->Write(&size, sizeof(size));
 
 		file->Seek(savePos);
 	}
 	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
-		file->WriteLineIndented(chunkDepth, "[]");
+		file->WriteLineIndented(ChunkDepth(), "[]");
 	}
 }
 
@@ -1289,7 +1308,7 @@ void zCArchiver::WriteASCIILine(const char *entryName, const char *entryType, zS
 
 	zSTRING l = n + "=" + t + ":" + value;
 
-	file->WriteLineIndented(chunkDepth, l);
+	file->WriteLineIndented(ChunkDepth(), l);
 }
 
 void zCArchiver::WriteInt(const char *entryName, int32 value)

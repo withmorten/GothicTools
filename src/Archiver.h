@@ -55,10 +55,15 @@ struct GESStringMapStorage
 
 struct zTChunkRecord
 {
+	uint32 startPos; // BINARY
+	uint32 size; // BINARY
+
 	uint16 classVersion;
 	int32 objectIndex;
 	zSTRING name;
 	zSTRING className;
+
+	zTChunkRecord() { startPos = 0; size = 0; }
 
 	bool32 IsNull() { return className == zARC_CHUNK_CLASS_NAME_NULL; }
 	bool32 IsReference() { return className == zARC_CHUNK_CLASS_NAME_REF; }
@@ -72,11 +77,12 @@ public:
 public:
 	zFILE *file;
 	zTArchiveMode mode;
-	int32 chunkDepth;
-	int32 lastChunkStart; // for BINARY
+
+	zCArray<zTChunkRecord> chunkStack;
 
 	zSTRING user;
 	zSTRING date;
+
 	int32 objCount; // from archive
 	zCArray<zCObject *> objects; // filled as we go
 	zCObjectRegistry *registry; // owned by the world, can be NULL
@@ -100,8 +106,10 @@ public:
 
 	zCObject *CreateObject(zTChunkRecord &chunk);
 
-	void PushChunk() { chunkDepth++; }
-	void PopChunk() { chunkDepth--; }
+	void PushChunk(zTChunkRecord &chunk);
+	zTChunkRecord PopChunk();
+	zTChunkRecord PeekChunk();
+	int32 ChunkDepth();
 
 	bool32 ReadChunkStart(zTChunkRecord &chunk);
 	bool32 ReadChunkEnd();
