@@ -656,25 +656,77 @@ bool32 zCArchiver::ReadChunkEnd()
 
 	if (mode == zARC_MODE_BINARY)
 	{
-		file->Seek(chunk.startPos + chunk.size);
+		int32 oldPos = file->Pos();
+		int32 newPos = chunk.startPos + chunk.size;
+
+		if (newPos != oldPos)
+		{
+			file->Seek(newPos);
+
+			printf("warning: BINARY chunk at pos %d skipped with %d bytes not read\n", chunk.startPos, newPos - oldPos);
+		}
 	}
 	else if (mode == zARC_MODE_ASCII)
 	{
-		zSTRING s;
-		file->ReadLine(s);
+		zSTRING line;
+		int32 level = 1;
+		int32 ctr = 0;
 
-		zSTRING e;
-		for (int32 i = 0; i < ChunkDepth(); i++) e += "\t";
-		e += "[]";
+		do
+		{
+			file->ReadLine(line, TRUE);
 
-		if (s != e) return FALSE;
+			if (line.Length() && line[0] == '[')
+			{
+				if (line[1] == ']')
+				{
+					level--; // ChunkEnd
+				}
+				else
+				{
+					level++; // ChunkStart
+				}
+			}
+
+			ctr++;
+		}
+		while (level > 0);
+
+		if (ctr > 1)
+		{
+			printf("warning: ASCII chunk at pos %d skipped with %d entries not read\n", file->Pos(), ctr - 1);
+		}
 	}
 	else if (mode == zARC_MODE_BINARY_SAFE)
 	{
-		zSTRING s;
-		ReadBinSafeValue(zARC2_ID_STRING, &s);
+		zSTRING line;
+		int32 level = 1;
+		int32 ctr = 0;
 
-		if (s != "[]") return FALSE;
+		do
+		{
+			ReadBinSafeValue(zARC2_ID_STRING, &line);
+
+			if (line.Length() && line[0] == '[')
+			{
+				if (line[1] == ']')
+				{
+					level--; // ChunkEnd
+				}
+				else
+				{
+					level++; // ChunkStart
+				}
+			}
+
+			ctr++;
+		}
+		while (level > 0);
+
+		if (ctr > 1)
+		{
+			printf("warning: BIN_SAFE chunk at pos %d skipped\n", file->Pos());
+		}
 	}
 
 	return TRUE;
@@ -694,14 +746,29 @@ bool32 zCArchiver::PeekChunkStart(zTChunkRecord &chunk)
 
 bool32 zCArchiver::PeekChunkEnd()
 {
+	bool32 result = TRUE;
 	int32 savePos = file->Pos();
 
-	zTChunkRecord chunk = PeekChunk();
-	bool32 result = ReadChunkEnd();
-	PushChunk(chunk);
+	if (mode == zARC_MODE_ASCII)
+	{
+		zSTRING s;
+		file->ReadLine(s);
+
+		zSTRING e;
+		for (int32 i = 0; i < ChunkDepth(); i++) e += "\t";
+		e += "[]";
+
+		result = s == e;
+	}
+	else if (mode == zARC_MODE_BINARY_SAFE)
+	{
+		zSTRING s;
+		ReadBinSafeValue(zARC2_ID_STRING, &s);
+
+		result = s == "[]";
+	}
 
 	file->Seek(savePos);
-
 	return result;
 }
 
@@ -762,17 +829,6 @@ zCObject *zCArchiver::ReadObject(zCObject *useThis)
 
 bool32 zCArchiver::ReadASCIIValue(const char *entryName, const char *typeName, zSTRING &value)
 {
-	// TODO these comments are outdated ???
-	// partially ... MDK SURFACE.ZEN can now be read, but remaining values at the end of an object don't get skipped -_-
-
-	// in Gothic, zCArchiverGeneric::ReadChunkEnd calls zCArchiverGeneric::SkipChunk which just searches for the chunk end, but only for non BINARY
-	// BINARY knows the chunk size and chunk begin and seeks to the end???
-	// even in BIN_SAFE mode, which is kinda shocking
-
-	// TODO it seems like this will have to become a loop through all entries in chunk until we have found the right one
-	// since MDK surface.zen has values it shouldn't have and is thus unparsable :(
-	// but i think we can still just use the current file pos - since order is predictable still, and we will never get need a skipped value ...
-	// need to handle skipping remaining values though :(
 	int32 savePos = file->Pos();
 
 	zSTRING l;
@@ -789,17 +845,12 @@ bool32 zCArchiver::ReadASCIIValue(const char *entryName, const char *typeName, z
 
 	if (n != entryName || t != typeName)
 	{
-		// if not found, just recurse and try again, oCMobInter from MDK SURFACE.ZEN has state and stateTarget despite being 108
-		// TOOD need to check against chunkend here ...
-
 		if (!PeekChunkEnd() && ReadASCIIValue(entryName, typeName, value))
 		{
 			return TRUE;
 		}
 
 		file->Seek(savePos);
-
-		//printf("ReadASCIIValue failed at %d, expected entry '%s' of type '%s', but got '%s' of type '%s'\n", savePos, entryName, typeName, n.ToChar(), t.ToChar());
 
 		return FALSE;
 	}
