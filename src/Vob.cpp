@@ -1368,7 +1368,7 @@ bool32 oCMobInter::Unarchive(zCArchiver &arc)
 {
 	if (!oCMOB::Unarchive(arc)) return FALSE;
 
-	if (gothicVersionIn <= GOTHIC_VERSION_101)
+	if (gothicVersionIn <= GOTHIC_VERSION_104)
 	{
 		arc.ReadInt("state", state);
 		arc.ReadInt("stateTarget", stateTarget);
@@ -1393,7 +1393,7 @@ void oCMobInter::Archive(zCArchiver &arc)
 {
 	oCMOB::Archive(arc);
 
-	if (gothicVersionOut <= GOTHIC_VERSION_101)
+	if (gothicVersionOut <= GOTHIC_VERSION_104)
 	{
 		arc.WriteInt("state", state);
 		arc.WriteInt("stateTarget", stateTarget);
