@@ -88,14 +88,10 @@ int main(int argc, const char **argv)
 		printf("loaded %d matches\n", matches.objectMatches.numInArray + matches.wayMatches.numInArray);
 	}
 
-	// TODO ShowVisual seems to be set to TRUE after loading some visuals?
-	// zCVobLensFlare::Unarchive sets it to TRUE after Unarchive
-	// ^ this is handled now, 104 doesn't set it to TRUE, but 108 does ...
-	// now why is not TRUE in original WORLD.ZEN? what kind of ancient version did they write the world with?
-	// most likely a Spacer version around 1.04/1.05 .. probably 1.05, since that removes stateTarget/stateNum
-	// the increased float "accuracy" is also because for zSTRING(float) %.9f was used instead of %.9g
-
-	// TODO gothic 1 which focusNames were ok and which were not? I think named ones were supposed to be bad ...
+	// some notes
+	// SURFACE.ZEN was probaby written with ~1.04, since stateTarget and stateNum in oCMobInter are still present
+	// WORLD.ZEN was probably written with ~1.05, since showVisual in zCVobLensFlare is not forced to TRUE there, but it is in 1.06l
+	// some version after 1.04d changes zSTRING(float) from %.9f to %.9g
 
 	// VobTree
 	{
