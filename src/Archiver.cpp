@@ -849,56 +849,48 @@ bool32 zCArchiver::ReadBinSafeValue(zTArchiveTypeID entryType, void *buffer)
 
 		break;
 	}
-
 	case zARC2_ID_INTEGER:
 	{
 		file->Read(buffer, sizeof(int32));
 
 		break;
 	}
-
 	case zARC2_ID_FLOAT:
 	{
 		file->Read(buffer, sizeof(float));
 
 		break;
 	}
-
 	case zARC2_ID_BYTE:
 	{
 		file->Read(buffer, sizeof(byte));
 
 		break;
 	}
-
 	case zARC2_ID_WORD:
 	{
 		file->Read(buffer, sizeof(uint16));
 
 		break;
 	}
-
 	case zARC2_ID_BOOL:
 	{
 		file->Read(buffer, sizeof(bool32));
 
 		break;
 	}
-
 	case zARC2_ID_VEC3:
 	{
 		file->Read(buffer, sizeof(zVEC3));
 
 		break;
 	}
-
 	case zARC2_ID_COLOR:
 	{
 		file->Read(buffer, sizeof(zCOLOR));
 
 		break;
 	}
-
 	case zARC2_ID_RAW:
 	{
 		uint16 size;
@@ -908,7 +900,6 @@ bool32 zCArchiver::ReadBinSafeValue(zTArchiveTypeID entryType, void *buffer)
 
 		break;
 	}
-
 	case zARC2_ID_RAWFLOAT:
 	{
 		uint16 size;
@@ -918,14 +909,12 @@ bool32 zCArchiver::ReadBinSafeValue(zTArchiveTypeID entryType, void *buffer)
 
 		break;
 	}
-
 	case zARC2_ID_ENUM:
 	{
 		file->Read(buffer, sizeof(int32));
 
 		break;
 	}
-
 	case zARC2_ID_HASH:
 	{
 		int32 linearValue;
