@@ -315,7 +315,7 @@ void zCMesh::SaveMatList(zCFileBIN &file)
 	{
 		zCMaterial *mat = matList[i];
 
-		//mat->chunk.classVersion = materialVersionOut;
+		mat->classVersion = materialVersionOut;
 
 		arc.WriteString("", mat->name);
 
