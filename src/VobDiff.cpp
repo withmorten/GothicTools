@@ -1,5 +1,7 @@
 #include "Vob.h"
 
+#define SPECIAL_FLAKY_VOB_EPSILON // allow a more lenient epsilon for some vob types known to be extra flaky
+
 void zCVob::Hash()
 {
 	zCObject::Hash();

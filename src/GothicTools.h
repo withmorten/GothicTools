@@ -169,5 +169,3 @@ extern bool32 deLOD;
 
 bool32 SetInVersions(int32 version);
 bool32 SetOutVersions(int32 version);
-
-#define SPECIAL_FLAKY_VOB_EPSILON
