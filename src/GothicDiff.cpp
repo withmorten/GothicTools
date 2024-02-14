@@ -93,6 +93,12 @@ int main(int argc, const char **argv)
 	// WORLD.ZEN was probably written with ~1.05, since showVisual in zCVobLensFlare is not forced to TRUE there, but it is in 1.06l
 	// some version after 1.04d changes zSTRING(float) from %.9f to %.9g
 
+//#define SPECIAL_VOB_DEBUG
+#ifdef SPECIAL_VOB_DEBUG
+	zCVob *foo1 = (zCVob *)world1->GetVob(34);
+	zCVob *foo2 = (zCVob *)world2->GetVob(1674);
+#endif
+
 	// VobTree
 	{
 		// first check is for hash equality (fast)
@@ -116,9 +122,23 @@ int main(int argc, const char **argv)
 
 			if (!vob1->found)
 			{
+#ifdef SPECIAL_VOB_DEBUG
+				if (vob1 == foo1)
+				{
+					__nop();
+				}
+#endif
+
 				for (int32 j = 0; j < world2->vobs.numInArray; j++)
 				{
 					zCVob *vob2 = world2->vobs[j];
+
+#ifdef SPECIAL_VOB_DEBUG
+					if (vob1 == foo1 && vob2 == foo2)
+					{
+						__nop();
+					}
+#endif
 
 					if (!vob2->found && vob1->IsEqual(vob2))
 					{
