@@ -246,13 +246,15 @@ bool32 zCVob::Unarchive(zCArchiver &arc)
 		arc.ReadInt("pack", pack);
 	}
 
+	bool32 result;
+
 	if (pack)
 	{
-		return UnarchivePacked(arc);
+		result = UnarchivePacked(arc);
 	}
 	else
 	{
-		return UnarchiveVerbose(arc);
+		result = UnarchiveVerbose(arc);
 	}
 
 	// TODO starting with 1.00b there is a check of the following here (it's not there in 0.94k)
@@ -262,6 +264,8 @@ bool32 zCVob::Unarchive(zCArchiver &arc)
 
 	float minExtend = bbox3DWS.GetMinExtent();
 	if (minExtend > VOB_IGNORE_MIN_EXTEND) zbias = 0;
+
+	return result;
 }
 
 void zCVob::Archive(zCArchiver &arc)
