@@ -51,7 +51,7 @@ bool32 zCTexture::Load(zFILE *file)
 {
 	file->Read(&header, sizeof(header));
 
-	if (memcmp(header.cookie, zTEX_FILE_INTERNAL_COOKIE, sizeof(header.cookie))) return FALSE;
+	if (!memequal(header.cookie, zTEX_FILE_INTERNAL_COOKIE, sizeof(header.cookie))) return FALSE;
 
 	if (header.vers != zTEX_FILE_INTERNAL_VERS) return FALSE;
 

@@ -542,7 +542,7 @@ bool32 zCMover::IsEqual(zCObject *obj)
 		if (posLerpType != vob->posLerpType) return FALSE;
 		if (speedType != vob->speedType) return FALSE;
 
-		if (!memcmp(keyframes, vob->keyframes, sizeof(*keyframes) * numKeyframes)) return FALSE;
+		if (!memequal(keyframes, vob->keyframes, sizeof(*keyframes) * numKeyframes)) return FALSE;
 	}
 
 	if (sfxOpenStart != vob->sfxOpenStart) return FALSE;
