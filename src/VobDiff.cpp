@@ -62,20 +62,12 @@ bool32 zCVob::IsEqual(zCObject *obj)
 
 	if (trafoOSToWSRot != vob->trafoOSToWSRot || trafoOSToWSPos != vob->trafoOSToWSPos)
 	{
-		float epsilon = 0.01f;
+		float epsilon = 0.1f;
 
 #ifdef SPECIAL_FLAKY_VOB_EPSILON
 		if (visualName == "FIRE_SMOKE.pfx" && vob->visualName == "FIRE_SMOKE.pfx")
 		{
 			epsilon = 1.0f;
-		}
-		else if (presetName == "FIREE" && vob->presetName == "FIREE")
-		{
-			epsilon = 0.1f;
-		}
-		else if (presetName == "FIRE400" && vob->presetName == "FIRE400")
-		{
-			epsilon = 0.1f;
 		}
 #endif
 
