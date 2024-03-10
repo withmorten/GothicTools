@@ -760,13 +760,32 @@ void zCVobLensFlare::Hash()
 
 bool32 zCVobLensFlare::IsEqual(zCObject *obj)
 {
-	if (!zCEffect::IsEqual(obj)) return FALSE;
+	if (!zCObject::IsEqual(obj)) return FALSE;
 
 	zCVobLensFlare *vob = (zCVobLensFlare *)obj;
 
-	if (lensflareFX != vob->lensflareFX) return FALSE;
+	bool32 result = TRUE;
+	
+	bool32 saveShowVisual1 = showVisual;
+	bool32 saveShowVisual2 = vob->showVisual;
 
-	return TRUE;
+	if (gothicVersionOut >= GOTHIC_VERSION_108)
+	{
+		showVisual = TRUE;
+		vob->showVisual = TRUE;
+	}
+
+	if (result) result = zCEffect::IsEqual(obj);
+
+	if (result) result = lensflareFX == vob->lensflareFX;
+
+	if (gothicVersionOut >= GOTHIC_VERSION_108)
+	{
+		showVisual = saveShowVisual1;
+		vob->showVisual = saveShowVisual2;
+	}
+
+	return result;
 }
 
 void zCZone::Hash()
@@ -963,13 +982,71 @@ void oCItem::Hash()
 
 bool32 oCItem::IsEqual(zCObject *obj)
 {
-	if (!oCVob::IsEqual(obj)) return FALSE;
+	if (!zCObject::IsEqual(obj)) return FALSE;
 
 	oCItem *vob = (oCItem *)obj;
 
-	if (itemInstance != vob->itemInstance) return FALSE;
+	bool32 result = TRUE;
 
-	return TRUE;
+	zSTRING saveVisualName1 = visualName;
+	zCObject *saveVisual1 = visual;
+	bool32 saveShowVisual1 = showVisual;
+
+	zSTRING saveVisualName2 = vob->visualName;
+	zCObject *saveVisual2 = vob->visual;
+	bool32 saveShowVisual2 = vob->showVisual;
+
+	if (gothicVersionOut >= GOTHIC_VERSION_108)
+	{
+		bool32 ignoreVisual1 = TRUE;
+		bool32 ignoreVisual2 = TRUE;
+
+		for (int32 i = 0; i < array_size(itemsZenVisual); i++)
+		{
+			if (itemInstance == itemsZenVisual[i])
+			{
+				ignoreVisual1 = FALSE;
+			}
+
+			if (vob->itemInstance == itemsZenVisual[i])
+			{
+				ignoreVisual2 = FALSE;
+			}
+
+			if (!ignoreVisual1 && !ignoreVisual2) break;
+		}
+
+		if (ignoreVisual1)
+		{
+			visualName = "";
+			visual = NULL;
+			showVisual = FALSE;
+		}
+
+		if (ignoreVisual2)
+		{
+			vob->visualName = "";
+			vob->visual = NULL;
+			vob->showVisual = FALSE;
+		}
+	}
+
+	if (result) result = oCVob::IsEqual(obj);
+
+	if (result) result = itemInstance == vob->itemInstance;
+
+	if (gothicVersionOut >= GOTHIC_VERSION_108)
+	{
+		visualName = saveVisualName1;
+		visual = saveVisual1;
+		showVisual = saveShowVisual1;
+
+		vob->visualName = saveVisualName2;
+		vob->visual = saveVisual2;
+		vob->showVisual = saveShowVisual2;
+	}
+
+	return result;
 }
 
 void oCMOB::Hash()
