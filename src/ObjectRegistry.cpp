@@ -2,67 +2,87 @@
 
 void zCObjectMatches::Load(const char *fileName)
 {
+	enum
+	{
+		INIT,
+		OBJECTS,
+		WAYS,
+		END,
+	}
+	state = INIT;
+
 	zFILE file(fileName);
 
 	zSTRING s;
 
-	file.ReadLine(s);
-
-	if (s != "objects")
-	{
-		printf("matches file needs to start with 'objects'\n");
-
-		return;
-	}
-
-	// first read objects
 	do
 	{
 		file.ReadLine(s);
 
-		if (s.IsEmpty() || s == "ways") break;
+		if (!s.IsEmpty() && s[0] == ';') continue;
 
-		if (s[0] == ';') continue;
+		switch (state)
+		{
+		case INIT:
+			if (s == "objects")
+			{
+				state = OBJECTS;
+			}
 
-		size_t t1 = s.find('\t');
-		size_t t2 = s.find('\t', t1 + 1);
+			break;
 
-		if (t1 == string::npos || t2 == string::npos) continue;
+		case OBJECTS:
+			if (s == "ways")
+			{
+				state = WAYS;
+			}
+			else
+			{
+				size_t t1 = s.find('\t');
+				if (t1 == string::npos) continue;
 
-		zCObjectMatch match;
+				size_t t2 = s.find('\t', t1 + 1);
+				if (t2 == string::npos) continue;
 
-		match.object1 = zSTRING(s.substr(0, t1)).ToInt();
-		match.object2 = zSTRING(s.substr(t1 + 1, t2)).ToInt();
-		match.reason = s.substr(t2 + 1);
+				zCObjectMatch match;
 
-		objectMatches.Insert(match);
+				match.object1 = zSTRING(s.substr(0, t1)).ToInt();
+				match.object2 = zSTRING(s.substr(t1 + 1, t2)).ToInt();
+				match.reason = s.substr(t2 + 1);
+
+				objectMatches.Insert(match);
+			}
+
+			break;
+
+		case WAYS:
+			if (s.IsEmpty())
+			{
+				state = END;
+			}
+			else
+			{
+				size_t t1 = s.find('\t');
+				if (t1 == string::npos) continue;
+
+				size_t t2 = s.find('\t', t1 + 1);
+				if (t2 == string::npos) continue;
+
+				zCWayMatch match;
+
+				match.way1 = zSTRING(s.substr(0, t1)).ToInt();
+				match.way2 = zSTRING(s.substr(t1 + 1, t2)).ToInt();
+				match.reason = s.substr(t2 + 1);
+
+				wayMatches.Insert(match);
+			}
+
+			break;
+		}
+
+		if (file.Eof()) break;
 	}
-	while (TRUE);
-
-	// then read ways
-	do
-	{
-		file.ReadLine(s);
-
-		if (s.IsEmpty()) break;
-
-		if (s[0] == ';') continue;
-
-		size_t t1 = s.find('\t');
-		size_t t2 = s.find('\t', t1 + 1);
-
-		if (t1 == string::npos || t2 == string::npos) continue;
-
-		zCWayMatch match;
-
-		match.way1 = zSTRING(s.substr(0, t1)).ToInt();
-		match.way2 = zSTRING(s.substr(t1 + 1, t2)).ToInt();
-		match.reason = s.substr(t2 + 1);
-
-		wayMatches.Insert(match);
-
-	}
-	while (TRUE);
+	while (state != END);
 }
 
 bool32 zCObjectMatches::IsInObjectMatches1(int32 object1)

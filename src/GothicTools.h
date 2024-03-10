@@ -33,6 +33,8 @@ typedef uint8 byte;
 typedef uint8 bool8;
 typedef int32 bool32;
 
+#define array_size(array) (sizeof(array) / sizeof(array[0]))
+
 #define memequal(buf1, buf2, count) !memcmp(buf1, buf2, count)
 
 #ifndef _WIN32

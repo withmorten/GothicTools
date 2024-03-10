@@ -1485,7 +1485,7 @@ void zCArchiver::WriteRaw(const char *entryName, void *buffer, uint32 size)
 	{
 		file->Write(buffer, size);
 	}
-	else if (mode == zARC_MODE_ASCII)
+	else if (mode == zARC_MODE_ASCII || mode == zARC_MODE_ASCII_DIFF)
 	{
 		zSTRING value;
 		byte *sourceBuffer = (byte *)buffer;
