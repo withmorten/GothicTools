@@ -259,6 +259,11 @@ void zCVob::Archive(zCArchiver &arc)
 {
 	zCObject::Archive(arc);
 
+	if (arc.mode == zARC_MODE_ASCII_DIFF)
+	{
+		arc.WriteRaw("hash", &hash, sizeof(hash));
+	}
+
 	if (gothicVersionOut >= GOTHIC_VERSION_104)
 	{
 		arc.WriteInt("pack", 0);

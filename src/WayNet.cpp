@@ -22,6 +22,11 @@ void zCWaypoint::Archive(zCArchiver &arc)
 {
 	zCObject::Archive(arc);
 
+	if (arc.mode == zARC_MODE_ASCII_DIFF)
+	{
+		arc.WriteRaw("hash", &hash, sizeof(hash));
+	}
+
 	arc.WriteString("wpName", wpName);
 	arc.WriteInt("waterDepth", waterDepth);
 	arc.WriteBool("underWater", underWater);
