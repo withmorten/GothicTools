@@ -14,6 +14,7 @@ enum
 	ARG_VERSION_IN_1,
 	ARG_FILE_IN_2,
 	ARG_VERSION_IN_2,
+	ARG_DIFF_VERSION,
 	ARG_OPTIONAL_MATCHES_FILE,
 	ARG_NUM,
 };
@@ -29,7 +30,7 @@ int main(int argc, const char **argv)
 	{
 		printf("GothicDiff v0.1 by withmorten\n");
 		printf("usage:\n");
-		printf("GothicDiff <filename in 1> <version in 1> <filename in 2> <version in 2> [<matches file>]\n\n");
+		printf("GothicDiff <filename in 1> <version in 1> <filename in 2> <version in 2> <diff version> [<matches file>]\n\n");
 
 		return zOK;
 	}
@@ -39,10 +40,11 @@ int main(int argc, const char **argv)
 	int32 version1 = atoi(argv[ARG_VERSION_IN_1]);
 	int32 version2 = atoi(argv[ARG_VERSION_IN_2]);
 
-	zCWorld *world1 = zNEW(zCWorld);
-	zCArchiver arc1;
-
 	if (!SetInVersions(version1)) return zERROR;
+
+	zCWorld *world1 = zNEW(zCWorld);
+
+	zCArchiver arc1;
 
 	arc1.OpenFile(argv[ARG_FILE_IN_1]);
 	arc1.ReadHeader();
@@ -54,6 +56,7 @@ int main(int argc, const char **argv)
 	if (!SetInVersions(version2)) return zERROR;
 
 	zCWorld *world2 = zNEW(zCWorld);
+
 	zCArchiver arc2;
 
 	arc2.OpenFile(argv[ARG_FILE_IN_2]);
@@ -77,7 +80,8 @@ int main(int argc, const char **argv)
 
 	// version2 wins, if higher
 	// because there is no logic for discarding higher version values for comparison.
-	SetOutVersions(version2 > version1 ? version2 : version1);
+	int32 diff_version = atoi(argv[ARG_DIFF_VERSION]);
+	if (!SetOutVersions(diff_version)) return zERROR;
 
 	zCObjectMatches matches;
 
