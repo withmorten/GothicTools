@@ -65,19 +65,6 @@ zOBJECT_DEFINITION(oCMobSwitch);
 zOBJECT_DEFINITION(oCMobWheel);
 zOBJECT_DEFINITION(oCNpc);
 
-zCVob::zCVob()
-{
-	visual = NULL;
-	ai = NULL;
-
-	parent = NULL;
-	depth = 0;
-}
-
-zCVob::~zCVob()
-{
-}
-
 bool32 zCVob::UnarchiveVerbose(zCArchiver &arc)
 {
 	arc.ReadString("presetName", presetName);

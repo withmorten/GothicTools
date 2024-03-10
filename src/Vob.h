@@ -129,8 +129,8 @@ public:
 	zCObject *ai;
 
 public:
-	zCVob();
-	~zCVob();
+	zCVob() { visual = NULL; ai = NULL; parent = NULL; depth = 0; }
+	~zCVob() { }
 
 	bool32 UnarchiveVerbose(zCArchiver &arc);
 	bool32 UnarchivePacked(zCArchiver &arc);
