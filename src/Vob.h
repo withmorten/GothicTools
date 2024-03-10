@@ -1051,6 +1051,9 @@ public:
 	zOBJECT_DECLARATION(oCItem);
 
 public:
+	static zSTRING itemsZenVisual[2]; // item instances with a visual that contains ".ZEN"
+
+public:
 	zSTRING itemInstance;
 
 public:

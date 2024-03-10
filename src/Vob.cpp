@@ -1090,19 +1090,29 @@ bool32 zCVobLensFlare::Unarchive(zCArchiver &arc)
 
 	arc.ReadString("lensflareFX", lensflareFX);
 
-	if (gothicVersionIn >= GOTHIC_VERSION_108)
-	{
-		showVisual = TRUE;
-	}
+	// originally, showVisual is forced to true here for gothicVersionIn >= GOTHIC_VERSION_108,
+	// but it's moved to Archive to keep correct value for as long as possible
 
 	return TRUE;
 }
 
 void zCVobLensFlare::Archive(zCArchiver &arc)
 {
+	bool32 saveShowVisual = showVisual;
+
+	if (gothicVersionIn >= GOTHIC_VERSION_108)
+	{
+		showVisual = TRUE;
+	}
+
 	zCEffect::Archive(arc);
 
 	arc.WriteString("lensflareFX", lensflareFX);
+
+	if (gothicVersionIn >= GOTHIC_VERSION_108)
+	{
+		showVisual = saveShowVisual;
+	}
 }
 
 bool32 zCZoneZFog::Unarchive(zCArchiver &arc)
@@ -1308,6 +1318,12 @@ void oCObjectGenerator::Archive(zCArchiver &arc)
 	arc.WriteFloat("objectSpeed", objectSpeed);
 }
 
+zSTRING oCItem::itemsZenVisual[2] =
+{
+	"ITLSTORCHFIRESPIT",
+	"ITLSTORCHBURNING",
+};
+
 bool32 oCItem::Unarchive(zCArchiver &arc)
 {
 	if (!oCVob::Unarchive(arc)) return FALSE;
@@ -1319,9 +1335,42 @@ bool32 oCItem::Unarchive(zCArchiver &arc)
 
 void oCItem::Archive(zCArchiver &arc)
 {
+	zSTRING saveVisualName = visualName;
+	zCObject *saveVisual = visual;
+	bool32 saveShowVisual = showVisual;
+
+	if (gothicVersionIn >= GOTHIC_VERSION_108)
+	{
+		bool32 ignoreVisual = TRUE;
+
+		for (int32 i = 0; i < array_size(itemsZenVisual); i++)
+		{
+			if (itemInstance == itemsZenVisual[i])
+			{
+				ignoreVisual = FALSE;
+
+				break;
+			}
+		}
+
+		if (ignoreVisual)
+		{
+			visualName = "";
+			visual = NULL;
+			showVisual = FALSE;
+		}
+	}
+
 	oCVob::Archive(arc);
 
 	arc.WriteString("itemInstance", itemInstance);
+
+	if (gothicVersionIn >= GOTHIC_VERSION_108)
+	{
+		visualName = saveVisualName;
+		visual = saveVisual;
+		showVisual = saveShowVisual;
+	}
 }
 
 bool32 oCMOB::Unarchive(zCArchiver &arc)
