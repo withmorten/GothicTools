@@ -8,7 +8,7 @@ void zCVob::Hash()
 
 	hash = XXH64(presetName.ToChar(), presetName.Length(), hash);
 
-	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash);
+	// hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash); // not useful, because hash now is a sort of identifier, but is hashed for zCZone
 	hash = XXH64(&trafoOSToWSRot, sizeof(trafoOSToWSRot), hash);
 	hash = XXH64(&trafoOSToWSPos, sizeof(trafoOSToWSPos), hash);
 
