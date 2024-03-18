@@ -57,7 +57,19 @@ bool32 zCVob::IsEqual(zCObject *obj)
 	if (staticVob != vob->staticVob) return FALSE;
 	if (dynShadow != vob->dynShadow) return FALSE;
 
+	int32 save_zbias = zbias;
+
+	if (gothicVersionOut >= GOTHIC_VERSION_130)
+	{
+		// originally done in Unarchive
+		float minExtend = bbox3DWS.GetMinExtent();
+		if (minExtend > VOB_IGNORE_MIN_EXTEND) zbias = 0;
+	}
+
 	if (zbias != vob->zbias) return FALSE;
+
+	zbias = save_zbias;
+
 	if (isAmbient != vob->isAmbient) return FALSE;
 
 	if (trafoOSToWSRot != vob->trafoOSToWSRot || trafoOSToWSPos != vob->trafoOSToWSPos)

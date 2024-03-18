@@ -249,9 +249,6 @@ bool32 zCVob::Unarchive(zCArchiver &arc)
 	// bbox3D.mins = bbox3D.maxs = trafoObjToWorld.GetTranslation();
 	// since we don't actually animate anything here, maybe this isn't necessary?
 
-	float minExtend = bbox3DWS.GetMinExtent();
-	if (minExtend > VOB_IGNORE_MIN_EXTEND) zbias = 0;
-
 	return result;
 }
 
@@ -303,7 +300,16 @@ void zCVob::Archive(zCArchiver &arc)
 
 	if (gothicVersionOut >= GOTHIC_VERSION_130)
 	{
+		int32 save_zbias = zbias;
+
+		// originally done in Unarchive
+		float minExtend = bbox3DWS.GetMinExtent();
+		if (minExtend > VOB_IGNORE_MIN_EXTEND) zbias = 0;
+
 		arc.WriteInt("zbias", zbias);
+
+		zbias = save_zbias;
+
 		arc.WriteBool("isAmbient", isAmbient);
 	}
 
