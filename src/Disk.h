@@ -28,7 +28,7 @@ public:
 	int32 Size() { return size; }
 	int32 Pos() { return ftell(file_handle); }
 	void Append() { fseek(file_handle, 0, SEEK_END); }
-	bool32 Eof() { return (feof(file_handle) != FALSE); }
+	bool32 Eof() { return (feof(file_handle) != 0); }
 	void Seek(int32 pos) { fseek(file_handle, pos, SEEK_SET); }
 	void SeekRel(int32 rel) { fseek(file_handle, rel, SEEK_CUR); }
 
