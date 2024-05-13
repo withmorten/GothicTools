@@ -2,9 +2,9 @@
 
 #define SPECIAL_FLAKY_VOB_EPSILON // allow a more lenient epsilon for some vob types known to be extra flaky
 
-void zCVob::Hash()
+void zCVob::CalcHash()
 {
-	zCObject::Hash();
+	zCObject::CalcHash();
 
 	hash = XXH64(presetName.ToChar(), presetName.Length(), hash);
 
@@ -109,9 +109,9 @@ bool32 zCVob::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCCamTrj_KeyFrame::Hash()
+void zCCamTrj_KeyFrame::CalcHash()
 {
-	zCVob::Hash();
+	zCVob::CalcHash();
 
 	hash = XXH64(&time, sizeof(time), hash);
 	hash = XXH64(&angleRollDeg, sizeof(angleRollDeg), hash);
@@ -157,9 +157,9 @@ bool32 zCCamTrj_KeyFrame::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCCSCamera::Hash()
+void zCCSCamera::CalcHash()
 {
-	zCVob::Hash();
+	zCVob::CalcHash();
 
 	hash = XXH64(&camTrjFOR, sizeof(camTrjFOR), hash);
 	hash = XXH64(&targetTrjFOR, sizeof(targetTrjFOR), hash);
@@ -211,7 +211,7 @@ bool32 zCCSCamera::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-XXH64_hash_t zCVobLightData::Hash(XXH64_hash_t hash)
+XXH64_hash_t zCVobLightData::CalcHash(XXH64_hash_t hash)
 {
 	hash = XXH64(&lightType, sizeof(lightType), hash);
 	hash = XXH64(&range, sizeof(range), hash);
@@ -287,13 +287,13 @@ bool32 zCVobLightData::IsEqual(zCVobLightData &lightData)
 	return TRUE;
 }
 
-void zCVobLight::Hash()
+void zCVobLight::CalcHash()
 {
-	zCVob::Hash();
+	zCVob::CalcHash();
 
 	hash = XXH64(lightPresetInUse.ToChar(), lightPresetInUse.Length(), hash);
 
-	hash = lightData.Hash(hash);
+	hash = lightData.CalcHash(hash);
 }
 
 bool32 zCVobLight::IsEqual(zCObject *obj)
@@ -309,9 +309,9 @@ bool32 zCVobLight::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCTriggerBase::Hash()
+void zCTriggerBase::CalcHash()
 {
-	zCVob::Hash();
+	zCVob::CalcHash();
 
 	hash = XXH64(triggerTarget.ToChar(), triggerTarget.Length(), hash);
 }
@@ -327,9 +327,9 @@ bool32 zCTriggerBase::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCCodeMaster::Hash()
+void zCCodeMaster::CalcHash()
 {
-	zCTriggerBase::Hash();
+	zCTriggerBase::CalcHash();
 
 	hash = XXH64(&flags.orderRelevant, sizeof(flags.orderRelevant), hash);
 	hash = XXH64(&flags.firstFalseIsFailure, sizeof(flags.firstFalseIsFailure), hash);
@@ -365,9 +365,9 @@ bool32 zCCodeMaster::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCMessageFilter::Hash()
+void zCMessageFilter::CalcHash()
 {
-	zCTriggerBase::Hash();
+	zCTriggerBase::CalcHash();
 
 	hash = XXH64(&onTrigger, sizeof(onTrigger), hash);
 	hash = XXH64(&onUntrigger, sizeof(onUntrigger), hash);
@@ -385,9 +385,9 @@ bool32 zCMessageFilter::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCMoverControler::Hash()
+void zCMoverControler::CalcHash()
 {
-	zCTriggerBase::Hash();
+	zCTriggerBase::CalcHash();
 
 	hash = XXH64(&moverMessage, sizeof(moverMessage), hash);
 	hash = XXH64(&gotoFixedKey, sizeof(gotoFixedKey), hash);
@@ -405,9 +405,9 @@ bool32 zCMoverControler::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCTriggerWorldStart::Hash()
+void zCTriggerWorldStart::CalcHash()
 {
-	zCTriggerBase::Hash();
+	zCTriggerBase::CalcHash();
 
 	hash = XXH64(&fireOnlyFirstTime, sizeof(fireOnlyFirstTime), hash);
 }
@@ -423,9 +423,9 @@ bool32 zCTriggerWorldStart::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCTrigger::Hash()
+void zCTrigger::CalcHash()
 {
-	zCTriggerBase::Hash();
+	zCTriggerBase::CalcHash();
 
 	hash = XXH64(&flags.startEnabled, sizeof(flags.startEnabled), hash);
 	hash = XXH64(&flags.isEnabled, sizeof(flags.isEnabled), hash);
@@ -473,9 +473,9 @@ bool32 zCTrigger::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCTriggerTeleport::Hash()
+void zCTriggerTeleport::CalcHash()
 {
-	zCTrigger::Hash();
+	zCTrigger::CalcHash();
 
 	hash = XXH64(sfxTeleport.ToChar(), sfxTeleport.Length(), hash);
 }
@@ -491,9 +491,9 @@ bool32 zCTriggerTeleport::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCMover::Hash()
+void zCMover::CalcHash()
 {
-	zCTrigger::Hash();
+	zCTrigger::CalcHash();
 
 	hash = XXH64(&moverBehavior, sizeof(moverBehavior), hash);
 	hash = XXH64(&touchBlockerDamage, sizeof(touchBlockerDamage), hash);
@@ -561,9 +561,9 @@ bool32 zCMover::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCTriggerList::Hash()
+void zCTriggerList::CalcHash()
 {
-	zCTrigger::Hash();
+	zCTrigger::CalcHash();
 
 	hash = XXH64(&listProcess, sizeof(listProcess), hash);
 	hash = XXH64(&numTarget, sizeof(numTarget), hash);
@@ -593,9 +593,9 @@ bool32 zCTriggerList::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCTriggerChangeLevel::Hash()
+void oCTriggerChangeLevel::CalcHash()
 {
-	zCTrigger::Hash();
+	zCTrigger::CalcHash();
 
 	hash = XXH64(levelName.ToChar(), levelName.Length(), hash);
 	hash = XXH64(startVobName.ToChar(), startVobName.Length(), hash);
@@ -613,9 +613,9 @@ bool32 oCTriggerChangeLevel::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCTriggerScript::Hash()
+void oCTriggerScript::CalcHash()
 {
-	zCTrigger::Hash();
+	zCTrigger::CalcHash();
 
 	hash = XXH64(scriptFunc.ToChar(), scriptFunc.Length(), hash);
 }
@@ -631,9 +631,9 @@ bool32 oCTriggerScript::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCEarthquake::Hash()
+void zCEarthquake::CalcHash()
 {
-	zCEffect::Hash();
+	zCEffect::CalcHash();
 
 	hash = XXH64(&radius, sizeof(radius), hash);
 	hash = XXH64(&timeSec, sizeof(timeSec), hash);
@@ -653,9 +653,9 @@ bool32 zCEarthquake::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCPFXControler::Hash()
+void zCPFXControler::CalcHash()
 {
-	zCEffect::Hash();
+	zCEffect::CalcHash();
 
 	hash = XXH64(pfxName.ToChar(), pfxName.Length(), hash);
 	hash = XXH64(&killVobWhenDone, sizeof(killVobWhenDone), hash);
@@ -675,9 +675,9 @@ bool32 zCPFXControler::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCTouchDamage::Hash()
+void zCTouchDamage::CalcHash()
 {
-	zCEffect::Hash();
+	zCEffect::CalcHash();
 
 	hash = XXH64(&damage, sizeof(damage), hash);
 
@@ -719,9 +719,9 @@ bool32 zCTouchDamage::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCTouchAnimateSound::Hash()
+void zCTouchAnimateSound::CalcHash()
 {
-	zCTouchAnimate::Hash();
+	zCTouchAnimate::CalcHash();
 
 	hash = XXH64(sfxTouch.ToChar(), sfxTouch.Length(), hash);
 }
@@ -737,9 +737,9 @@ bool32 zCTouchAnimateSound::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCVobAnimate::Hash()
+void zCVobAnimate::CalcHash()
 {
-	zCEffect::Hash();
+	zCEffect::CalcHash();
 
 	hash = XXH64(&startOn, sizeof(startOn), hash);
 }
@@ -755,9 +755,9 @@ bool32 zCVobAnimate::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCVobLensFlare::Hash()
+void zCVobLensFlare::CalcHash()
 {
-	zCEffect::Hash();
+	zCEffect::CalcHash();
 
 	hash = XXH64(lensflareFX.ToChar(), lensflareFX.Length(), hash);
 }
@@ -792,16 +792,16 @@ bool32 zCVobLensFlare::IsEqual(zCObject *obj)
 	return result;
 }
 
-void zCZone::Hash()
+void zCZone::CalcHash()
 {
-	zCVob::Hash();
+	zCVob::CalcHash();
 
 	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash);
 }
 
-void zCZoneZFog::Hash()
+void zCZoneZFog::CalcHash()
 {
-	zCZone::Hash();
+	zCZone::CalcHash();
 
 	hash = XXH64(&fogRangeCenter, sizeof(fogRangeCenter), hash);
 	hash = XXH64(&innerRangePerc, sizeof(innerRangePerc), hash);
@@ -827,9 +827,9 @@ bool32 zCZoneZFog::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCZoneVobFarPlane::Hash()
+void zCZoneVobFarPlane::CalcHash()
 {
-	zCZone::Hash();
+	zCZone::CalcHash();
 
 	hash = XXH64(&vobFarPlaneZ, sizeof(vobFarPlaneZ), hash);
 	hash = XXH64(&innerRangePerc, sizeof(innerRangePerc), hash);
@@ -847,9 +847,9 @@ bool32 zCZoneVobFarPlane::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCVobSound::Hash()
+void zCVobSound::CalcHash()
 {
-	zCZone::Hash();
+	zCZone::CalcHash();
 
 	hash = XXH64(&sndVolume, sizeof(sndVolume), hash);
 	hash = XXH64(&sndMode, sizeof(sndMode), hash);
@@ -885,9 +885,9 @@ bool32 zCVobSound::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCVobSoundDaytime::Hash()
+void zCVobSoundDaytime::CalcHash()
 {
-	zCVobSound::Hash();
+	zCVobSound::CalcHash();
 
 	hash = XXH64(&sndStartTime, sizeof(sndStartTime), hash);
 	hash = XXH64(&sndEndTime, sizeof(sndEndTime), hash);
@@ -907,9 +907,9 @@ bool32 zCVobSoundDaytime::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void zCZoneReverb::Hash()
+void zCZoneReverb::CalcHash()
 {
-	zCZone::Hash();
+	zCZone::CalcHash();
 
 	hash = XXH64(&reverbPreset, sizeof(reverbPreset), hash);
 	hash = XXH64(&reverbWeight, sizeof(reverbWeight), hash);
@@ -929,9 +929,9 @@ bool32 zCZoneReverb::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCZoneMusic::Hash()
+void oCZoneMusic::CalcHash()
 {
-	zCZoneMusic::Hash();
+	zCZoneMusic::CalcHash();
 
 	hash = XXH64(&enabled, sizeof(enabled), hash);
 	hash = XXH64(&priority, sizeof(priority), hash);
@@ -957,9 +957,9 @@ bool32 oCZoneMusic::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCObjectGenerator::Hash()
+void oCObjectGenerator::CalcHash()
 {
-	zCVob::Hash();
+	zCVob::CalcHash();
 
 	hash = XXH64(objectName.ToChar(), objectName.Length(), hash);
 	hash = XXH64(&objectSpeed, sizeof(objectSpeed), hash);
@@ -977,9 +977,9 @@ bool32 oCObjectGenerator::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCItem::Hash()
+void oCItem::CalcHash()
 {
-	oCVob::Hash();
+	oCVob::CalcHash();
 
 	hash = XXH64(itemInstance.ToChar(), itemInstance.Length(), hash);
 }
@@ -1053,9 +1053,9 @@ bool32 oCItem::IsEqual(zCObject *obj)
 	return result;
 }
 
-void oCMOB::Hash()
+void oCMOB::CalcHash()
 {
-	oCVob::Hash();
+	oCVob::CalcHash();
 
 	hash = XXH64(focusName.ToChar(), focusName.Length(), hash);
 	hash = XXH64(&hitpoints, sizeof(hitpoints), hash);
@@ -1091,9 +1091,9 @@ bool32 oCMOB::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCMobInter::Hash()
+void oCMobInter::CalcHash()
 {
-	oCMOB::Hash();
+	oCMOB::CalcHash();
 
 	hash = XXH64(&state, sizeof(state), hash);
 	hash = XXH64(&stateTarget, sizeof(stateTarget), hash);
@@ -1125,9 +1125,9 @@ bool32 oCMobInter::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCMobFire::Hash()
+void oCMobFire::CalcHash()
 {
-	oCMobInter::Hash();
+	oCMobInter::CalcHash();
 
 	hash = XXH64(fireSlot.ToChar(), fireSlot.Length(), hash);
 	hash = XXH64(fireVobtreeName.ToChar(), fireVobtreeName.Length(), hash);
@@ -1145,9 +1145,9 @@ bool32 oCMobFire::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCMobItemSlot::Hash()
+void oCMobItemSlot::CalcHash()
 {
-	oCMobInter::Hash();
+	oCMobInter::CalcHash();
 
 	hash = XXH64(&itemRemoveable, sizeof(itemRemoveable), hash);
 }
@@ -1163,9 +1163,9 @@ bool32 oCMobItemSlot::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCMobLockable::Hash()
+void oCMobLockable::CalcHash()
 {
-	oCMobInter::Hash();
+	oCMobInter::CalcHash();
 
 	hash = XXH64(&locked, sizeof(locked), hash);
 	hash = XXH64(keyInstance.ToChar(), keyInstance.Length(), hash);
@@ -1185,9 +1185,9 @@ bool32 oCMobLockable::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCMobContainer::Hash()
+void oCMobContainer::CalcHash()
 {
-	oCMobLockable::Hash();
+	oCMobLockable::CalcHash();
 
 	hash = XXH64(contains.ToChar(), contains.Length(), hash);
 }
@@ -1203,9 +1203,9 @@ bool32 oCMobContainer::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
-void oCNpc::Hash()
+void oCNpc::CalcHash()
 {
-	oCVob::Hash();
+	oCVob::CalcHash();
 
 	hash = XXH64(npcInstance.ToChar(), npcInstance.Length(), hash);
 }

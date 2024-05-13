@@ -141,9 +141,9 @@ void zCMaterial::Archive(zCArchiver &arc)
 	arc.WriteRawFloat("defaultMapping", &defaultMapping, sizeof(defaultMapping));
 }
 
-void zCMaterial::Hash()
+void zCMaterial::CalcHash()
 {
-	zCObject::Hash();
+	zCObject::CalcHash();
 
 	hash = XXH64(name.ToChar(), name.Length(), hash);
 	hash = XXH64(&matGroup, sizeof(matGroup), hash);

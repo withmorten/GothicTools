@@ -136,7 +136,7 @@ public:
 	bool32 UnarchivePacked(zCArchiver &arc);
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -176,7 +176,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -231,7 +231,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -306,7 +306,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	XXH64_hash_t Hash(XXH64_hash_t hash);
+	XXH64_hash_t CalcHash(XXH64_hash_t hash);
 	bool32 IsEqual(zCVobLightData &lightData);
 };
 
@@ -322,7 +322,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -337,7 +337,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -365,7 +365,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -393,7 +393,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -422,7 +422,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -437,7 +437,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -498,7 +498,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -569,7 +569,7 @@ public:
 
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -584,7 +584,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -612,7 +612,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -634,7 +634,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -649,7 +649,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -672,7 +672,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -695,7 +695,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -734,7 +734,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -761,7 +761,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -776,7 +776,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -791,7 +791,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -825,7 +825,7 @@ public:
 	zOBJECT_DECLARATION(zCZone);
 
 public:
-	void Hash(); // required for bbox3DWS
+	void CalcHash(); // required for bbox3DWS
 };
 
 class zCZoneZFog : public zCZone
@@ -843,7 +843,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -865,7 +865,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -910,7 +910,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -927,7 +927,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -975,7 +975,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1007,7 +1007,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1035,7 +1035,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1059,7 +1059,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1094,7 +1094,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1116,7 +1116,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1138,7 +1138,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1153,7 +1153,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1176,7 +1176,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1191,7 +1191,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -1224,6 +1224,6 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };

@@ -4,7 +4,7 @@ zOBJECT_DEFINITION(zCObject);
 zOBJECT_DEFINITION(zCAIBase);
 zOBJECT_DEFINITION(zCAICamera);
 
-void zCObject::Hash()
+void zCObject::CalcHash()
 {
 	hash = XXH64(GetClassName().ToChar(), GetClassName().Length(), hash);
 }
@@ -14,10 +14,14 @@ bool32 zCObject::IsEqual(zCObject *obj)
 	return GetClassName() == obj->GetClassName();
 }
 
+XXH64_hash_t zCObject::GetHash()
+{
+	if (hash == 0) CalcHash();
+	
+	return hash;
+}
+
 bool32 zCObject::IsHashEqual(zCObject *obj)
 {
-	if (hash == 0) Hash();
-	if (obj->hash == 0) obj->Hash();
-
-	return hash == obj->hash;
+	return GetHash() == obj->GetHash();
 }

@@ -51,9 +51,9 @@ void zCDecal::Archive(zCArchiver &arc)
 	}
 }
 
-void zCDecal::Hash()
+void zCDecal::CalcHash()
 {
-	zCObject::Hash();
+	zCObject::CalcHash();
 
 	hash = XXH64(name.ToChar(), name.Length(), hash);
 	hash = XXH64(&decalDim, sizeof(decalDim), hash);

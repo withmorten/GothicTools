@@ -258,6 +258,8 @@ void zCVob::Archive(zCArchiver &arc)
 
 	if (arc.mode == zARC_MODE_ASCII_DIFF)
 	{
+		XXH64_hash_t hash = GetHash();
+
 		arc.WriteRaw("hash", &hash, sizeof(hash));
 	}
 

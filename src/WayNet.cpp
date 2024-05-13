@@ -34,9 +34,9 @@ void zCWaypoint::Archive(zCArchiver &arc)
 	arc.WriteVec3("direction", direction);
 }
 
-void zCWaypoint::Hash()
+void zCWaypoint::CalcHash()
 {
-	zCObject::Hash();
+	zCObject::CalcHash();
 
 	hash = XXH64(wpName.ToChar(), wpName.Length(), hash);
 	hash = XXH64(&waterDepth, sizeof(waterDepth), hash);

@@ -32,9 +32,10 @@ public:
 
 	virtual bool32 Unarchive(zCArchiver &arc) { return TRUE; }
 	virtual void Archive(zCArchiver &arc) { }
-	virtual void Hash();
+	virtual void CalcHash();
 	virtual bool32 IsEqual(zCObject *obj); // if hash equal has failed - also has special logic for some classes
 
+	XXH64_hash_t GetHash();
 	bool32 IsHashEqual(zCObject *obj);
 };
 

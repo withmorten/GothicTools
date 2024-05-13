@@ -19,7 +19,7 @@ public:
 public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
-	void Hash();
+	void CalcHash();
 	bool32 IsEqual(zCObject *obj);
 };
 
