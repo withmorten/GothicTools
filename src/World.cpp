@@ -33,23 +33,26 @@ zCWorld::~zCWorld()
 	zDELETE(vobTree);
 	zDELETE(wayNet);
 
-	// now that we have references, this is the easy way out to cleanup non vobs ...
-	// waypoints
-	registry->DeleteList<zCWaypoint>();
+	if (registry)
+	{
+		// now that we have references, this is the easy way out to cleanup non vobs ...
+		// waypoints
+		registry->DeleteList<zCWaypoint>();
 
-	// visuals
-	registry->DeleteList<zCPolyStrip>();
-	registry->DeleteList<zCDecal>();
-	registry->DeleteList<zCParticleFX>();
-	registry->DeleteList<zCMesh>();
-	registry->DeleteList<zCModel>();
-	registry->DeleteList<zCMorphMesh>();
-	registry->DeleteList<zCProgMeshProto>();
+		// visuals
+		registry->DeleteList<zCPolyStrip>();
+		registry->DeleteList<zCDecal>();
+		registry->DeleteList<zCParticleFX>();
+		registry->DeleteList<zCMesh>();
+		registry->DeleteList<zCModel>();
+		registry->DeleteList<zCMorphMesh>();
+		registry->DeleteList<zCProgMeshProto>();
 
-	// ais
-	registry->DeleteList<zCAICamera>();
+		// ais
+		registry->DeleteList<zCAICamera>();
 
-	zDELETE(registry);
+		zDELETE(registry);
+	}
 }
 
 bool32 zCWorld::LoadZEN(zCArchiver &arc)
@@ -226,6 +229,24 @@ zCVob *zCWorld::GetVob(int32 objectIndex)
 		if (vobs[i]->objectIndex == objectIndex)
 		{
 			return vobs[i];
+		}
+	}
+
+	return NULL;
+}
+
+zCWaypoint *zCWorld::GetWaypoint(int32 objectIndex)
+{
+	if (registry)
+	{
+		auto &waypoints = registry->GetList<zCWaypoint>();
+
+		for (int32 i = 0; i < waypoints.numInArray; i++)
+		{
+			if (waypoints[i]->objectIndex == objectIndex)
+			{
+				return waypoints[i];
+			}
 		}
 	}
 

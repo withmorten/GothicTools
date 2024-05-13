@@ -7,6 +7,7 @@
 class zCBspTree;
 class zCVob;
 class zCWayNet;
+class zCWaypoint;
 class zCObjectRegistry;
 
 class zCWorld : public zCObject
@@ -40,4 +41,5 @@ public:
 	void Archive(zCArchiver &arc);
 
 	zCVob *GetVob(int32 objectIndex);
+	zCWaypoint *GetWaypoint(int32 objectIndex);
 };

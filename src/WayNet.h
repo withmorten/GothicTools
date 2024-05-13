@@ -70,4 +70,6 @@ public:
 
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
+
+	zCWay *GetWay(int32 wayIndex);
 };

@@ -210,3 +210,16 @@ void zCWayNet::Archive(zCArchiver &arc)
 		arc.WriteObject(zSTRING("wayr" + n).ToChar(), ways[i]->right);
 	}
 }
+
+zCWay *zCWayNet::GetWay(int32 wayIndex)
+{
+	for (int32 i = 0; i < numWays; i++)
+	{
+		if (ways[i]->wayIndex == wayIndex)
+		{
+			return ways[i];
+		}
+	}
+
+	return NULL;
+}
