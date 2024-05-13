@@ -1316,21 +1316,28 @@ void zCArchiver::WriteObject(const char *chunkName, zCObject *object)
 	}
 	else
 	{
-		int32 objectIndex = SearchWriteObjectList(object);
-
-		if (objectIndex != -1)
+		if (mode == zARC_MODE_ASCII_DIFF)
 		{
-			WriteChunkStart(chunkName, zARC_CHUNK_CLASS_NAME_REF, objectIndex);
+			WriteChunkStart(chunkName, object->classHierarchy.ToChar(), object->objectIndex, object->classVersion);
+
+			object->Archive(*this);
 		}
 		else
 		{
-			objectIndex = mode != zARC_MODE_ASCII_DIFF ? GetWriteObjectListNum() : object->objectIndex;
+			int32 objectIndex = SearchWriteObjectList(object);
 
-			WriteChunkStart(chunkName, object->classHierarchy.ToChar(), objectIndex, object->classVersion);
+			if (objectIndex != -1)
+			{
+				WriteChunkStart(chunkName, zARC_CHUNK_CLASS_NAME_REF, objectIndex);
+			}
+			else
+			{
+				WriteChunkStart(chunkName, object->classHierarchy.ToChar(), GetWriteObjectListNum(), object->classVersion);
 
-			AddToWriteObjectList(object);
+				AddToWriteObjectList(object);
 
-			object->Archive(*this);
+				object->Archive(*this);
+			}
 		}
 	}
 
