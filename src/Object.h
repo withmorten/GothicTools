@@ -24,18 +24,21 @@ public:
 	zSTRING classHierarchy;
 
 	XXH64_hash_t hash; // for easy equality check
+	XXH32_hash_t id;
 	bool32 found; // for checking if this object was previously found ...
 
 public:
-	zCObject() { hash = 0; found = FALSE; }
+	zCObject() { hash = 0; id = 0; found = FALSE; }
 	virtual ~zCObject() { };
 
 	virtual bool32 Unarchive(zCArchiver &arc) { return TRUE; }
 	virtual void Archive(zCArchiver &arc) { }
 	virtual void CalcHash();
+	virtual void CalcID();
 	virtual bool32 IsEqual(zCObject *obj); // if hash equal has failed - also has special logic for some classes
 
 	XXH64_hash_t GetHash();
+	XXH32_hash_t GetID();
 	bool32 IsHashEqual(zCObject *obj);
 };
 

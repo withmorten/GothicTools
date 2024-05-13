@@ -180,3 +180,43 @@ void zCMaterial::CalcHash()
 
 	hash = XXH64(&defaultMapping, sizeof(defaultMapping), hash);
 }
+
+void zCMaterial::CalcID()
+{
+	zCObject::CalcID();
+
+	id = XXH32(name.ToChar(), name.Length(), id);
+	id = XXH32(&matGroup, sizeof(matGroup), id);
+	id = XXH32(&color, sizeof(color), id);
+	id = XXH32(&smoothAngle, sizeof(smoothAngle), id);
+
+	id = XXH32(texture.ToChar(), texture.Length(), id);
+	id = XXH32(texScale.ToChar(), texScale.Length(), id);
+	id = XXH32(&texAniFPS, sizeof(texAniFPS), id);
+	id = XXH32(&texAniMapMode, sizeof(texAniMapMode), id);
+	id = XXH32(texAniMapDir.ToChar(), texAniMapDir.Length(), id);
+
+	id = XXH32(&noCollDet, sizeof(noCollDet), id);
+	id = XXH32(&noLightmap, sizeof(noLightmap), id);
+	id = XXH32(&lodDontCollapse, sizeof(lodDontCollapse), id);
+
+	id = XXH32(detailObject.ToChar(), detailObject.Length(), id);
+
+	id = XXH32(&detailObjectScale, sizeof(detailObjectScale), id);
+
+	id = XXH32(&forceOccluder, sizeof(forceOccluder), id);
+	id = XXH32(&environmentalMapping, sizeof(environmentalMapping), id);
+	id = XXH32(&environmentalMappingStrength, sizeof(environmentalMappingStrength), id);
+
+	id = XXH32(&waveMode, sizeof(waveMode), id);
+	id = XXH32(&waveSpeed, sizeof(waveSpeed), id);
+
+	id = XXH32(&waveMaxAmplitude, sizeof(waveMaxAmplitude), id);
+	id = XXH32(&waveGridSize, sizeof(waveGridSize), id);
+
+	id = XXH32(&ignoreSunLight, sizeof(ignoreSunLight), id);
+
+	id = XXH32(&alphaFunc, sizeof(alphaFunc), id);
+
+	id = XXH32(&defaultMapping, sizeof(defaultMapping), id);
+}

@@ -65,3 +65,18 @@ void zCDecal::CalcHash()
 	hash = XXH64(&decalAlphaWeight, sizeof(decalAlphaWeight), hash);
 	hash = XXH64(&ignoreDayLight, sizeof(ignoreDayLight), hash);
 }
+
+void zCDecal::CalcID()
+{
+	zCObject::CalcID();
+
+	id = XXH32(name.ToChar(), name.Length(), id);
+	id = XXH32(&decalDim, sizeof(decalDim), id);
+	id = XXH32(&decalOffset, sizeof(decalOffset), id);
+	id = XXH32(&decal2Sided, sizeof(decal2Sided), id);
+	id = XXH32(&decalAlphaFunc, sizeof(decalAlphaFunc), id);
+	id = XXH32(&decalTexAniFPS, sizeof(decalTexAniFPS), id);
+
+	id = XXH32(&decalAlphaWeight, sizeof(decalAlphaWeight), id);
+	id = XXH32(&ignoreDayLight, sizeof(ignoreDayLight), id);
+}

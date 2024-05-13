@@ -45,6 +45,17 @@ void zCWaypoint::CalcHash()
 	hash = XXH64(&direction, sizeof(direction), hash);
 }
 
+void zCWaypoint::CalcID()
+{
+	zCObject::CalcID();
+
+	id = XXH32(wpName.ToChar(), wpName.Length(), id);
+	id = XXH32(&waterDepth, sizeof(waterDepth), id);
+	id = XXH32(&underWater, sizeof(underWater), id);
+	id = XXH32(&position, sizeof(position), id);
+	id = XXH32(&direction, sizeof(direction), id);
+}
+
 bool32 zCWaypoint::IsEqual(zCObject *obj)
 {
 	if (!zCObject::IsEqual(obj)) return FALSE;
@@ -68,6 +79,16 @@ bool32 zCWaypoint::IsEqual(zCObject *obj)
 	return TRUE;
 }
 
+zCWay::zCWay(zCWaypoint *l, zCWaypoint *r, int32 wI)
+{
+	left = l;
+	right = r;
+	wayIndex = wI;
+	hash = 0;
+	id = 0;
+	found = FALSE;
+}
+
 bool32 zCWay::IsHashEqual(zCWay *way)
 {
 	if (!left->IsHashEqual(way->left)) return FALSE;
@@ -76,10 +97,32 @@ bool32 zCWay::IsHashEqual(zCWay *way)
 	return TRUE;
 }
 
+XXH32_hash_t zCWay::GetID()
+{
+	if (id == 0)
+	{
+		id = XXH32(left->wpName.ToChar(), left->wpName.Length(), id);
+		id = XXH32(right->wpName.ToChar(), right->wpName.Length(), id);
+	}
+
+	return id;
+}
+
+XXH64_hash_t zCWay::GetHash()
+{
+	if (hash == 0)
+	{
+		hash = XXH64(left->wpName.ToChar(), left->wpName.Length(), hash);
+		hash = XXH64(right->wpName.ToChar(), right->wpName.Length(), hash);
+	}
+
+	return hash;
+}
+
 bool32 zCWay::IsEqual(zCWay *way)
 {
-	if (!left->IsEqual(way->left)) return FALSE;
-	if (!right->IsEqual(way->right)) return FALSE;
+	if (left->wpName != way->left->wpName) return FALSE;
+	if (right->wpName != way->right->wpName) return FALSE;
 
 	return TRUE;
 }

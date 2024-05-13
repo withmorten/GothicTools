@@ -30,6 +30,39 @@ void zCVob::CalcHash()
 	hash = XXH64(&isAmbient, sizeof(isAmbient), hash);
 }
 
+void zCVob::CalcID()
+{
+	zCObject::CalcID();
+
+	id = XXH32(presetName.ToChar(), presetName.Length(), id);
+
+	// TODO bbox needs to also be checked for triggers, and potentially other vobs?
+	// zCZone
+	// zCTriggerBase, zCTrigger?
+	// zCTouchDamage?
+	// zCTouchAnimate?
+	// id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id); // not useful, because id now is a sort of identifier, but is hashed for zCZone
+	id = XXH32(&trafoOSToWSRot, sizeof(trafoOSToWSRot), id);
+	id = XXH32(&trafoOSToWSPos, sizeof(trafoOSToWSPos), id);
+
+	id = XXH32(vobName.ToChar(), vobName.Length(), id);
+	id = XXH32(visualName.ToChar(), visualName.Length(), id);
+	id = XXH32(&showVisual, sizeof(showVisual), id);
+	id = XXH32(&visualCamAlign, sizeof(visualCamAlign), id);
+
+	id = XXH32(&visualAniMode, sizeof(visualAniMode), id);
+	id = XXH32(&visualAniModeStrength, sizeof(visualAniModeStrength), id);
+	id = XXH32(&vobFarClipZScale, sizeof(vobFarClipZScale), id);
+
+	id = XXH32(&cdStatic, sizeof(cdStatic), id);
+	id = XXH32(&cdDyn, sizeof(cdDyn), id);
+	id = XXH32(&staticVob, sizeof(staticVob), id);
+	id = XXH32(&dynShadow, sizeof(dynShadow), id);
+
+	id = XXH32(&zbias, sizeof(zbias), id);
+	id = XXH32(&isAmbient, sizeof(isAmbient), id);
+}
+
 bool32 zCVob::IsEqual(zCObject *obj)
 {
 	if (!zCObject::IsEqual(obj)) return FALSE;
@@ -131,6 +164,28 @@ void zCCamTrj_KeyFrame::CalcHash()
 	hash = XXH64(&originalPose, sizeof(originalPose), hash);
 }
 
+void zCCamTrj_KeyFrame::CalcID()
+{
+	zCVob::CalcID();
+
+	id = XXH32(&time, sizeof(time), id);
+	id = XXH32(&angleRollDeg, sizeof(angleRollDeg), id);
+	id = XXH32(&camFOVScale, sizeof(camFOVScale), id);
+
+	id = XXH32(&motionType, sizeof(motionType), id);
+	id = XXH32(&motionTypeFOV, sizeof(motionTypeFOV), id);
+	id = XXH32(&motionTypeRoll, sizeof(motionTypeRoll), id);
+	id = XXH32(&motionTypeTimeScale, sizeof(motionTypeTimeScale), id);
+
+	id = XXH32(&tension, sizeof(tension), id);
+	id = XXH32(&bias, sizeof(bias), id);
+	id = XXH32(&continuity, sizeof(continuity), id);
+	id = XXH32(&timeScale, sizeof(timeScale), id);
+	id = XXH32(&timeIsFixed, sizeof(timeIsFixed), id);
+
+	id = XXH32(&originalPose, sizeof(originalPose), id);
+}
+
 bool32 zCCamTrj_KeyFrame::IsEqual(zCObject *obj)
 {
 	if (!zCVob::IsEqual(obj)) return FALSE;
@@ -180,6 +235,31 @@ void zCCSCamera::CalcHash()
 
 	hash = XXH64(&posKeys.numInArray, sizeof(posKeys.numInArray), hash);
 	hash = XXH64(&targetKeys.numInArray, sizeof(targetKeys.numInArray), hash);
+}
+
+void zCCSCamera::CalcID()
+{
+	zCVob::CalcID();
+
+	id = XXH32(&camTrjFOR, sizeof(camTrjFOR), id);
+	id = XXH32(&targetTrjFOR, sizeof(targetTrjFOR), id);
+	id = XXH32(&loopMode, sizeof(loopMode), id);
+	id = XXH32(&splLerpMode, sizeof(splLerpMode), id);
+
+	id = XXH32(&ignoreFORVobRotCam, sizeof(ignoreFORVobRotCam), id);
+	id = XXH32(&ignoreFORVobRotTarget, sizeof(ignoreFORVobRotTarget), id);
+	id = XXH32(&adaptToSurroundings, sizeof(adaptToSurroundings), id);
+	id = XXH32(&easeToFirstKey, sizeof(easeToFirstKey), id);
+	id = XXH32(&easeFromLastKey, sizeof(easeFromLastKey), id);
+	id = XXH32(&totalTime, sizeof(totalTime), id);
+
+	id = XXH32(autoCamFocusVobName.ToChar(), autoCamFocusVobName.Length(), id);
+	id = XXH32(&autoCamPlayerMovable, sizeof(autoCamPlayerMovable), id);
+	id = XXH32(&autoCamUntriggerOnLastKey, sizeof(autoCamUntriggerOnLastKey), id);
+	id = XXH32(&autoCamUntriggerOnLastKeyDelay, sizeof(autoCamUntriggerOnLastKeyDelay), id);
+
+	id = XXH32(&posKeys.numInArray, sizeof(posKeys.numInArray), id);
+	id = XXH32(&targetKeys.numInArray, sizeof(targetKeys.numInArray), id);
 }
 
 bool32 zCCSCamera::IsEqual(zCObject *obj)
@@ -239,6 +319,34 @@ XXH64_hash_t zCVobLightData::CalcHash(XXH64_hash_t hash)
 	return hash;
 }
 
+XXH32_hash_t zCVobLightData::CalcID(XXH32_hash_t id)
+{
+	id = XXH32(&lightType, sizeof(lightType), id);
+	id = XXH32(&range, sizeof(range), id);
+	id = XXH32(&color, sizeof(color), id);
+	id = XXH32(&spotConeAngle, sizeof(spotConeAngle), id);
+	id = XXH32(&lightStatic, sizeof(lightStatic), id);
+	id = XXH32(&lightQuality, sizeof(lightQuality), id);
+	id = XXH32(lensflareFX.ToChar(), lensflareFX.Length(), id);
+
+	if (!lightStatic)
+	{
+		id = XXH32(&turnedOn, sizeof(turnedOn), id);
+
+		id = XXH32(rangeAniScale.array, sizeof(*rangeAniScale.array) * rangeAniScale.numInArray, id);
+		id = XXH32(&rangeAniFPS, sizeof(rangeAniFPS), id);
+		id = XXH32(&rangeAniSmooth, sizeof(rangeAniSmooth), id);
+
+		id = XXH32(colorAniList.array, sizeof(*colorAniList.array) * colorAniList.numInArray, id);
+		id = XXH32(&colorAniFPS, sizeof(colorAniFPS), id);
+		id = XXH32(&colorAniSmooth, sizeof(colorAniSmooth), id);
+
+		id = XXH32(&canMove, sizeof(canMove), id);
+	}
+
+	return id;
+}
+
 bool32 zCVobLightData::IsEqual(zCVobLightData &lightData)
 {
 	if (lightType != lightData.lightType) return FALSE;
@@ -296,6 +404,15 @@ void zCVobLight::CalcHash()
 	hash = lightData.CalcHash(hash);
 }
 
+void zCVobLight::CalcID()
+{
+	zCVob::CalcID();
+
+	id = XXH32(lightPresetInUse.ToChar(), lightPresetInUse.Length(), id);
+
+	id = lightData.CalcID(id);
+}
+
 bool32 zCVobLight::IsEqual(zCObject *obj)
 {
 	if (!zCVob::IsEqual(obj)) return FALSE;
@@ -314,6 +431,13 @@ void zCTriggerBase::CalcHash()
 	zCVob::CalcHash();
 
 	hash = XXH64(triggerTarget.ToChar(), triggerTarget.Length(), hash);
+}
+
+void zCTriggerBase::CalcID()
+{
+	zCVob::CalcID();
+
+	id = XXH32(triggerTarget.ToChar(), triggerTarget.Length(), id);
 }
 
 bool32 zCTriggerBase::IsEqual(zCObject *obj)
@@ -341,6 +465,23 @@ void zCCodeMaster::CalcHash()
 	for (int32 i = 0; i < numSlaves; i++)
 	{
 		hash = XXH64(slaveVobNameList[i].ToChar(), slaveVobNameList[i].Length(), hash);
+	}
+}
+
+void zCCodeMaster::CalcID()
+{
+	zCTriggerBase::CalcID();
+
+	id = XXH32(&flags.orderRelevant, sizeof(flags.orderRelevant), id);
+	id = XXH32(&flags.firstFalseIsFailure, sizeof(flags.firstFalseIsFailure), id);
+	id = XXH32(triggerTargetFailure.ToChar(), triggerTargetFailure.Length(), id);
+	id = XXH32(&flags.untriggerCancels, sizeof(flags.untriggerCancels), id);
+
+	id = XXH32(&numSlaves, sizeof(numSlaves), id);
+
+	for (int32 i = 0; i < numSlaves; i++)
+	{
+		id = XXH32(slaveVobNameList[i].ToChar(), slaveVobNameList[i].Length(), id);
 	}
 }
 
@@ -373,6 +514,14 @@ void zCMessageFilter::CalcHash()
 	hash = XXH64(&onUntrigger, sizeof(onUntrigger), hash);
 }
 
+void zCMessageFilter::CalcID()
+{
+	zCTriggerBase::CalcID();
+
+	id = XXH32(&onTrigger, sizeof(onTrigger), id);
+	id = XXH32(&onUntrigger, sizeof(onUntrigger), id);
+}
+
 bool32 zCMessageFilter::IsEqual(zCObject *obj)
 {
 	if (!zCTriggerBase::IsEqual(obj)) return FALSE;
@@ -393,6 +542,14 @@ void zCMoverControler::CalcHash()
 	hash = XXH64(&gotoFixedKey, sizeof(gotoFixedKey), hash);
 }
 
+void zCMoverControler::CalcID()
+{
+	zCTriggerBase::CalcID();
+
+	id = XXH32(&moverMessage, sizeof(moverMessage), id);
+	id = XXH32(&gotoFixedKey, sizeof(gotoFixedKey), id);
+}
+
 bool32 zCMoverControler::IsEqual(zCObject *obj)
 {
 	if (!zCTriggerBase::IsEqual(obj)) return FALSE;
@@ -410,6 +567,13 @@ void zCTriggerWorldStart::CalcHash()
 	zCTriggerBase::CalcHash();
 
 	hash = XXH64(&fireOnlyFirstTime, sizeof(fireOnlyFirstTime), hash);
+}
+
+void zCTriggerWorldStart::CalcID()
+{
+	zCTriggerBase::CalcID();
+
+	id = XXH32(&fireOnlyFirstTime, sizeof(fireOnlyFirstTime), id);
 }
 
 bool32 zCTriggerWorldStart::IsEqual(zCObject *obj)
@@ -446,6 +610,29 @@ void zCTrigger::CalcHash()
 	hash = XXH64(&fireDelaySec, sizeof(fireDelaySec), hash);
 }
 
+void zCTrigger::CalcID()
+{
+	zCTriggerBase::CalcID();
+
+	id = XXH32(&flags.startEnabled, sizeof(flags.startEnabled), id);
+	id = XXH32(&flags.isEnabled, sizeof(flags.isEnabled), id);
+	id = XXH32(&flags.sendUntrigger, sizeof(flags.sendUntrigger), id);
+
+	id = XXH32(&filterFlags.reactToOnTrigger, sizeof(filterFlags.reactToOnTrigger), id);
+	id = XXH32(&filterFlags.reactToOnTouch, sizeof(filterFlags.reactToOnTouch), id);
+	id = XXH32(&filterFlags.reactToOnDamage, sizeof(filterFlags.reactToOnDamage), id);
+	id = XXH32(&filterFlags.respondToObject, sizeof(filterFlags.respondToObject), id);
+	id = XXH32(&filterFlags.respondToPC, sizeof(filterFlags.respondToPC), id);
+	id = XXH32(&filterFlags.respondToNPC, sizeof(filterFlags.respondToNPC), id);
+
+	id = XXH32(respondToVobName.ToChar(), respondToVobName.Length(), id);
+	id = XXH32(&numCanBeActivated, sizeof(numCanBeActivated), id);
+	id = XXH32(&retriggerWaitSec, sizeof(retriggerWaitSec), id);
+	id = XXH32(&damageThreshold, sizeof(damageThreshold), id);
+
+	id = XXH32(&fireDelaySec, sizeof(fireDelaySec), id);
+}
+
 bool32 zCTrigger::IsEqual(zCObject *obj)
 {
 	if (!zCTriggerBase::IsEqual(obj)) return FALSE;
@@ -478,6 +665,13 @@ void zCTriggerTeleport::CalcHash()
 	zCTrigger::CalcHash();
 
 	hash = XXH64(sfxTeleport.ToChar(), sfxTeleport.Length(), hash);
+}
+
+void zCTriggerTeleport::CalcID()
+{
+	zCTrigger::CalcID();
+
+	id = XXH32(sfxTeleport.ToChar(), sfxTeleport.Length(), id);
 }
 
 bool32 zCTriggerTeleport::IsEqual(zCObject *obj)
@@ -522,6 +716,39 @@ void zCMover::CalcHash()
 	hash = XXH64(sfxLock.ToChar(), sfxLock.Length(), hash);
 	hash = XXH64(sfxUnlock.ToChar(), sfxUnlock.Length(), hash);
 	hash = XXH64(sfxUseLocked.ToChar(), sfxUseLocked.Length(), hash);
+}
+
+void zCMover::CalcID()
+{
+	zCTrigger::CalcID();
+
+	id = XXH32(&moverBehavior, sizeof(moverBehavior), id);
+	id = XXH32(&touchBlockerDamage, sizeof(touchBlockerDamage), id);
+	id = XXH32(&stayOpenTimeSec, sizeof(stayOpenTimeSec), id);
+	id = XXH32(&moverLocked, sizeof(moverLocked), id);
+	id = XXH32(&autoLinkEnabled, sizeof(autoLinkEnabled), id);
+
+	id = XXH32(&autoRotate, sizeof(autoRotate), id);
+
+	id = XXH32(&numKeyframes, sizeof(numKeyframes), id);
+
+	if (numKeyframes > 0)
+	{
+		id = XXH32(&moveSpeed, sizeof(moveSpeed), id);
+		id = XXH32(&posLerpType, sizeof(posLerpType), id);
+		id = XXH32(&speedType, sizeof(speedType), id);
+
+		id = XXH32(keyframes, sizeof(*keyframes) * numKeyframes, id);
+	}
+
+	id = XXH32(sfxOpenStart.ToChar(), sfxOpenStart.Length(), id);
+	id = XXH32(sfxOpenEnd.ToChar(), sfxOpenEnd.Length(), id);
+	id = XXH32(sfxMoving.ToChar(), sfxMoving.Length(), id);
+	id = XXH32(sfxCloseStart.ToChar(), sfxCloseStart.Length(), id);
+	id = XXH32(sfxCloseEnd.ToChar(), sfxCloseEnd.Length(), id);
+	id = XXH32(sfxLock.ToChar(), sfxLock.Length(), id);
+	id = XXH32(sfxUnlock.ToChar(), sfxUnlock.Length(), id);
+	id = XXH32(sfxUseLocked.ToChar(), sfxUseLocked.Length(), id);
 }
 
 bool32 zCMover::IsEqual(zCObject *obj)
@@ -575,6 +802,20 @@ void zCTriggerList::CalcHash()
 	}
 }
 
+void zCTriggerList::CalcID()
+{
+	zCTrigger::CalcID();
+
+	id = XXH32(&listProcess, sizeof(listProcess), id);
+	id = XXH32(&numTarget, sizeof(numTarget), id);
+
+	for (int32 i = 0; i < numTarget; i++)
+	{
+		id = XXH32(triggerTargetList[i].ToChar(), triggerTargetList[i].Length(), id);
+		id = XXH32(&fireDelayList[i], sizeof(fireDelayList[i]), id);
+	}
+}
+
 bool32 zCTriggerList::IsEqual(zCObject *obj)
 {
 	if (!zCTrigger::IsEqual(obj)) return FALSE;
@@ -601,6 +842,14 @@ void oCTriggerChangeLevel::CalcHash()
 	hash = XXH64(startVobName.ToChar(), startVobName.Length(), hash);
 }
 
+void oCTriggerChangeLevel::CalcID()
+{
+	zCTrigger::CalcID();
+
+	id = XXH32(levelName.ToChar(), levelName.Length(), id);
+	id = XXH32(startVobName.ToChar(), startVobName.Length(), id);
+}
+
 bool32 oCTriggerChangeLevel::IsEqual(zCObject *obj)
 {
 	if (!zCTrigger::IsEqual(obj)) return FALSE;
@@ -618,6 +867,13 @@ void oCTriggerScript::CalcHash()
 	zCTrigger::CalcHash();
 
 	hash = XXH64(scriptFunc.ToChar(), scriptFunc.Length(), hash);
+}
+
+void oCTriggerScript::CalcID()
+{
+	zCTrigger::CalcID();
+
+	id = XXH32(scriptFunc.ToChar(), scriptFunc.Length(), id);
 }
 
 bool32 oCTriggerScript::IsEqual(zCObject *obj)
@@ -640,6 +896,15 @@ void zCEarthquake::CalcHash()
 	hash = XXH64(&amplitudeCM, sizeof(amplitudeCM), hash);
 }
 
+void zCEarthquake::CalcID()
+{
+	zCEffect::CalcID();
+
+	id = XXH32(&radius, sizeof(radius), id);
+	id = XXH32(&timeSec, sizeof(timeSec), id);
+	id = XXH32(&amplitudeCM, sizeof(amplitudeCM), id);
+}
+
 bool32 zCEarthquake::IsEqual(zCObject *obj)
 {
 	if (!zCEffect::IsEqual(obj)) return FALSE;
@@ -660,6 +925,15 @@ void zCPFXControler::CalcHash()
 	hash = XXH64(pfxName.ToChar(), pfxName.Length(), hash);
 	hash = XXH64(&killVobWhenDone, sizeof(killVobWhenDone), hash);
 	hash = XXH64(&pfxStartOn, sizeof(pfxStartOn), hash);
+}
+
+void zCPFXControler::CalcID()
+{
+	zCEffect::CalcID();
+
+	id = XXH32(pfxName.ToChar(), pfxName.Length(), id);
+	id = XXH32(&killVobWhenDone, sizeof(killVobWhenDone), id);
+	id = XXH32(&pfxStartOn, sizeof(pfxStartOn), id);
 }
 
 bool32 zCPFXControler::IsEqual(zCObject *obj)
@@ -695,6 +969,26 @@ void zCTouchDamage::CalcHash()
 	hash = XXH64(&damageCollType, sizeof(damageCollType), hash);
 }
 
+void zCTouchDamage::CalcID()
+{
+	zCEffect::CalcID();
+
+	id = XXH32(&damage, sizeof(damage), id);
+
+	id = XXH32(&damageType.Barrier, sizeof(damageType.Barrier), id);
+	id = XXH32(&damageType.Blunt, sizeof(damageType.Blunt), id);
+	id = XXH32(&damageType.Edge, sizeof(damageType.Edge), id);
+	id = XXH32(&damageType.Fire, sizeof(damageType.Fire), id);
+	id = XXH32(&damageType.Fly, sizeof(damageType.Fly), id);
+	id = XXH32(&damageType.Magic, sizeof(damageType.Magic), id);
+	id = XXH32(&damageType.Point, sizeof(damageType.Point), id);
+	id = XXH32(&damageType.Fall, sizeof(damageType.Fall), id);
+
+	id = XXH32(&damageRepeatDelaySec, sizeof(damageRepeatDelaySec), id);
+	id = XXH32(&damageVolDownScale, sizeof(damageVolDownScale), id);
+	id = XXH32(&damageCollType, sizeof(damageCollType), id);
+}
+
 bool32 zCTouchDamage::IsEqual(zCObject *obj)
 {
 	if (!zCEffect::IsEqual(obj)) return FALSE;
@@ -726,6 +1020,13 @@ void zCTouchAnimateSound::CalcHash()
 	hash = XXH64(sfxTouch.ToChar(), sfxTouch.Length(), hash);
 }
 
+void zCTouchAnimateSound::CalcID()
+{
+	zCTouchAnimate::CalcID();
+
+	id = XXH32(sfxTouch.ToChar(), sfxTouch.Length(), id);
+}
+
 bool32 zCTouchAnimateSound::IsEqual(zCObject *obj)
 {
 	if (!zCTouchAnimate::IsEqual(obj)) return FALSE;
@@ -744,6 +1045,13 @@ void zCVobAnimate::CalcHash()
 	hash = XXH64(&startOn, sizeof(startOn), hash);
 }
 
+void zCVobAnimate::CalcID()
+{
+	zCEffect::CalcID();
+
+	id = XXH32(&startOn, sizeof(startOn), id);
+}
+
 bool32 zCVobAnimate::IsEqual(zCObject *obj)
 {
 	if (!zCEffect::IsEqual(obj)) return FALSE;
@@ -760,6 +1068,13 @@ void zCVobLensFlare::CalcHash()
 	zCEffect::CalcHash();
 
 	hash = XXH64(lensflareFX.ToChar(), lensflareFX.Length(), hash);
+}
+
+void zCVobLensFlare::CalcID()
+{
+	zCEffect::CalcID();
+
+	id = XXH32(lensflareFX.ToChar(), lensflareFX.Length(), id);
 }
 
 bool32 zCVobLensFlare::IsEqual(zCObject *obj)
@@ -799,6 +1114,13 @@ void zCZone::CalcHash()
 	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash);
 }
 
+void zCZone::CalcID()
+{
+	zCVob::CalcID();
+
+	id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id);
+}
+
 void zCZoneZFog::CalcHash()
 {
 	zCZone::CalcHash();
@@ -809,6 +1131,18 @@ void zCZoneZFog::CalcHash()
 
 	hash = XXH64(&fadeOutSky, sizeof(fadeOutSky), hash);
 	hash = XXH64(&overrideColor, sizeof(overrideColor), hash);
+}
+
+void zCZoneZFog::CalcID()
+{
+	zCZone::CalcID();
+
+	id = XXH32(&fogRangeCenter, sizeof(fogRangeCenter), id);
+	id = XXH32(&innerRangePerc, sizeof(innerRangePerc), id);
+	id = XXH32(&fogColor, sizeof(fogColor), id);
+
+	id = XXH32(&fadeOutSky, sizeof(fadeOutSky), id);
+	id = XXH32(&overrideColor, sizeof(overrideColor), id);
 }
 
 bool32 zCZoneZFog::IsEqual(zCObject *obj)
@@ -833,6 +1167,14 @@ void zCZoneVobFarPlane::CalcHash()
 
 	hash = XXH64(&vobFarPlaneZ, sizeof(vobFarPlaneZ), hash);
 	hash = XXH64(&innerRangePerc, sizeof(innerRangePerc), hash);
+}
+
+void zCZoneVobFarPlane::CalcID()
+{
+	zCZone::CalcID();
+
+	id = XXH32(&vobFarPlaneZ, sizeof(vobFarPlaneZ), id);
+	id = XXH32(&innerRangePerc, sizeof(innerRangePerc), id);
 }
 
 bool32 zCZoneVobFarPlane::IsEqual(zCObject *obj)
@@ -862,6 +1204,23 @@ void zCVobSound::CalcHash()
 	hash = XXH64(&sndVolType, sizeof(sndVolType), hash);
 	hash = XXH64(&sndRadius, sizeof(sndRadius), hash);
 	hash = XXH64(sndName.ToChar(), sndName.Length(), hash);
+}
+
+void zCVobSound::CalcID()
+{
+	zCZone::CalcID();
+
+	id = XXH32(&sndVolume, sizeof(sndVolume), id);
+	id = XXH32(&sndMode, sizeof(sndMode), id);
+	id = XXH32(&sndRandDelay, sizeof(sndRandDelay), id);
+	id = XXH32(&sndRandDelayVar, sizeof(sndRandDelayVar), id);
+	id = XXH32(&sndStartOn, sizeof(sndStartOn), id);
+	id = XXH32(&sndAmbient3D, sizeof(sndAmbient3D), id);
+	id = XXH32(&sndObstruction, sizeof(sndObstruction), id);
+	id = XXH32(&sndConeAngle, sizeof(sndConeAngle), id);
+	id = XXH32(&sndVolType, sizeof(sndVolType), id);
+	id = XXH32(&sndRadius, sizeof(sndRadius), id);
+	id = XXH32(sndName.ToChar(), sndName.Length(), id);
 }
 
 bool32 zCVobSound::IsEqual(zCObject *obj)
@@ -894,6 +1253,15 @@ void zCVobSoundDaytime::CalcHash()
 	hash = XXH64(sndName2.ToChar(), sndName2.Length(), hash);
 }
 
+void zCVobSoundDaytime::CalcID()
+{
+	zCVobSound::CalcID();
+
+	id = XXH32(&sndStartTime, sizeof(sndStartTime), id);
+	id = XXH32(&sndEndTime, sizeof(sndEndTime), id);
+	id = XXH32(sndName2.ToChar(), sndName2.Length(), id);
+}
+
 bool32 zCVobSoundDaytime::IsEqual(zCObject *obj)
 {
 	if (!zCVobSound::IsEqual(obj)) return FALSE;
@@ -914,6 +1282,15 @@ void zCZoneReverb::CalcHash()
 	hash = XXH64(&reverbPreset, sizeof(reverbPreset), hash);
 	hash = XXH64(&reverbWeight, sizeof(reverbWeight), hash);
 	hash = XXH64(&innerRangePerc, sizeof(innerRangePerc), hash);
+}
+
+void zCZoneReverb::CalcID()
+{
+	zCZone::CalcID();
+
+	id = XXH32(&reverbPreset, sizeof(reverbPreset), id);
+	id = XXH32(&reverbWeight, sizeof(reverbWeight), id);
+	id = XXH32(&innerRangePerc, sizeof(innerRangePerc), id);
 }
 
 bool32 zCZoneReverb::IsEqual(zCObject *obj)
@@ -941,6 +1318,18 @@ void oCZoneMusic::CalcHash()
 	hash = XXH64(&loop, sizeof(loop), hash);
 }
 
+void oCZoneMusic::CalcID()
+{
+	zCZoneMusic::CalcID();
+
+	id = XXH32(&enabled, sizeof(enabled), id);
+	id = XXH32(&priority, sizeof(priority), id);
+	id = XXH32(&ellipsoid, sizeof(ellipsoid), id);
+	id = XXH32(&reverbLevel, sizeof(reverbLevel), id);
+	id = XXH32(&volumeLevel, sizeof(volumeLevel), id);
+	id = XXH32(&loop, sizeof(loop), id);
+}
+
 bool32 oCZoneMusic::IsEqual(zCObject *obj)
 {
 	if (!zCZoneMusic::IsEqual(obj)) return FALSE;
@@ -965,6 +1354,14 @@ void oCObjectGenerator::CalcHash()
 	hash = XXH64(&objectSpeed, sizeof(objectSpeed), hash);
 }
 
+void oCObjectGenerator::CalcID()
+{
+	zCVob::CalcID();
+
+	id = XXH32(objectName.ToChar(), objectName.Length(), id);
+	id = XXH32(&objectSpeed, sizeof(objectSpeed), id);
+}
+
 bool32 oCObjectGenerator::IsEqual(zCObject *obj)
 {
 	if (!zCVob::IsEqual(obj)) return FALSE;
@@ -982,6 +1379,13 @@ void oCItem::CalcHash()
 	oCVob::CalcHash();
 
 	hash = XXH64(itemInstance.ToChar(), itemInstance.Length(), hash);
+}
+
+void oCItem::CalcID()
+{
+	oCVob::CalcID();
+
+	id = XXH32(itemInstance.ToChar(), itemInstance.Length(), id);
 }
 
 bool32 oCItem::IsEqual(zCObject *obj)
@@ -1070,6 +1474,23 @@ void oCMOB::CalcHash()
 	hash = XXH64(&isDestroyed, sizeof(isDestroyed), hash);
 }
 
+void oCMOB::CalcID()
+{
+	oCVob::CalcID();
+
+	id = XXH32(focusName.ToChar(), focusName.Length(), id);
+	id = XXH32(&hitpoints, sizeof(hitpoints), id);
+	id = XXH32(&damage, sizeof(damage), id);
+	id = XXH32(&moveable, sizeof(moveable), id);
+	id = XXH32(&takeable, sizeof(takeable), id);
+	id = XXH32(&focusOverride, sizeof(focusOverride), id);
+	id = XXH32(&soundMaterial, sizeof(soundMaterial), id);
+	id = XXH32(visualDestroyed.ToChar(), visualDestroyed.Length(), id);
+	id = XXH32(owner.ToChar(), owner.Length(), id);
+	id = XXH32(ownerGuild.ToChar(), ownerGuild.Length(), id);
+	id = XXH32(&isDestroyed, sizeof(isDestroyed), id);
+}
+
 bool32 oCMOB::IsEqual(zCObject *obj)
 {
 	if (!oCVob::IsEqual(obj)) return FALSE;
@@ -1106,6 +1527,21 @@ void oCMobInter::CalcHash()
 	hash = XXH64(&rewind, sizeof(rewind), hash);
 }
 
+void oCMobInter::CalcID()
+{
+	oCMOB::CalcID();
+
+	id = XXH32(&state, sizeof(state), id);
+	id = XXH32(&stateTarget, sizeof(stateTarget), id);
+
+	id = XXH32(&stateNum, sizeof(stateNum), id);
+	id = XXH32(triggerTarget.ToChar(), triggerTarget.Length(), id);
+	id = XXH32(useWithItem.ToChar(), useWithItem.Length(), id);
+	id = XXH32(conditionFunc.ToChar(), conditionFunc.Length(), id);
+	id = XXH32(onStateFunc.ToChar(), onStateFunc.Length(), id);
+	id = XXH32(&rewind, sizeof(rewind), id);
+}
+
 bool32 oCMobInter::IsEqual(zCObject *obj)
 {
 	if (!oCMOB::IsEqual(obj)) return FALSE;
@@ -1133,6 +1569,14 @@ void oCMobFire::CalcHash()
 	hash = XXH64(fireVobtreeName.ToChar(), fireVobtreeName.Length(), hash);
 }
 
+void oCMobFire::CalcID()
+{
+	oCMobInter::CalcID();
+
+	id = XXH32(fireSlot.ToChar(), fireSlot.Length(), id);
+	id = XXH32(fireVobtreeName.ToChar(), fireVobtreeName.Length(), id);
+}
+
 bool32 oCMobFire::IsEqual(zCObject *obj)
 {
 	if (!oCMobInter::IsEqual(obj)) return FALSE;
@@ -1150,6 +1594,13 @@ void oCMobItemSlot::CalcHash()
 	oCMobInter::CalcHash();
 
 	hash = XXH64(&itemRemoveable, sizeof(itemRemoveable), hash);
+}
+
+void oCMobItemSlot::CalcID()
+{
+	oCMobInter::CalcID();
+
+	id = XXH32(&itemRemoveable, sizeof(itemRemoveable), id);
 }
 
 bool32 oCMobItemSlot::IsEqual(zCObject *obj)
@@ -1172,6 +1623,15 @@ void oCMobLockable::CalcHash()
 	hash = XXH64(pickLockStr.ToChar(), pickLockStr.Length(), hash);
 }
 
+void oCMobLockable::CalcID()
+{
+	oCMobInter::CalcID();
+
+	id = XXH32(&locked, sizeof(locked), id);
+	id = XXH32(keyInstance.ToChar(), keyInstance.Length(), id);
+	id = XXH32(pickLockStr.ToChar(), pickLockStr.Length(), id);
+}
+
 bool32 oCMobLockable::IsEqual(zCObject *obj)
 {
 	if (!oCMobInter::IsEqual(obj)) return FALSE;
@@ -1192,6 +1652,13 @@ void oCMobContainer::CalcHash()
 	hash = XXH64(contains.ToChar(), contains.Length(), hash);
 }
 
+void oCMobContainer::CalcID()
+{
+	oCMobLockable::CalcID();
+
+	id = XXH32(contains.ToChar(), contains.Length(), id);
+}
+
 bool32 oCMobContainer::IsEqual(zCObject *obj)
 {
 	if (!oCMobLockable::IsEqual(obj)) return FALSE;
@@ -1208,6 +1675,13 @@ void oCNpc::CalcHash()
 	oCVob::CalcHash();
 
 	hash = XXH64(npcInstance.ToChar(), npcInstance.Length(), hash);
+}
+
+void oCNpc::CalcID()
+{
+	oCVob::CalcID();
+
+	id = XXH32(npcInstance.ToChar(), npcInstance.Length(), id);
 }
 
 bool32 oCNpc::IsEqual(zCObject *obj)

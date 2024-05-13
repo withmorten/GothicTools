@@ -20,6 +20,7 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void CalcHash();
+	void CalcID();
 	bool32 IsEqual(zCObject *obj);
 };
 
@@ -30,12 +31,17 @@ public:
 	zCWaypoint *right;
 
 	int32 wayIndex;
-	bool32 found;
+
+	XXH64_hash_t hash;
+	XXH32_hash_t id;
+	bool32 found; // for checking if this way was previously found ...
 
 public:
-	zCWay(zCWaypoint *l, zCWaypoint *r, int32 wI) { left = l; right = r; wayIndex = wI; found = FALSE; }
+	zCWay(zCWaypoint *l, zCWaypoint *r, int32 wI);
 
 	bool32 IsHashEqual(zCWay *way);
+	XXH64_hash_t GetHash();
+	XXH32_hash_t GetID();
 	bool32 IsEqual(zCWay *way);
 };
 

@@ -97,4 +97,5 @@ public:
 	bool32 Unarchive(zCArchiver &arc);
 	void Archive(zCArchiver &arc);
 	void CalcHash();
+	void CalcID();
 };
