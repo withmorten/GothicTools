@@ -296,6 +296,7 @@ XXH64_hash_t zCVobLightData::CalcHash(XXH64_hash_t hash)
 	hash = XXH64(&lightType, sizeof(lightType), hash);
 	hash = XXH64(&range, sizeof(range), hash);
 	hash = XXH64(&color, sizeof(color), hash);
+
 	hash = XXH64(&spotConeAngle, sizeof(spotConeAngle), hash);
 	hash = XXH64(&lightStatic, sizeof(lightStatic), hash);
 	hash = XXH64(&lightQuality, sizeof(lightQuality), hash);
@@ -350,8 +351,8 @@ XXH32_hash_t zCVobLightData::CalcID(XXH32_hash_t id)
 bool32 zCVobLightData::IsEqual(zCVobLightData &lightData)
 {
 	if (lightType != lightData.lightType) return FALSE;
-	// if (color != lightData.color) return FALSE;
 	if (range != lightData.range) return FALSE;
+	// if (color != lightData.color) return FALSE;
 
 	if (spotConeAngle != lightData.spotConeAngle) return FALSE;
 	if (lightStatic != lightData.lightStatic) return FALSE;
