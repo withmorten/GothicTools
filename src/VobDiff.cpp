@@ -8,7 +8,7 @@ void zCVob::CalcHash()
 
 	hash = XXH64(presetName.ToChar(), presetName.Length(), hash);
 
-	// hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash); // not useful, because hash now is a sort of identifier, but is hashed for zCZone
+	// hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash); // not useful, differs way too much on e.g. animated vobs
 	hash = XXH64(&trafoOSToWSRot, sizeof(trafoOSToWSRot), hash);
 	hash = XXH64(&trafoOSToWSPos, sizeof(trafoOSToWSPos), hash);
 
@@ -41,7 +41,7 @@ void zCVob::CalcID()
 	// zCTriggerBase, zCTrigger?
 	// zCTouchDamage?
 	// zCTouchAnimate?
-	// id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id); // not useful, because id now is a sort of identifier, but is hashed for zCZone
+	// id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id); // not useful, differs way too much on e.g. animated vobs
 	id = XXH32(&trafoOSToWSRot, sizeof(trafoOSToWSRot), id);
 	id = XXH32(&trafoOSToWSPos, sizeof(trafoOSToWSPos), id);
 
@@ -71,7 +71,7 @@ bool32 zCVob::IsEqual(zCObject *obj)
 
 	if (presetName != vob->presetName) return FALSE;
 
-	// if (bbox3DWS != vob->bbox3DWS) return FALSE; // this value varies way too much on i.e. animated objects
+	// if (bbox3DWS != vob->bbox3DWS) return FALSE; // this value varies way too much on e.g. animated objects
 	// if (trafoOSToWSRot != vob->trafoOSToWSRot) return FALSE;
 	// if (trafoOSToWSPos != vob->trafoOSToWSPos) return FALSE;
 
@@ -430,12 +430,16 @@ void zCTriggerBase::CalcHash()
 {
 	zCVob::CalcHash();
 
+	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash); // required here
+
 	hash = XXH64(triggerTarget.ToChar(), triggerTarget.Length(), hash);
 }
 
 void zCTriggerBase::CalcID()
 {
 	zCVob::CalcID();
+
+	id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id); // required here
 
 	id = XXH32(triggerTarget.ToChar(), triggerTarget.Length(), id);
 }
@@ -445,6 +449,8 @@ bool32 zCTriggerBase::IsEqual(zCObject *obj)
 	if (!zCVob::IsEqual(obj)) return FALSE;
 
 	zCTriggerBase *vob = (zCTriggerBase *)obj;
+
+	if (bbox3DWS != vob->bbox3DWS) return FALSE; // required here
 
 	if (triggerTarget != vob->triggerTarget) return FALSE;
 
@@ -953,6 +959,8 @@ void zCTouchDamage::CalcHash()
 {
 	zCEffect::CalcHash();
 
+	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash); // required here
+
 	hash = XXH64(&damage, sizeof(damage), hash);
 
 	hash = XXH64(&damageType.Barrier, sizeof(damageType.Barrier), hash);
@@ -972,6 +980,8 @@ void zCTouchDamage::CalcHash()
 void zCTouchDamage::CalcID()
 {
 	zCEffect::CalcID();
+
+	id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id); // required here
 
 	id = XXH32(&damage, sizeof(damage), id);
 
@@ -995,6 +1005,8 @@ bool32 zCTouchDamage::IsEqual(zCObject *obj)
 
 	zCTouchDamage *vob = (zCTouchDamage *)obj;
 
+	if (bbox3DWS != vob->bbox3DWS) return FALSE; // required here
+
 	if (damage != vob->damage) return FALSE;
 
 	if (damageType.Barrier != vob->damageType.Barrier) return FALSE;
@@ -1009,6 +1021,31 @@ bool32 zCTouchDamage::IsEqual(zCObject *obj)
 	if (damageRepeatDelaySec != vob->damageRepeatDelaySec) return FALSE;
 	if (damageVolDownScale != vob->damageVolDownScale) return FALSE;
 	if (damageCollType != vob->damageCollType) return FALSE;
+
+	return TRUE;
+}
+
+void zCTouchAnimate::CalcHash()
+{
+	zCEffect::CalcHash();
+
+	hash = XXH64(&bbox3DWS, sizeof(bbox3DWS), hash);
+}
+
+void zCTouchAnimate::CalcID()
+{
+	zCEffect::CalcID();
+
+	id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id);
+}
+
+bool32 zCTouchAnimate::IsEqual(zCObject *obj)
+{
+	if (!zCEffect::IsEqual(obj)) return FALSE;
+
+	zCTouchAnimate *vob = (zCTouchAnimate *)obj;
+
+	if (bbox3DWS != vob->bbox3DWS) return FALSE;
 
 	return TRUE;
 }
@@ -1119,6 +1156,17 @@ void zCZone::CalcID()
 	zCVob::CalcID();
 
 	id = XXH32(&bbox3DWS, sizeof(bbox3DWS), id);
+}
+
+bool32 zCZone::IsEqual(zCObject *obj)
+{
+	if (!zCVob::IsEqual(obj)) return FALSE;
+
+	zCZone *vob = (zCZone *)obj;
+
+	if (bbox3DWS != vob->bbox3DWS) return FALSE;
+
+	return TRUE;
 }
 
 void zCZoneZFog::CalcHash()

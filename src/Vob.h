@@ -767,6 +767,11 @@ class zCTouchAnimate : public zCEffect
 {
 public:
 	zOBJECT_DECLARATION(zCTouchAnimate);
+
+public:
+	void CalcHash(); // required for bbox3DWS
+	void CalcID(); // required for bbox3DWS
+	bool32 IsEqual(zCObject *obj); // required for bbox3DWS
 };
 
 class zCTouchAnimateSound : public zCTouchAnimate
@@ -849,6 +854,7 @@ public:
 public:
 	void CalcHash(); // required for bbox3DWS
 	void CalcID(); // required for bbox3DWS
+	bool32 IsEqual(zCObject *obj); // required for bbox3DWS
 };
 
 class zCZoneZFog : public zCZone
