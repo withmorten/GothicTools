@@ -376,7 +376,9 @@ bool32 zCVobLightData::IsEqual(zCVobLightData &lightData)
 		// special handling for colorAniFPS, which can be almost equal
 		if (colorAniFPS != lightData.colorAniFPS)
 		{
-			if (fabs(colorAniFPS - lightData.colorAniFPS) >= 0.0001f) return FALSE;
+			float epsilon = 0.0001f;
+
+			if (fabs(colorAniFPS - lightData.colorAniFPS) >= epsilon) return FALSE;
 		}
 	}
 
